@@ -1,0 +1,156 @@
+[
+  {
+    "as": "leo",
+    "method": "GET",
+    "path": "/api/demo/conferences/uist-demo/attendees/mira",
+    "response": {
+      "status": 404,
+      "data": {
+        "error": "Profile unavailable."
+      }
+    }
+  },
+  {
+    "as": "mira",
+    "method": "PATCH",
+    "path": "/api/demo/conferences/uist-demo/me/sharing",
+    "body": {
+      "field": "profile",
+      "value": true
+    },
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "uist-demo",
+        "field": "profile",
+        "value": true
+      }
+    }
+  },
+  {
+    "as": "leo",
+    "method": "GET",
+    "path": "/api/demo/conferences/uist-demo/attendees/mira",
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "uist-demo",
+        "profile": {
+          "id": "mira",
+          "name": "Mira Patel",
+          "affiliation": "Northbank Design Lab",
+          "bio": "I study how people work together with accessible creative tools.",
+          "topics": [
+            "Accessibility",
+            "Collaboration",
+            "Design tools"
+          ],
+          "color": "lilac",
+          "links": {
+            "website": "https://example.org/research/mira",
+            "scholar": "https://scholar.google.com/scholar?q=Accessibility%20interaction%20design"
+          },
+          "authorKey": "",
+          "authored": [],
+          "lists": [],
+          "shared": []
+        }
+      }
+    }
+  },
+  {
+    "as": "mira",
+    "method": "PATCH",
+    "path": "/api/demo/conferences/uist-demo/me/sharing",
+    "body": {
+      "field": "list.reading",
+      "value": true
+    },
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "uist-demo",
+        "field": "list.reading",
+        "value": true
+      }
+    }
+  },
+  {
+    "as": "mira",
+    "method": "PATCH",
+    "path": "/api/demo/conferences/uist-demo/me/sharing",
+    "body": {
+      "field": "session.s1",
+      "value": {
+        "going": true,
+        "shared": true
+      }
+    },
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "uist-demo",
+        "field": "session.s1",
+        "value": {
+          "going": true,
+          "shared": true
+        }
+      }
+    }
+  },
+  {
+    "as": "leo",
+    "method": "GET",
+    "path": "/api/demo/conferences/uist-demo/attendees/mira",
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "uist-demo",
+        "profile": {
+          "id": "mira",
+          "name": "Mira Patel",
+          "affiliation": "Northbank Design Lab",
+          "bio": "I study how people work together with accessible creative tools.",
+          "topics": [
+            "Accessibility",
+            "Collaboration",
+            "Design tools"
+          ],
+          "color": "lilac",
+          "links": {
+            "website": "https://example.org/research/mira",
+            "scholar": "https://scholar.google.com/scholar?q=Accessibility%20interaction%20design"
+          },
+          "authorKey": "",
+          "authored": [],
+          "lists": [
+            {
+              "id": "reading",
+              "name": "Access & collaboration",
+              "paperIds": [
+                "p1",
+                "p2",
+                "p3"
+              ],
+              "visible": true
+            }
+          ],
+          "shared": [
+            "s1"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "as": "guest",
+    "method": "GET",
+    "path": "/api/demo/conferences/uist-demo/attendees/mira",
+    "response": {
+      "status": 403,
+      "data": {
+        "error": "Only registered attendees of this conference can access networking."
+      }
+    }
+  }
+]

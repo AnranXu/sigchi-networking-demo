@@ -1,0 +1,602 @@
+{
+  "description": "All attendees, papers, affiliations, author identifiers, and plans are synthetic. ORCID matching is illustrated with demo identifiers; website links use example.org and Scholar links open topic searches.",
+  "scope": "Entire fictional seed, including private examples. The attendee endpoint returns an audience-filtered subset.",
+  "conference": {
+    "id": "uist-demo",
+    "name": "UIST ’25",
+    "city": "Busan",
+    "edition": "Fictional program"
+  },
+  "personas": [
+    {
+      "id": "mira",
+      "name": "Mira Patel"
+    },
+    {
+      "id": "leo",
+      "name": "Leo Kim"
+    },
+    {
+      "id": "guest",
+      "name": "Unregistered guest"
+    }
+  ],
+  "sessions": [
+    {
+      "id": "s1",
+      "name": "Designing for access",
+      "room": "Capri",
+      "time": "Mon · 09:00",
+      "papers": [
+        "p1",
+        "p2"
+      ]
+    },
+    {
+      "id": "s2",
+      "name": "Collaboration in practice",
+      "room": "Sicily",
+      "time": "Mon · 11:00",
+      "papers": [
+        "p3",
+        "p4"
+      ]
+    },
+    {
+      "id": "s3",
+      "name": "Tangible interfaces",
+      "room": "Palermo",
+      "time": "Tue · 09:00",
+      "papers": [
+        "p5",
+        "p6"
+      ]
+    },
+    {
+      "id": "s4",
+      "name": "Tools for creative work",
+      "room": "Capri",
+      "time": "Tue · 14:00",
+      "papers": [
+        "p7",
+        "p8"
+      ]
+    }
+  ],
+  "papers": [
+    {
+      "id": "p1",
+      "title": "Tactile Paths for Shared Diagrams",
+      "authors": [
+        "orcid-demo-02",
+        "orcid-demo-03"
+      ],
+      "topics": [
+        "Accessibility",
+        "Haptics"
+      ]
+    },
+    {
+      "id": "p2",
+      "title": "Describing Changes in Collaborative Canvases",
+      "authors": [
+        "orcid-demo-04"
+      ],
+      "topics": [
+        "Accessibility",
+        "Collaboration"
+      ]
+    },
+    {
+      "id": "p3",
+      "title": "Small Signals in Hybrid Teamwork",
+      "authors": [
+        "orcid-demo-05"
+      ],
+      "topics": [
+        "Collaboration",
+        "Social computing"
+      ]
+    },
+    {
+      "id": "p4",
+      "title": "Finding Common Ground in Design Critiques",
+      "authors": [
+        "orcid-demo-07"
+      ],
+      "topics": [
+        "Collaboration",
+        "Design tools"
+      ]
+    },
+    {
+      "id": "p5",
+      "title": "Sketching with Programmable Surfaces",
+      "authors": [
+        "orcid-demo-06"
+      ],
+      "topics": [
+        "Haptics",
+        "Fabrication"
+      ]
+    },
+    {
+      "id": "p6",
+      "title": "Listening to Materials Through Touch",
+      "authors": [
+        "orcid-demo-03"
+      ],
+      "topics": [
+        "Haptics",
+        "Accessibility"
+      ]
+    },
+    {
+      "id": "p7",
+      "title": "A Shared Notebook for Creative Coding",
+      "authors": [
+        "orcid-demo-08"
+      ],
+      "topics": [
+        "Design tools",
+        "Collaboration"
+      ]
+    },
+    {
+      "id": "p8",
+      "title": "Prototyping Interfaces with Paper Circuits",
+      "authors": [
+        "orcid-demo-09"
+      ],
+      "topics": [
+        "Fabrication",
+        "Design tools"
+      ]
+    }
+  ],
+  "attendees": [
+    {
+      "id": "mira",
+      "name": "Mira Patel",
+      "affiliation": "Northbank Design Lab",
+      "bio": "I study how people work together with accessible creative tools.",
+      "topics": [
+        "Accessibility",
+        "Collaboration",
+        "Design tools"
+      ],
+      "color": "lilac",
+      "authorKey": "",
+      "links": {
+        "website": "https://example.org/research/mira",
+        "scholar": "https://scholar.google.com/scholar?q=Accessibility%20interaction%20design"
+      },
+      "profileVisible": false,
+      "listVisible": false,
+      "listName": "Access & collaboration",
+      "saved": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "going": [
+        "s1",
+        "s2"
+      ],
+      "shared": [],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Access & collaboration",
+          "paperIds": [
+            "p1",
+            "p2",
+            "p3"
+          ],
+          "visible": false
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [
+            "p8"
+          ],
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": "leo",
+      "name": "Leo Kim",
+      "affiliation": "Harbor Interaction Lab",
+      "bio": "I build tactile interfaces that make collaborative diagrams easier to explore.",
+      "topics": [
+        "Accessibility",
+        "Haptics",
+        "Collaboration"
+      ],
+      "color": "teal",
+      "authorKey": "orcid-demo-02",
+      "links": {
+        "website": "https://example.org/research/leo",
+        "scholar": "https://scholar.google.com/scholar?q=Accessibility%20interaction%20design"
+      },
+      "profileVisible": true,
+      "listVisible": true,
+      "listName": "Tangible access",
+      "saved": [
+        "p1",
+        "p2",
+        "p6"
+      ],
+      "going": [
+        "s1",
+        "s3"
+      ],
+      "shared": [
+        "s1"
+      ],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Tangible access",
+          "paperIds": [
+            "p1",
+            "p2",
+            "p6"
+          ],
+          "visible": true
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [
+            "p8"
+          ],
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": "ines",
+      "name": "Inés Costa",
+      "affiliation": "Studio for Inclusive Systems",
+      "bio": "My work brings touch and sound into everyday information design.",
+      "topics": [
+        "Haptics",
+        "Accessibility"
+      ],
+      "color": "rose",
+      "authorKey": "orcid-demo-03",
+      "links": {
+        "website": "https://example.org/research/ines",
+        "scholar": "https://scholar.google.com/scholar?q=Haptics%20interaction%20design"
+      },
+      "profileVisible": true,
+      "listVisible": false,
+      "listName": "Touch and sound",
+      "saved": [
+        "p1",
+        "p5",
+        "p6"
+      ],
+      "going": [
+        "s1",
+        "s3"
+      ],
+      "shared": [
+        "s1"
+      ],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Touch and sound",
+          "paperIds": [
+            "p1",
+            "p5",
+            "p6"
+          ],
+          "visible": false
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [
+            "p8"
+          ],
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": "noah",
+      "name": "Noah Brooks",
+      "affiliation": "Eastwell University",
+      "bio": "I design collaborative canvases with blind and low-vision creators.",
+      "topics": [
+        "Accessibility",
+        "Collaboration"
+      ],
+      "color": "blue",
+      "authorKey": "orcid-demo-04",
+      "links": {
+        "website": "https://example.org/research/noah",
+        "scholar": "https://scholar.google.com/scholar?q=Accessibility%20interaction%20design"
+      },
+      "profileVisible": true,
+      "listVisible": true,
+      "listName": "Shared canvases",
+      "saved": [
+        "p1",
+        "p2",
+        "p4"
+      ],
+      "going": [
+        "s1",
+        "s2"
+      ],
+      "shared": [],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Shared canvases",
+          "paperIds": [
+            "p1",
+            "p2",
+            "p4"
+          ],
+          "visible": true
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [
+            "p8"
+          ],
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": "yuna",
+      "name": "Yuna Park",
+      "affiliation": "Fieldwork Studio",
+      "bio": "I look at the subtle cues people use to coordinate hybrid work.",
+      "topics": [
+        "Social computing",
+        "Collaboration"
+      ],
+      "color": "amber",
+      "authorKey": "orcid-demo-05",
+      "links": {
+        "website": "https://example.org/research/yuna",
+        "scholar": "https://scholar.google.com/scholar?q=Social%20computing%20interaction%20design"
+      },
+      "profileVisible": true,
+      "listVisible": true,
+      "listName": "Hybrid teamwork",
+      "saved": [
+        "p3",
+        "p4"
+      ],
+      "going": [
+        "s2"
+      ],
+      "shared": [
+        "s2"
+      ],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Hybrid teamwork",
+          "paperIds": [
+            "p3",
+            "p4"
+          ],
+          "visible": true
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [
+            "p8"
+          ],
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": "sol",
+      "name": "Sol Rivera",
+      "affiliation": "Form & Fabric Lab",
+      "bio": "I make programmable materials people can shape with their hands.",
+      "topics": [
+        "Fabrication",
+        "Haptics"
+      ],
+      "color": "mint",
+      "authorKey": "orcid-demo-06",
+      "links": {
+        "website": "https://example.org/research/sol",
+        "scholar": "https://scholar.google.com/scholar?q=Fabrication%20interaction%20design"
+      },
+      "profileVisible": true,
+      "listVisible": true,
+      "listName": "Material studies",
+      "saved": [
+        "p5",
+        "p6",
+        "p8"
+      ],
+      "going": [
+        "s3"
+      ],
+      "shared": [
+        "s3"
+      ],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Material studies",
+          "paperIds": [
+            "p5",
+            "p6",
+            "p8"
+          ],
+          "visible": true
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [
+            "p8"
+          ],
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": "amara",
+      "name": "Amara Diallo",
+      "affiliation": "Neighbourhood Computing",
+      "bio": "I study how groups exchange feedback during creative work.",
+      "topics": [
+        "Design tools",
+        "Collaboration"
+      ],
+      "color": "coral",
+      "authorKey": "orcid-demo-07",
+      "links": {
+        "website": "https://example.org/research/amara",
+        "scholar": "https://scholar.google.com/scholar?q=Design%20tools%20interaction%20design"
+      },
+      "profileVisible": true,
+      "listVisible": true,
+      "listName": "Design conversations",
+      "saved": [
+        "p4",
+        "p7"
+      ],
+      "going": [
+        "s2",
+        "s4"
+      ],
+      "shared": [
+        "s2"
+      ],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Design conversations",
+          "paperIds": [
+            "p4",
+            "p7"
+          ],
+          "visible": true
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [
+            "p8"
+          ],
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": "eli",
+      "name": "Eli Chen",
+      "affiliation": "Open Instrument Studio",
+      "bio": "I prototype new tools for live coding and collective sketching.",
+      "topics": [
+        "Design tools",
+        "Creative coding"
+      ],
+      "color": "periwinkle",
+      "authorKey": "orcid-demo-08",
+      "links": {
+        "website": "https://example.org/research/eli",
+        "scholar": "https://scholar.google.com/scholar?q=Design%20tools%20interaction%20design"
+      },
+      "profileVisible": true,
+      "listVisible": true,
+      "listName": "Creative instruments",
+      "saved": [
+        "p7",
+        "p8"
+      ],
+      "going": [
+        "s4"
+      ],
+      "shared": [
+        "s4"
+      ],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Creative instruments",
+          "paperIds": [
+            "p7",
+            "p8"
+          ],
+          "visible": true
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [
+            "p8"
+          ],
+          "visible": false
+        }
+      ]
+    },
+    {
+      "id": "robin",
+      "name": "Robin Vale",
+      "affiliation": "Maker Studies Group",
+      "bio": "I explore low-cost circuits for rapid prototyping.",
+      "topics": [
+        "Fabrication",
+        "Design tools"
+      ],
+      "color": "olive",
+      "authorKey": "orcid-demo-09",
+      "links": {
+        "website": "https://example.org/research/robin",
+        "scholar": "https://scholar.google.com/scholar?q=Fabrication%20interaction%20design"
+      },
+      "profileVisible": false,
+      "listVisible": false,
+      "listName": "Making together",
+      "saved": [
+        "p5",
+        "p8"
+      ],
+      "going": [
+        "s4"
+      ],
+      "shared": [],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Making together",
+          "paperIds": [
+            "p5",
+            "p8"
+          ],
+          "visible": false
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [
+            "p8"
+          ],
+          "visible": false
+        }
+      ]
+    }
+  ]
+}
