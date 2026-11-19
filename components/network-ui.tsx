@@ -49,6 +49,7 @@ import {
   downloadJson,
   isStatic,
 } from "@/lib/client-api";
+import { roomFromHash } from "../lib/room-identification";
 import { Research } from "./research";
 import PeopleBrowser from "./people-browser";
 import {
@@ -170,6 +171,30 @@ export default function NetworkUI() {
   const personas = view?.identities || seedViewers;
   const [phoneSearch, setPhoneSearch] = useState(false);
   const [roomOpen, setRoomOpen] = useState(false);
+  const [incomingRoom, setIncomingRoom] = useState<string | null>(null),
+    [prefilledRoom, setPrefilledRoom] = useState<string | null>(null);
+  useEffect(() => {
+    function readLink() {
+      const name = roomFromHash(window.location.hash);
+      if (name) setIncomingRoom(name);
+    }
+    readLink();
+    window.addEventListener("hashchange", readLink);
+    return () => window.removeEventListener("hashchange", readLink);
+  }, []);
+  useEffect(() => {
+    if (!incomingRoom || view?.own?.id !== viewer) return;
+    setPage("My profile");
+    setRoomOpen(true);
+    setPrefilledRoom(incomingRoom);
+    setIncomingRoom(null);
+    if (roomFromHash(window.location.hash) === incomingRoom)
+      history.replaceState(
+        history.state,
+        "",
+        window.location.pathname + window.location.search,
+      );
+  }, [incomingRoom, view?.own?.id, viewer]);
   const [previewViewer, setPreviewViewer] = useState("carla");
   const mobileMenu = useRef<HTMLButtonElement>(null),
     sideNav = useRef<HTMLElement>(null),
@@ -275,6 +300,7 @@ export default function NetworkUI() {
     (p) => p.id !== viewer && p.id !== "guest",
   );
   function switchViewer(id: string) {
+    setPrefilledRoom(null);
     setRoomOpen(false);
     setViewer(id);
     localStorage.setItem("sigchi.chi26.persona", id);
@@ -313,6 +339,7 @@ export default function NetworkUI() {
     }
   }
   function navigate(p: Page) {
+    setPrefilledRoom(null);
     setRoomOpen(false);
     requestAnimationFrame(() => pageTitle.current?.focus());
     setPage(p);
@@ -732,6 +759,12 @@ export default function NetworkUI() {
                 </div>
               ) : !me && page !== "Program" ? (
                 <div className="joinWrap">
+                  {incomingRoom && (
+                    <p className="captureResult">
+                      Room QR · {incomingRoom}. Create a profile or choose a
+                      demo attendee to check in.
+                    </p>
+                  )}
                   <CreateProfile
                     onCreate={createProfile}
                     people={recipients}
@@ -805,14 +838,21 @@ export default function NetworkUI() {
                       }
                       icon={<MapPin size={19} />}
                       open={roomOpen}
-                      onToggle={setRoomOpen}
+                      onToggle={(open) => {
+                        setRoomOpen(open);
+                        if (!open) setPrefilledRoom(null);
+                      }}
                     >
-                      <CheckInPanel
-                        me={me}
-                        people={recipients}
-                        change={change}
-                        busy={busy}
-                      />
+                      {roomOpen && (
+                        <CheckInPanel
+                          key={prefilledRoom || me.id}
+                          prefilledRoom={prefilledRoom}
+                          me={me}
+                          people={recipients}
+                          change={change}
+                          busy={busy}
+                        />
+                      )}
                     </ProfileDisclosure>
                     <ProfileDisclosure
                       title="Research links"

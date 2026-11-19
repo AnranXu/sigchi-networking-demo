@@ -19,7 +19,7 @@ Paths below follow `/api/demo/conferences/chi26-demo/`.
 
 ## Who can see what
 
-Every item has its own audience: only me, selected people or all registered conference attendees. The profile audience also applies to each item. Selecting someone for a check-in cannot give them access to a hidden profile. Reading-list downloads, session filters and room lookups use the same viewer-specific projection. A manual check-in expires in one hour and can be cleared early. Adding a session to a plan does not check someone into its room. The simulated check-in runs on the visitor’s clock while the program retains its historical April 2026 dates.
+Every item has its own audience: only me, selected people or all registered conference attendees. The profile audience also applies to each item. Selecting someone for a check-in cannot give them access to a hidden profile. Reading-list downloads, session filters and room lookups use the same viewer-specific projection. A manual check-in expires in one hour and can be cleared early. Adding a session to a plan does not check someone into its room. The camera and photo readers resolve a CHI room locally from its sign or a demo QR. Only the confirmed room name goes into the existing check-in request. The simulated check-in runs on the visitor’s clock while the program retains its historical April 2026 dates.
 
 For example, with the profile visible to attendees, the following audience limits room check-ins to Carla:
 ```json

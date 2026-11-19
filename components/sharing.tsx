@@ -1,6 +1,13 @@
 "use client";
-import React, { useId, useState, type ReactNode } from "react";
-import { ChevronDown } from "lucide-react";
+import React, {
+  useCallback,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { ChevronDown, ScanText, QrCode } from "lucide-react";
+import { RoomCapture, type CaptureMode } from "./room-capture";
 import { rooms } from "../lib/demo-fixtures";
 import {
   audience,
@@ -57,7 +64,8 @@ export function AudienceControl({
       ) : (
         <label className="audienceSelect">
           <span id={name}>{label}</span>
-          <select aria-labelledby={name}
+          <select
+            aria-labelledby={name}
             disabled={busy}
             value={rule.mode}
             onChange={(e) => choose(e.target.value as Audience["mode"])}
@@ -133,17 +141,38 @@ export function ProfileDisclosure({
 }
 
 export function CheckInPanel({
+  prefilledRoom,
   me,
   people,
   change,
   busy,
 }: {
+  prefilledRoom: string | null;
   me: DemoPerson;
   people: Identity[];
   change: Save;
   busy: boolean;
 }) {
-  const [room, setRoom] = useState(me.checkIn?.room || rooms[0]);
+  const [room, setRoom] = useState(prefilledRoom || me.checkIn?.room || "");
+  const [mode, setMode] = useState<CaptureMode | null>(null);
+  const [result, setResult] = useState(
+    prefilledRoom ? prefilledRoom + " selected from the room QR." : "",
+  );
+  const trigger = useRef<HTMLButtonElement | null>(null);
+  const closeCapture = useCallback(() => {
+    setMode(null);
+    requestAnimationFrame(() =>
+      trigger.current?.focus({ preventScroll: true }),
+    );
+  }, []);
+  const acceptRoom = useCallback(
+    (found: string) => {
+      setRoom(found);
+      setResult(found + " selected. Confirm your check-in below.");
+      closeCapture();
+    },
+    [closeCapture],
+  );
   return (
     <div className="roomEditor">
       {me.checkIn && (
@@ -156,13 +185,62 @@ export function CheckInPanel({
           .
         </p>
       )}
+      <div className="roomMethods">
+        <button
+          type="button"
+          className="outlined"
+          aria-expanded={mode === "sign"}
+          disabled={busy}
+          onClick={(e) => {
+            trigger.current = e.currentTarget;
+            setResult("");
+            setMode(mode === "sign" ? null : "sign");
+          }}
+        >
+          <ScanText aria-hidden="true" size={17} />
+          Detect room
+        </button>
+        <button
+          type="button"
+          className="outlined"
+          aria-expanded={mode === "qr"}
+          disabled={busy}
+          onClick={(e) => {
+            trigger.current = e.currentTarget;
+            setResult("");
+            setMode(mode === "qr" ? null : "qr");
+          }}
+        >
+          <QrCode aria-hidden="true" size={17} />
+          Scan QR code
+        </button>
+      </div>
+      {mode && (
+        <RoomCapture
+          key={mode}
+          mode={mode}
+          onRoom={acceptRoom}
+          onClose={closeCapture}
+        />
+      )}
+      {result && (
+        <p className="captureResult" role="status">
+          {result}
+        </p>
+      )}
       <label className="audienceSelect">
         <span>Room</span>
         <select
           value={room}
           disabled={busy}
-          onChange={(e) => setRoom(e.target.value)}
+          aria-label="Room"
+          onChange={(e) => {
+            setRoom(e.target.value);
+            setResult("");
+            setMode(null);
+          }}
         >
+          <option value="">Choose a room</option>
           {rooms.map((r) => (
             <option key={r}>{r}</option>
           ))}
@@ -185,8 +263,11 @@ export function CheckInPanel({
       <div className="formRow">
         <button
           className="primary"
-          disabled={busy}
-          onClick={() => change("checkIn", { room })}
+          disabled={busy || !room || !!mode}
+          onClick={() => {
+            setResult("");
+            change("checkIn", { room });
+          }}
         >
           {me.checkIn ? "Update check-in" : "Check in for 1 hour"}
         </button>

@@ -2283,3 +2283,92 @@ main {
     border-color: Highlight;
   }
 }
+
+.roomMethods,
+.captureTop,
+.captureActions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+.roomMethods {
+  margin: 0.2rem 0 0.8rem;
+}
+.roomMethods .outlined {
+  min-height: 44px;
+}
+.roomMethods button[aria-expanded="true"] {
+  color: #24499a;
+  border-color: #5474c0;
+  background: #edf2ff;
+}
+.roomCapture {
+  background: #f6f8fc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  margin: 10px 0;
+  min-width: 0;
+}
+.captureTop {
+  justify-content: space-between;
+}
+.captureTop h3 {
+  font-size: 1rem;
+}
+.roomCapture p {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  margin: 6px 0;
+}
+.roomCapture video {
+  width: 100%;
+  max-height: 290px;
+  object-fit: contain;
+  background: #202536;
+  border-radius: 6px;
+}
+.roomCapture video[hidden] {
+  display: none;
+}
+.captureActions {
+  font-size: 0.875rem;
+}
+.captureActions label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #24499a;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.captureActions label input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.captureActions label:focus-within {
+  outline: 3px solid #24499a;
+  outline-offset: 2px;
+}
+.captureActions a {
+  color: #24499a;
+  padding: 0.65rem 0;
+}
+.captureStatus {
+  font-weight: 550;
+}
+.captureResult {
+  font-size: 0.875rem;
+  color: #264785;
+}
+.roomEditor .audienceSelect select {
+  width: auto;
+  max-width: 100%;
+}

@@ -1,3 +1,4 @@
+import { buildRoomTools } from "./build-room-tools.mjs";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { build } from "esbuild";
@@ -6,6 +7,7 @@ import path from "node:path";
 
 const output = path.resolve(process.argv[2] || "docs");
 await mkdir(output, { recursive: true });
+await buildRoomTools(output);
 await build({
   entryPoints: { app: "client/main.tsx" },
   bundle: true,

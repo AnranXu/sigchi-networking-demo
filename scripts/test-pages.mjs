@@ -3,7 +3,7 @@ import { build } from "esbuild";
 const { outputFiles } = await build({
   stdin: {
     contents:
-      'export * from "./lib/pages-api";export * from "./lib/demo-fixtures";',
+      'export * from "./lib/room-identification";export * from "./lib/pages-api";export * from "./lib/demo-fixtures";',
     resolveDir: process.cwd(),
   },
   bundle: true,
@@ -11,11 +11,34 @@ const { outputFiles } = await build({
   platform: "node",
   write: false,
 });
-const { pagesRequest, conference, rooms, papers, sessions, backgrounds } =
-  await import(
-    "data:text/javascript;base64," +
-      Buffer.from(outputFiles[0].contents).toString("base64")
-  );
+const {
+  roomFromQr,
+  roomFromSign,
+  pagesRequest,
+  conference,
+  rooms,
+  papers,
+  sessions,
+  backgrounds,
+} = await import(
+  "data:text/javascript;base64," +
+    Buffer.from(outputFiles[0].contents).toString("base64")
+);
+const roomKey = "https://anranxu.github.io/sigchi-networking-demo/#chi26-room=";
+assert.equal(roomFromQr(roomKey + "12307"), "P1 - Room 115");
+assert.equal(roomFromQr(roomKey + "999999"), null);
+assert.equal(roomFromQr("https://example.org/#chi26-room=12307"), null);
+assert.equal(roomFromQr(roomKey + "12307&next=elsewhere"), null);
+assert.equal(roomFromSign("SALA 115", 92), "P1 - Room 115");
+assert.equal(roomFromSign("116", 93), "P1 - Room 116");
+assert.equal(
+  roomFromSign("Area 1 + 2 + 3: theatre", 88),
+  "Area 1 + 2 + 3: theatre",
+);
+assert.equal(roomFromSign("Room 115 / Room 116", 99), null);
+assert.equal(roomFromSign("Room 115", 40), null);
+assert.equal(roomFromSign("Main programme 115", 90), null);
+assert.equal(roomFromSign("ROOM 999", 99), null);
 const store = new Map();
 globalThis.localStorage = {
   getItem: (k) => store.get(k) ?? null,
