@@ -121,7 +121,7 @@ export const backgrounds: Background[] = [
   {
     id: "vincent",
     name: "Vincent Cavez",
-    affiliation: "Postdoctoral scholar, Stanford University (2025–2026)",
+    affiliation: "Postdoctoral scholar, Stanford University",
     bio: "Vincent studies pen-based interaction and creative tools, including how musicians annotate scores and how people learn with AI and sketching interfaces.",
     topics: [
       "Pen-based interaction",
