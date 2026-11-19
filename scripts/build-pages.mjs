@@ -18,6 +18,7 @@ await build({
   jsx: "automatic",
   define: { "process.env.NODE_ENV": '"production"' },
 });
+await copyFile("public/reminder-worker.js", path.join(output, "reminder-worker.js"));
 await cp("public/fonts", path.join(output, "fonts"), { recursive: true });
 await copyFile("public/sigchi.svg", path.join(output, "sigchi.svg"));
 for (const logo of ["conference.png", "conference-2025.png"])

@@ -117,7 +117,8 @@
       "papers": [
         "189201"
       ],
-      "url": "https://programs.sigchi.org/chi/2025/program/session/195027"
+      "url": "https://programs.sigchi.org/chi/2025/program/session/195027",
+      "startsAt": 1745849400000
     },
     {
       "id": "195099",
@@ -127,7 +128,8 @@
       "papers": [
         "189388"
       ],
-      "url": "https://programs.sigchi.org/chi/2025/program/session/195099"
+      "url": "https://programs.sigchi.org/chi/2025/program/session/195099",
+      "startsAt": 1745849400000
     },
     {
       "id": "197231",
@@ -137,7 +139,8 @@
       "papers": [
         "188995"
       ],
-      "url": "https://programs.sigchi.org/chi/2025/program/session/197231"
+      "url": "https://programs.sigchi.org/chi/2025/program/session/197231",
+      "startsAt": 1746003600000
     },
     {
       "id": "195003",
@@ -147,7 +150,8 @@
       "papers": [
         "189120"
       ],
-      "url": "https://programs.sigchi.org/chi/2025/program/session/195003"
+      "url": "https://programs.sigchi.org/chi/2025/program/session/195003",
+      "startsAt": 1746030000000
     },
     {
       "id": "195031",
@@ -157,7 +161,8 @@
       "papers": [
         "188303"
       ],
-      "url": "https://programs.sigchi.org/chi/2025/program/session/195031"
+      "url": "https://programs.sigchi.org/chi/2025/program/session/195031",
+      "startsAt": 1746090000000
     }
   ]
 }

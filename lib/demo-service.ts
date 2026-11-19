@@ -13,6 +13,7 @@ import {
   type Message,
   type Preference,
 } from "./network-model";
+import { validReminder } from "./session-reminders";
 export type DemoStore = {
   rows: Preference[];
   messages: (Message & { conferenceId?: string })[];
@@ -185,6 +186,14 @@ export function serve(
           profile: publicProfile(p, viewer, conference),
         })
       : error(404, "Profile unavailable.");
+  }
+  if (method === "PATCH" && route === "me/reminders") {
+    const minutes = body?.minutesBefore;
+    if (!validReminder(minutes)) return error(400, "Choose a reminder time.");
+    return {
+      ...result({ conferenceId: conference.id, minutesBefore: minutes }),
+      changes: [setting(viewer, scope + "reminderMinutes", minutes)],
+    };
   }
   if (method === "PATCH" && route === "me/sharing") {
     const { field, value } = body ?? {};

@@ -298,7 +298,8 @@
       "papers": [
         "222959"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/225155"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225155",
+      "startsAt": 1776078900000
     },
     {
       "id": "225713",
@@ -308,7 +309,8 @@
       "papers": [
         "221897"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/225713"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225713",
+      "startsAt": 1776078900000
     },
     {
       "id": "251863",
@@ -318,7 +320,8 @@
       "papers": [
         "230142"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/251863"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/251863",
+      "startsAt": 1776089700000
     },
     {
       "id": "251931",
@@ -328,7 +331,8 @@
       "papers": [
         "230155"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/251931"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/251931",
+      "startsAt": 1776089700000
     },
     {
       "id": "252068",
@@ -338,7 +342,8 @@
       "papers": [
         "230155"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/252068"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/252068",
+      "startsAt": 1776103200000
     },
     {
       "id": "225050",
@@ -348,7 +353,8 @@
       "papers": [
         "222546"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/225050"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225050",
+      "startsAt": 1776157200000
     },
     {
       "id": "225103",
@@ -358,7 +364,8 @@
       "papers": [
         "221960"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/225103"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225103",
+      "startsAt": 1776157200000
     },
     {
       "id": "224984",
@@ -368,7 +375,8 @@
       "papers": [
         "222678"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/224984"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/224984",
+      "startsAt": 1776251700000
     },
     {
       "id": "225026",
@@ -378,7 +386,8 @@
       "papers": [
         "222996"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/225026"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225026",
+      "startsAt": 1776251700000
     },
     {
       "id": "214974",
@@ -388,7 +397,8 @@
       "papers": [
         "214803"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/214974"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/214974",
+      "startsAt": 1776262500000
     },
     {
       "id": "251934",
@@ -398,7 +408,8 @@
       "papers": [
         "229861"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/251934"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/251934",
+      "startsAt": 1776262500000
     },
     {
       "id": "215410",
@@ -408,7 +419,8 @@
       "papers": [
         "214803"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/215410"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/215410",
+      "startsAt": 1776270600000
     },
     {
       "id": "252070",
@@ -418,7 +430,8 @@
       "papers": [
         "229861"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/252070"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/252070",
+      "startsAt": 1776270600000
     },
     {
       "id": "224954",
@@ -428,7 +441,8 @@
       "papers": [
         "222240"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/224954"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/224954",
+      "startsAt": 1776330000000
     },
     {
       "id": "224952",
@@ -438,7 +452,8 @@
       "papers": [
         "222461"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/224952"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/224952",
+      "startsAt": 1776416400000
     },
     {
       "id": "225056",
@@ -448,7 +463,8 @@
       "papers": [
         "222912"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/225056"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225056",
+      "startsAt": 1776416400000
     },
     {
       "id": "225063",
@@ -458,7 +474,8 @@
       "papers": [
         "222312"
       ],
-      "url": "https://programs.sigchi.org/chi/2026/program/session/225063"
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225063",
+      "startsAt": 1776416400000
     }
   ]
 }

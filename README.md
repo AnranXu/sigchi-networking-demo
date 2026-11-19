@@ -11,7 +11,8 @@ A SIGCHI hackathon prototype for sharing a profile, finding people through paper
 3. Under **View as**, select Carla. In **People → Here now**, your name appears in that room. Switch to Yun Huang and it disappears. Leaving the room or waiting an hour ends the check-in. A planned session never creates a room check-in.
 4. Open a researcher’s profile to see public research, verified CHI contributions and suggested reading. In **Program**, save a real paper to your own reading list or add a session to your plan. Lists and plans have independent audiences.
 5. In **My profile → Conference**, switch to **CHI ’25 · Yokohama**. Choose a different audience and preview as another attendee. Switching back restores the previous conference’s settings. New profiles are private by default in each conference. The Yokohama sample includes five papers from its [published program](https://files.sigchi.org/conference/cache/10127/224/program) and supports manual room selection.
-6. Open **API examples** to inspect or download a viewer-specific response. The source fixture and worked examples are linked there.
+6. Open [My lists and reminders](https://anranxu.github.io/sigchi-networking-demo/#reminders). Sessions in your plan and sessions with a saved paper appear together. Choose a lead time and keep the demo open. **Try a reminder** runs a three-second preview using a saved session from the selected conference. **Device alerts** also displays reminders through supported browsers when allowed.
+7. Open **API examples** to inspect or download a viewer-specific response. The source fixture and worked examples are linked there.
 
 ## Conference data and people
 

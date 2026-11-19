@@ -48,6 +48,7 @@ import {
   type DemoConference,
 } from "../lib/conferences";
 import { roomFromHash } from "../lib/room-identification";
+import { SessionReminders } from "./session-reminders";
 import { Research } from "./research";
 import PeopleBrowser from "./people-browser";
 import {
@@ -234,6 +235,7 @@ function ConferenceUI({
     [prefilledRoom, setPrefilledRoom] = useState<string | null>(null);
   useEffect(() => {
     function readLink() {
+      if (window.location.hash === "#reminders") setPage("My lists");
       const name = roomFromHash(window.location.hash);
       if (event.roomReaders && name) setIncomingRoom(name);
     }
@@ -390,7 +392,7 @@ function ConferenceUI({
         throw Error(r.data.error || "Could not create profile.");
       setSignupName("");
       switchViewer(r.data.id);
-      navigate("People");
+      navigate(window.location.hash === "#reminders" ? "My lists" : "People");
       setNotice("Your profile is ready");
     } catch (e: any) {
       setError(e.message);
@@ -399,6 +401,9 @@ function ConferenceUI({
     }
   }
   function navigate(p: Page) {
+    if (p !== "My lists" && window.location.hash === "#reminders") {
+      history.replaceState(history.state, "", window.location.pathname + window.location.search);
+    }
     setPrefilledRoom(null);
     setRoomOpen(false);
     requestAnimationFrame(() => pageTitle.current?.focus());
@@ -420,12 +425,15 @@ function ConferenceUI({
     });
     return r;
   }
-  async function change(field: string, value: unknown) {
+  function change(field: string, value: unknown) {
+    return savePreference("me/sharing", { field, value });
+  }
+  async function savePreference(route: string, body: unknown) {
     if (busy) return;
     setBusy(true);
     setError("");
     try {
-      const r = await request("me/sharing", "PATCH", { field, value });
+      const r = await request(route, "PATCH", body);
       if (r.status >= 400) throw Error(r.data.error);
       setView(await loadView(viewer, event.id));
       setNotice("Changes saved for " + event.name);
@@ -728,6 +736,17 @@ function ConferenceUI({
               )}
             </div>
           )}
+          {view?.viewer === viewer && (
+            <SessionReminders
+              key={viewer} event={event} me={view.own} showControls={page === "My lists"}
+              busy={busy} tryAttendee={() => switchViewer("carla")}
+              chooseSession={() => {
+                navigate("Program");
+                requestAnimationFrame(() => document.querySelector<HTMLInputElement>(".sessionControls input[type=checkbox]")?.focus());
+              }}
+              setMinutes={minutesBefore => savePreference("me/reminders", { minutesBefore })}
+            />
+          )}
           {!view ? (
             <div role="status" className="panel record">
               Loading the demo…
@@ -1000,6 +1019,7 @@ function ConferenceUI({
                 </div>
               ) : page === "Program" ? (
                 <div className="reading">
+                  {me && <button className="textBtn programListsLink" onClick={() => navigate("My lists")}><Bookmark size={16} aria-hidden="true" />My lists and reminders</button>}
                   {sessions.map((s) => {
                     const going = me?.going.includes(s.id) || false,
                       shared = me?.shared.includes(s.id) || false;

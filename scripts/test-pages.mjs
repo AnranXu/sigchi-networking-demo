@@ -3,7 +3,7 @@ import { build } from "esbuild";
 const { outputFiles } = await build({
   stdin: {
     contents:
-      'export * from "./lib/room-identification";export * from "./lib/pages-api";export * from "./lib/demo-fixtures";',
+      'export * from "./lib/session-reminders";export * from "./lib/room-identification";export * from "./lib/pages-api";export * from "./lib/demo-fixtures";',
     resolveDir: process.cwd(),
   },
   bundle: true,
@@ -12,6 +12,8 @@ const { outputFiles } = await build({
   write: false,
 });
 const {
+  savedSessions,
+  reminderWindow,
   roomFromQr,
   roomFromSign,
   pagesRequest,
@@ -205,6 +207,24 @@ const localOnly = ky("guest", "POST", "profiles", {
 assert.equal(read25("yun", "attendees/" + localOnly).status, 200);
 assert.equal(get("yun", "attendees/" + localOnly).status, 404);
 assert.equal(get(localOnly, "state").data.own.rules.profile.mode, "private");
+
+const sampleSession = sessions[0];
+const samplePlan = { going: [sampleSession.id], lists: [{ paperIds: [sampleSession.papers[0]] }] };
+const duePlan = savedSessions(sessions, samplePlan);
+assert.equal(duePlan.filter(s => s.id === sampleSession.id).length, 1);
+assert.deepEqual(savedSessions(sessions, { going: [], lists: [] }), []);
+const alertAt = sampleSession.startsAt - 600000;
+assert.equal(reminderWindow([sampleSession], 10, alertAt - 1).next, alertAt);
+assert.deepEqual(reminderWindow([sampleSession], 10, alertAt - 1).due, []);
+assert.deepEqual(reminderWindow([sampleSession], 10, alertAt).due, [sampleSession]);
+assert.deepEqual(reminderWindow([sampleSession], 0, alertAt).due, []);
+assert.deepEqual(reminderWindow([sampleSession], 10, sampleSession.startsAt).due, []);
+assert.equal(req(id, "PATCH", "me/reminders", { minutesBefore: 15 }).status, 200);
+assert.equal(get(id, "state").data.own.reminderMinutes, 15);
+assert.equal(ky(id, "GET", "state").data.own.reminderMinutes, 10);
+assert.equal(req("guest", "PATCH", "me/reminders", { minutesBefore: 5 }).status, 403);
+assert.equal(req(id, "PATCH", "me/reminders", { minutesBefore: -2 }).status, 400);
+assert.equal(get("yun", person).data.profile.reminderMinutes, undefined);
 
 for (const b of backgrounds) {
   assert.ok(b.source.startsWith("https://"));

@@ -14,6 +14,7 @@ export type ReadingList = {
 };
 export type CheckIn = { room: string; expiresAt: number };
 export type DemoPerson = Person & {
+  reminderMinutes: number;
   lists: ReadingList[];
   rules: Record<string, Audience>;
   checkIn: CheckIn | null;
@@ -166,6 +167,7 @@ export function restore(
     const checkIn = byKey.get("checkIn") as CheckIn | null | undefined;
     return {
       ...p,
+      reminderMinutes: byKey.get("reminderMinutes") ?? 10,
       lists,
       rules,
       checkIn:

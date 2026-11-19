@@ -15,6 +15,7 @@ Paths below follow `/api/demo/conferences/{conferenceId}/`. Use `chi26-demo` for
 | GET | `attendees?session={id}` | People who shared a plan for this session with the viewer. |
 | GET | `attendees?room={room}` | People who explicitly checked into the room and shared it with the viewer. |
 | PATCH | `me/sharing` | Change profile, research link, list, session, or current-room sharing. Also used for manual check-in and check-out. |
+| PATCH | `me/reminders` | Save a personal reminder time for this conference with `minutesBefore` set to 5, 10, 15, or 30. Set it to 0 to turn reminders off. |
 | POST | `messages` | Send a demo message when sender and recipient can see each other’s profile. |
 
 ## Who can see what
