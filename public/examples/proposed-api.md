@@ -1,10 +1,10 @@
-# CHI 2026 networking API proposal
+# CHI conference networking API proposal
 
 The [SIGCHI Cloud API](https://services.sigchi.org/assets/pdf/cloud-api.pdf?version=4.9.24) documents conference discovery, conference programs and an authorized personal agenda. The networking resources below are proposed extensions. The demo uses a curated public [CHI 2026 program](https://programs.sigchi.org/chi/2026/program). Session times are in Barcelona local time.
 
 ## Resources
 
-Paths below follow `/api/demo/conferences/chi26-demo/`.
+Paths below follow `/api/demo/conferences/{conferenceId}/`. Use `chi26-demo` for Barcelona or `chi25-demo` for Yokohama. Profile audiences, research-link visibility, reading lists, session plans, check-ins, and conversations are scoped to that conference. A name-only account can set a different audience at each event. A new event starts private. The existing CHI ’26 settings remain attached to Barcelona.
 
 | Method | Resource | Result |
 | --- | --- | --- |
@@ -19,7 +19,7 @@ Paths below follow `/api/demo/conferences/chi26-demo/`.
 
 ## Who can see what
 
-Every item has its own audience: only me, selected people or all registered conference attendees. The profile audience also applies to each item. Selecting someone for a check-in cannot give them access to a hidden profile. Reading-list downloads, session filters and room lookups use the same viewer-specific projection. A manual check-in expires in one hour and can be cleared early. Adding a session to a plan does not check someone into its room. The camera and photo readers resolve a CHI room locally from its sign or a demo QR. Only the confirmed room name goes into the existing check-in request. The simulated check-in runs on the visitor’s clock while the program retains its historical April 2026 dates.
+Every item has its own audience: only me, selected people or all registered conference attendees. The profile audience also applies to each item. Selecting someone for a check-in cannot give them access to a hidden profile. Reading-list downloads, session filters and room lookups use the same viewer-specific projection. A manual check-in expires in one hour and can be cleared early. Adding a session to a plan does not check someone into its room. The camera and photo readers resolve a CHI room locally from its sign or a demo QR. Only the confirmed room name goes into the existing check-in request. Simulated check-ins run on the visitor’s clock. Session times follow the selected conference’s local time.
 
 For example, with the profile visible to attendees, the following audience limits room check-ins to Carla:
 ```json

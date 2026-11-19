@@ -1,8 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { MapPin, SlidersHorizontal, Search } from "lucide-react";
-import { papers, sessions, rooms, profileAffiliation } from "../lib/demo-fixtures";
+import { profileAffiliation } from "../lib/demo-fixtures";
 import { overlap, type DemoPerson, type Profile } from "../lib/network-model";
+import type { DemoConference } from "../lib/conferences";
 const tabs = [
   ["all", "People"],
   ["affiliations", "Affiliations"],
@@ -11,6 +12,7 @@ const tabs = [
 ];
 const surname = (p: Profile) => p.name.trim().split(/\s+/).at(-1) || p.name;
 type Props = {
+  event: DemoConference;
   phoneSearch: boolean;
   people: Profile[];
   me: DemoPerson;
@@ -24,6 +26,7 @@ type Props = {
   setQuery: (s: string) => void;
 };
 export default function PeopleBrowser({
+  event,
   phoneSearch,
   people,
   me,
@@ -36,6 +39,7 @@ export default function PeopleBrowser({
   query,
   setQuery,
 }: Props) {
+  const { papers, sessions, rooms } = event;
   const [filterOpen, setFilterOpen] = useState(false),
     [authorOnly, setAuthorOnly] = useState(false),
     [letter, setLetter] = useState("");

@@ -1,9 +1,15 @@
 import React from "react";
-import { backgrounds, papers } from "../lib/demo-fixtures";
-export function Research({ id }: { id: string }) {
+import { backgrounds } from "../lib/demo-fixtures";
+import { defaultConference, type DemoConference } from "../lib/conferences";
+export function Research({ id, event }: { id: string; event: DemoConference }) {
+  const { papers } = event;
   const b = backgrounds.find((p) => p.id === id);
   if (!b) return null;
-  const authored = papers.filter((p) => p.authors.includes(b.authorKey));
+  const authored = papers.filter((p) =>
+    event.id === defaultConference.id
+      ? p.authors.includes(b.authorKey)
+      : p.authorNames.includes(b.name),
+  );
   return (
     <section className="research">
       <h3>Research and publications</h3>
@@ -24,7 +30,7 @@ export function Research({ id }: { id: string }) {
       </div>
       {authored.length > 0 && (
         <>
-          <h4>Authored CHI ’26 contributions</h4>
+          <h4>Authored {event.name} contributions</h4>
           <ul>
             {authored.map((p) => (
               <li key={p.id}>
@@ -50,21 +56,25 @@ export function Research({ id }: { id: string }) {
           </ul>
         </>
       )}
-      <h4>Suggested CHI ’26 reading</h4>
-      <p>{b.reason}</p>
-      <ul>
-        {b.recommended.map((id) => {
-          const p = papers.find((p) => p.id === id)!;
-          return (
-            <li key={id}>
-              <small>{p.track}</small>
-              <a href={p.url} target="_blank" rel="noreferrer">
-                {p.title}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+      {event.id === defaultConference.id && (
+        <>
+          <h4>Suggested {event.name} reading</h4>
+          <p>{b.reason}</p>
+          <ul>
+            {b.recommended.map((id) => {
+              const p = papers.find((p) => p.id === id)!;
+              return (
+                <li key={id}>
+                  <small>{p.track}</small>
+                  <a href={p.url} target="_blank" rel="noreferrer">
+                    {p.title}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      )}
     </section>
   );
 }

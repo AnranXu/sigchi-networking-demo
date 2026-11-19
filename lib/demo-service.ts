@@ -1,4 +1,8 @@
-import { conference, papers, sessions, rooms } from "./demo-fixtures";
+import {
+  conferenceForPath,
+  conferencePrefix,
+  defaultConference,
+} from "./conferences";
 import {
   restore,
   publicProfile,
@@ -9,7 +13,10 @@ import {
   type Message,
   type Preference,
 } from "./network-model";
-export type DemoStore = { rows: Preference[]; messages: Message[] };
+export type DemoStore = {
+  rows: Preference[];
+  messages: (Message & { conferenceId?: string })[];
+};
 export type Change = { person: string; field: string; value: string };
 export type Result = {
   status: number;
@@ -68,14 +75,36 @@ export function serve(
   store: DemoStore,
   now = Date.now(),
 ): Result {
-  const url = new URL(path, "https://demo.example"),
-    prefix = "/conferences/" + conference.id + "/";
+  const url = new URL(path, "https://demo.example");
+  const conference = conferenceForPath(url.pathname);
   if (path === "start" && method === "POST")
-    return result({ demo: true, conference: conference.id });
-  if (!url.pathname.startsWith(prefix))
-    return error(404, "Unknown conference.");
-  const route = url.pathname.slice(prefix.length),
-    people = identities(store.rows);
+    return result({ demo: true, conference: defaultConference.id });
+  if (!conference) return error(404, "Unknown conference.");
+  const route = url.pathname.slice(conferencePrefix(conference.id).length + 1);
+  const { papers, sessions, rooms } = conference;
+  // Unprefixed preferences belong to the original CHI ’26 demo.
+  const scope =
+    conference.id === defaultConference.id ? "" : conference.id + ":";
+  const rows = store.rows
+    .filter(
+      (row) =>
+        row.field !== "identity" &&
+        (scope ? row.field.startsWith(scope) : !row.field.includes(":")),
+    )
+    .map((row) => ({ ...row, field: row.field.slice(scope.length) }));
+  const members = new Set(
+    rows
+      .filter((row) => row.field === "audience.profile")
+      .map((row) => row.person),
+  );
+  rows.push(
+    ...store.rows.filter(
+      (row) =>
+        row.field === "identity" &&
+        (row.person === viewer || members.has(row.person)),
+    ),
+  );
+  const people = identities(rows);
   if (route === "profiles" && method === "POST") {
     const name = typeof body?.name === "string" ? body.name.trim() : "";
     if (!name || name.length > 80 || /[\u0000-\u001f\u007f]/.test(name))
@@ -93,11 +122,11 @@ export function serve(
       ...result({ id, name }, 201),
       changes: [
         setting(id, "identity", name),
-        setting(id, "audience.profile", visibility),
+        setting(id, scope + "audience.profile", visibility),
       ],
     };
   }
-  const all = restore(store.rows, now),
+  const all = restore(rows, now, conference),
     me = all.find((p) => p.id === viewer);
   const demoViewers = [...people, { id: "guest", name: "Unregistered guest" }];
   if (!me)
@@ -115,7 +144,7 @@ export function serve(
         );
   const directory = all
     .filter((p) => permits(p.rules.profile, viewer))
-    .map((p) => publicProfile(p, viewer));
+    .map((p) => publicProfile(p, viewer, conference));
   if (method === "GET" && route === "state")
     return result({
       viewer,
@@ -123,7 +152,9 @@ export function serve(
       directory,
       identities: demoViewers,
       messages: store.messages.filter(
-        (m) => m.sender === viewer || m.recipient === viewer,
+        (m) =>
+          (m.conferenceId ?? defaultConference.id) === conference.id &&
+          (m.sender === viewer || m.recipient === viewer),
       ),
     });
   if (method === "GET" && route === "attendees") {
@@ -151,14 +182,15 @@ export function serve(
     return p && (permits(p.rules.profile, viewer) || p.id === viewer)
       ? result({
           conferenceId: conference.id,
-          profile: publicProfile(p, viewer),
+          profile: publicProfile(p, viewer, conference),
         })
       : error(404, "Profile unavailable.");
   }
   if (method === "PATCH" && route === "me/sharing") {
     const { field, value } = body ?? {};
     let changes: Change[] = [];
-    const save = (k: string, v: unknown) => changes.push(setting(viewer, k, v));
+    const save = (k: string, v: unknown) =>
+      changes.push(setting(viewer, scope + k, v));
     if (typeof field !== "string")
       return error(400, "Choose a sharing setting.");
     if (

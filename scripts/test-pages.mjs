@@ -136,6 +136,76 @@ assert.equal(
   400,
 );
 assert.equal(get("guest", "state").data.identities.length, countBefore);
+// A name-only account can share different data with different people at two conferences.
+const atEvent = (event, who, method, path, body) =>
+  pagesRequest("conferences/" + event + "/" + path, method, who, body);
+const ky = (who, method, path, body) =>
+  atEvent("chi25-demo", who, method, path, body);
+const save25 = (who, field, value) =>
+  assert.equal(ky(who, "PATCH", "me/sharing", { field, value }).status, 200);
+const read25 = (who, route) => ky(who, "GET", route);
+assert.equal(read25(id, "state").data.own.rules.profile.mode, "private");
+assert.equal(read25("carla", person).status, 404);
+assert.equal(read25("carla", "state").data.messages.length, 0);
+assert.equal(
+  read25("carla", "state").data.identities.some((p) => p.id === id),
+  false,
+);
+save25(id, "audience.profile", only(["yun"]));
+save25(id, "audience.currentRoom", only(["yun"]));
+save25(id, "checkIn", { room: "G401" });
+save25(id, "papers.reading", ["188995"]);
+save25(id, "audience.list.reading", everyone);
+save25(id, "session.197231", { going: true, shared: true });
+save25(id, "links", { website: "https://example.org/yokohama", scholar: "" });
+save25(id, "audience.links", everyone);
+const projection = read25("yun", person).data;
+assert.equal(projection.conferenceId, "chi25-demo");
+assert.equal(projection.profile.checkIn.room, "G401");
+assert.equal(projection.profile.links.website, "https://example.org/yokohama");
+assert.deepEqual(projection.profile.shared, ["197231"]);
+assert.deepEqual(projection.profile.lists[0].paperIds, ["188995"]);
+assert.equal(read25("carla", person).status, 404);
+assert.equal(get("yun", person).status, 404);
+set("audience.profile", everyone);
+assert.equal(get("yun", person).data.profile.checkIn, null);
+assert.equal(get("yun", person).data.profile.links.website, "");
+assert.deepEqual(get("yun", person).data.profile.lists[0].paperIds, [
+  papers[0].id,
+]);
+assert.equal(read25("carla", person).status, 404);
+assert.equal(
+  ky(id, "PATCH", "me/sharing", { field: "checkIn", value: { room: rooms[0] } })
+    .status,
+  400,
+);
+assert.equal(
+  ky(id, "PATCH", "me/sharing", {
+    field: "papers.reading",
+    value: [papers[0].id],
+  }).status,
+  400,
+);
+save25("yun", "audience.profile", everyone);
+assert.equal(
+  ky(id, "POST", "messages", { recipient: "yun", body: "Yokohama only" })
+    .status,
+  201,
+);
+assert.deepEqual(
+  read25("yun", "state").data.messages.map((m) => m.body),
+  ["Yokohama only"],
+);
+assert.equal(get("yun", "state").data.messages.length, 0);
+assert.equal(atEvent("unknown", "yun", "GET", "state").status, 404);
+const localOnly = ky("guest", "POST", "profiles", {
+  name: "Yokohama example",
+  audience: everyone,
+}).data.id;
+assert.equal(read25("yun", "attendees/" + localOnly).status, 200);
+assert.equal(get("yun", "attendees/" + localOnly).status, 404);
+assert.equal(get(localOnly, "state").data.own.rules.profile.mode, "private");
+
 for (const b of backgrounds) {
   assert.ok(b.source.startsWith("https://"));
   assert.ok(b.recommended.every((id) => papers.some((p) => p.id === id)));

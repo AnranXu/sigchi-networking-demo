@@ -2372,3 +2372,22 @@ main {
   width: auto;
   max-width: 100%;
 }
+
+.conferencePicker {
+  display: grid;
+  gap: .35rem;
+  margin: .9rem 0 1.1rem;
+  max-width: 26rem;
+  font-weight: 600;
+}
+.conferencePicker select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: .55rem .75rem;
+  color: var(--text);
+  background-color: white;
+  border: 1px solid #75809a;
+  border-radius: .45rem;
+  font: inherit;
+}

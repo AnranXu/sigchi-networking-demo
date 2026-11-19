@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { ChevronDown, ScanText, QrCode } from "lucide-react";
 import { RoomCapture, type CaptureMode } from "./room-capture";
-import { rooms } from "../lib/demo-fixtures";
+import type { DemoConference } from "../lib/conferences";
 import {
   audience,
   type Audience,
@@ -141,12 +141,14 @@ export function ProfileDisclosure({
 }
 
 export function CheckInPanel({
+  event,
   prefilledRoom,
   me,
   people,
   change,
   busy,
 }: {
+  event: DemoConference;
   prefilledRoom: string | null;
   me: DemoPerson;
   people: Identity[];
@@ -185,36 +187,38 @@ export function CheckInPanel({
           .
         </p>
       )}
-      <div className="roomMethods">
-        <button
-          type="button"
-          className="outlined"
-          aria-expanded={mode === "sign"}
-          disabled={busy}
-          onClick={(e) => {
-            trigger.current = e.currentTarget;
-            setResult("");
-            setMode(mode === "sign" ? null : "sign");
-          }}
-        >
-          <ScanText aria-hidden="true" size={17} />
-          Detect room
-        </button>
-        <button
-          type="button"
-          className="outlined"
-          aria-expanded={mode === "qr"}
-          disabled={busy}
-          onClick={(e) => {
-            trigger.current = e.currentTarget;
-            setResult("");
-            setMode(mode === "qr" ? null : "qr");
-          }}
-        >
-          <QrCode aria-hidden="true" size={17} />
-          Scan QR code
-        </button>
-      </div>
+      {event.roomReaders && (
+        <div className="roomMethods">
+          <button
+            type="button"
+            className="outlined"
+            aria-expanded={mode === "sign"}
+            disabled={busy}
+            onClick={(e) => {
+              trigger.current = e.currentTarget;
+              setResult("");
+              setMode(mode === "sign" ? null : "sign");
+            }}
+          >
+            <ScanText aria-hidden="true" size={17} />
+            Detect room
+          </button>
+          <button
+            type="button"
+            className="outlined"
+            aria-expanded={mode === "qr"}
+            disabled={busy}
+            onClick={(e) => {
+              trigger.current = e.currentTarget;
+              setResult("");
+              setMode(mode === "qr" ? null : "qr");
+            }}
+          >
+            <QrCode aria-hidden="true" size={17} />
+            Scan QR code
+          </button>
+        </div>
+      )}
       {mode && (
         <RoomCapture
           key={mode}
@@ -241,7 +245,7 @@ export function CheckInPanel({
           }}
         >
           <option value="">Choose a room</option>
-          {rooms.map((r) => (
+          {event.rooms.map((r) => (
             <option key={r}>{r}</option>
           ))}
         </select>
@@ -286,16 +290,21 @@ export function CheckInPanel({
 }
 
 export function CreateProfile({
+  conferencePicker,
+  name,
+  setName,
   onCreate,
   people,
   busy,
 }: {
+  conferencePicker: ReactNode;
+  name: string;
+  setName: (name: string) => void;
   onCreate: (name: string, rule: Audience) => void;
   people: Identity[];
   busy: boolean;
 }) {
-  const [name, setName] = useState(""),
-    [rule, setRule] = useState<Audience>(audience(false));
+  const [rule, setRule] = useState<Audience>(audience(false));
   return (
     <form
       className="joinCard panel simpleSignup"
@@ -305,6 +314,7 @@ export function CreateProfile({
       }}
     >
       <h2>Create your conference profile</h2>
+      {conferencePicker}
       <label className="nameField" htmlFor="display-name">
         Your name
         <input
@@ -319,7 +329,7 @@ export function CreateProfile({
       </label>
       <AudienceControl
         primary
-        label="Who can see my profile?"
+        label="Who can see my profile at this conference?"
         rule={rule}
         people={people}
         save={setRule}

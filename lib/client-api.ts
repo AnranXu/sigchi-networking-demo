@@ -1,5 +1,5 @@
 import type { View } from "./network-model";
-export const prefix = "conferences/chi26-demo/";
+import { conferencePrefix, defaultConference } from "./conferences";
 export const isStatic = () =>
   typeof document !== "undefined" &&
   !!document.querySelector('meta[name="pages-demo"]');
@@ -22,8 +22,11 @@ export async function callApi<T>(
   });
   return { status: res.status, data: await res.json() };
 }
-export async function loadView(viewer: string) {
-  const r = await callApi<View & { error?: string }>(prefix + "state", viewer);
+export async function loadView(viewer: string, eventId = defaultConference.id) {
+  const r = await callApi<View & { error?: string }>(
+    conferencePrefix(eventId) + "state",
+    viewer,
+  );
   if (r.status !== 200)
     throw new Error(r.data.error || "Could not load the demo.");
   return r.data;

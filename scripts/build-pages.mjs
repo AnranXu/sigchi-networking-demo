@@ -20,7 +20,8 @@ await build({
 });
 await cp("public/fonts", path.join(output, "fonts"), { recursive: true });
 await copyFile("public/sigchi.svg", path.join(output, "sigchi.svg"));
-await copyFile("public/conference.png", path.join(output, "conference.png"));
+for (const logo of ["conference.png", "conference-2025.png"])
+  await copyFile(path.join("public", logo), path.join(output, logo));
 await cp("public/examples", path.join(output, "examples"), { recursive: true });
 await writeFile(path.join(output, ".nojekyll"), "");
 const stamp = async (file) =>
@@ -35,6 +36,6 @@ const [cssVersion, jsVersion] = await Promise.all([
 await writeFile(
   path.join(output, "index.html"),
   `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="pages-demo" content="synthetic"><meta name="description" content="A SIGCHI hackathon prototype for exploring attendee profiles, reading lists and session sharing, with real CHI 2026 papers and simulated attendee activity."><title>CHI ’26 Programs · Networking demo</title><link rel="stylesheet" href="./fonts/montserrat.css"><link rel="icon" href="./conference.png"><link rel="stylesheet" href="./app.css?v=${cssVersion}"></head><body><div id="app"></div><noscript>Enable JavaScript to explore the conference demo.</noscript><script type="module" src="./app.js?v=${jsVersion}"></script></body></html>`,
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="pages-demo" content="synthetic"><meta name="description" content="A SIGCHI hackathon prototype for exploring attendee profiles, reading lists and session sharing, with real CHI 2026 and CHI 2025 programs and conference-specific sharing."><title>CHI ’26 Programs · Networking demo</title><link rel="stylesheet" href="./fonts/montserrat.css"><link rel="icon" href="./conference.png"><link rel="stylesheet" href="./app.css?v=${cssVersion}"></head><body><div id="app"></div><noscript>Enable JavaScript to explore the conference demo.</noscript><script type="module" src="./app.js?v=${jsVersion}"></script></body></html>`,
 );
 console.log("GitHub Pages site built in " + output);

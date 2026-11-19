@@ -27,10 +27,7 @@ import {
   FlaskConical,
 } from "lucide-react";
 import {
-  sessions,
-  papers,
   personas as seedViewers,
-  rooms,
   fixtureNote,
   profileAffiliation,
 } from "@/lib/demo-fixtures";
@@ -43,13 +40,13 @@ import {
   type Profile,
   type View,
 } from "@/lib/network-model";
+import { callApi, loadView, downloadJson, isStatic } from "@/lib/client-api";
 import {
-  callApi,
-  loadView,
-  prefix,
-  downloadJson,
-  isStatic,
-} from "@/lib/client-api";
+  conferences,
+  defaultConference,
+  conferencePrefix,
+  type DemoConference,
+} from "../lib/conferences";
 import { roomFromHash } from "../lib/room-identification";
 import { Research } from "./research";
 import PeopleBrowser from "./people-browser";
@@ -74,9 +71,6 @@ const navigation: [Page, typeof Users][] = [
   ["Messages", MessagesSquare],
   ["API examples", Code2],
 ];
-const paperName = (id: string) => papers.find((p) => p.id === id)?.title || id;
-const sessionName = (id: string) =>
-  sessions.find((p) => p.id === id)?.name || id;
 const initials = (n: string) =>
   n
     .split(" ")
@@ -150,9 +144,73 @@ function Dialog({
 }
 type Trace = { method: string; path: string; status: number; data: any };
 export default function NetworkUI() {
+  const [event, setEvent] = useState<DemoConference | null>(null);
+  const [name, setName] = useState("");
+  const [openingSettings, setOpeningSettings] = useState(false);
+  useEffect(() => {
+    const fromLink = () => {
+      if (!roomFromHash(window.location.hash)) return false;
+      setEvent(defaultConference);
+      localStorage.setItem("sigchi.conference", defaultConference.id);
+      return true;
+    };
+    if (!fromLink())
+      setEvent(
+        conferences.find(
+          (c) => c.id === localStorage.getItem("sigchi.conference"),
+        ) || defaultConference,
+      );
+    window.addEventListener("hashchange", fromLink);
+    return () => window.removeEventListener("hashchange", fromLink);
+  }, []);
+  function selectEvent(id: string) {
+    const next = conferences.find((c) => c.id === id);
+    if (!next) return;
+    if (!next.roomReaders && roomFromHash(window.location.hash)) {
+      history.replaceState(history.state, "", window.location.pathname + window.location.search);
+    }
+    setOpeningSettings(true);
+    localStorage.setItem("sigchi.conference", id);
+    setEvent(next);
+  }
+  return event ? (
+    <ConferenceUI
+      key={event.id}
+      event={event}
+      selectEvent={selectEvent}
+      openingSettings={openingSettings}
+      signupName={name}
+      setSignupName={setName}
+    />
+  ) : null;
+}
+
+function ConferenceUI({
+  event,
+  selectEvent,
+  openingSettings,
+  signupName,
+  setSignupName,
+}: {
+  event: DemoConference;
+  selectEvent: (id: string) => void;
+  openingSettings: boolean;
+  signupName: string;
+  setSignupName: (name: string) => void;
+}) {
+  const { papers, sessions, rooms } = event;
+  const prefix = conferencePrefix(event.id);
+  const focusConference = useRef(openingSettings);
+  const paperName = (id: string) =>
+    papers.find((p) => p.id === id)?.title || id;
+  const sessionName = (id: string) =>
+    sessions.find((s) => s.id === id)?.name || id;
+  useEffect(() => {
+    document.title = event.name + " Programs · Networking demo";
+  }, [event]);
   const [viewer, setViewer] = useState("guest"),
     [view, setView] = useState<View | null>(null),
-    [page, setPage] = useState<Page>("People");
+    [page, setPage] = useState<Page>(openingSettings ? "My profile" : "People");
   const [tab, setTab] = useState("all"),
     [q, setQ] = useState(""),
     [filter, setFilter] = useState("");
@@ -177,7 +235,7 @@ export default function NetworkUI() {
   useEffect(() => {
     function readLink() {
       const name = roomFromHash(window.location.hash);
-      if (name) setIncomingRoom(name);
+      if (event.roomReaders && name) setIncomingRoom(name);
     }
     readLink();
     window.addEventListener("hashchange", readLink);
@@ -232,7 +290,7 @@ export default function NetworkUI() {
     setError("");
     (async () => {
       await callApi("start", viewer, "POST");
-      const data = await loadView(viewer);
+      const data = await loadView(viewer, event.id);
       if (id === generation.current) setView(data);
     })().catch((e) => {
       if (id === generation.current) {
@@ -259,7 +317,7 @@ export default function NetworkUI() {
     let live = true;
     const sync = async (e: StorageEvent) => {
       if (e.key === "sigchi-networking-chi26.v2") {
-        const d = await loadView(viewer);
+        const d = await loadView(viewer, event.id);
         if (live) setView(d);
       }
     };
@@ -281,7 +339,7 @@ export default function NetworkUI() {
     let live = true;
     const t = setTimeout(
       () => {
-        loadView(viewer)
+        loadView(viewer, event.id)
           .then((v) => {
             if (live) setView(v);
           })
@@ -330,6 +388,7 @@ export default function NetworkUI() {
       );
       if (r.status !== 201)
         throw Error(r.data.error || "Could not create profile.");
+      setSignupName("");
       switchViewer(r.data.id);
       navigate("People");
       setNotice("Your profile is ready");
@@ -368,8 +427,8 @@ export default function NetworkUI() {
     try {
       const r = await request("me/sharing", "PATCH", { field, value });
       if (r.status >= 400) throw Error(r.data.error);
-      setView(await loadView(viewer));
-      setNotice("Changes saved");
+      setView(await loadView(viewer, event.id));
+      setNotice("Changes saved for " + event.name);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -388,7 +447,7 @@ export default function NetworkUI() {
       : previewViewer;
   const selected = previewing
     ? me && permits(me.rules.profile, previewAs)
-      ? publicProfile(me, previewAs)
+      ? publicProfile(me, previewAs, event)
       : undefined
     : directory.find((p) => p.id === profile);
   async function exportProfile(p: Profile) {
@@ -417,7 +476,7 @@ export default function NetworkUI() {
       });
       if (r.status !== 201) throw Error(r.data.error);
       setText("");
-      setView(await loadView(viewer));
+      setView(await loadView(viewer, event.id));
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -480,6 +539,29 @@ export default function NetworkUI() {
       </>
     );
   }
+  const conferencePicker = (
+    <label className="conferencePicker">
+      <span id="conference-picker-label">Conference</span>
+      <select
+        aria-labelledby="conference-picker-label"
+        value={event.id}
+        onChange={(e) => selectEvent(e.target.value)}
+        disabled={busy}
+        ref={(node) => {
+          if (node && focusConference.current) {
+            node.focus();
+            focusConference.current = false;
+          }
+        }}
+      >
+        {conferences.map((c) => (
+          <option key={c.id} value={c.id}>
+            {c.name} · {c.city}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
   return (
     <div className="shell">
       <a className="skipLink" href="#main-content">
@@ -539,15 +621,12 @@ export default function NetworkUI() {
         </button>
         <a
           className="confHome"
-          href="https://chi2026.acm.org/"
+          href={event.home}
           target="_blank"
           rel="noreferrer"
         >
-          <img
-            src={isStatic() ? "./conference.png" : "/conference.png"}
-            alt=""
-          />
-          CHI 2026 Home
+          <img src={(isStatic() ? "./" : "/") + event.logo} alt="" />
+          CHI {event.year} Home
         </a>
         <nav aria-label="Conference navigation">
           {navigation.map(([n, I], i) => (
@@ -581,15 +660,15 @@ export default function NetworkUI() {
             </button>
             <img
               className="confMark"
-              src={isStatic() ? "./conference.png" : "/conference.png"}
+              src={(isStatic() ? "./" : "/") + event.logo}
               alt=""
             />
             <div>
               <div className="topSmall">
-                Barcelona, Spain · April 13–17, 2026 · CEST
+                {event.location} · {event.dates} · {event.zone}
               </div>
               <h1 ref={pageTitle} tabIndex={-1}>
-                CHI ’26 {page}
+                {event.name} {page}
               </h1>
             </div>
           </div>
@@ -657,12 +736,10 @@ export default function NetworkUI() {
             <>
               {page === "API examples" ? (
                 <div className="panel record api">
-                  <h2>Proposed networking API</h2>
+                  <h2>What do we need from the SIGCHI API?</h2>
                   <p>
-                    Inspect the response as{" "}
-                    {personas.find((p) => p.id === viewer)?.name}. Change
-                    visibility in My profile, then repeat a request as another
-                    attendee.
+                    These examples show what {personas.find((p) => p.id === viewer)?.name} can see at {event.name}.
+                    Try another attendee to see how sharing works.
                   </p>
                   <label htmlFor="probe">Request</label>
                   <div className="formRow">
@@ -736,7 +813,7 @@ export default function NetworkUI() {
                       }
                       download
                     >
-                      Download example data
+                      CHI ’26 example data
                     </a>
                     <a
                       href={
@@ -745,7 +822,7 @@ export default function NetworkUI() {
                       }
                       download
                     >
-                      Worked API examples
+                      CHI ’26 worked examples
                     </a>
                     <a
                       href={
@@ -767,6 +844,9 @@ export default function NetworkUI() {
                     </p>
                   )}
                   <CreateProfile
+                    conferencePicker={conferencePicker}
+                    name={signupName}
+                    setName={setSignupName}
                     onCreate={createProfile}
                     people={recipients}
                     busy={busy}
@@ -778,6 +858,7 @@ export default function NetworkUI() {
                 </div>
               ) : page === "People" && me ? (
                 <PeopleBrowser
+                  event={event}
                   phoneSearch={phoneSearch}
                   me={me}
                   people={external}
@@ -805,9 +886,10 @@ export default function NetworkUI() {
                         {me.affiliation && <p>{profileAffiliation(me)}</p>}
                       </div>
                     </div>
+                    {conferencePicker}
                     <AudienceControl
                       primary
-                      label="Who can see my profile?"
+                      label="Who can see my profile at this conference?"
                       rule={me.rules.profile}
                       people={recipients}
                       busy={busy}
@@ -815,10 +897,16 @@ export default function NetworkUI() {
                     />
                     <p className="sharingExplanation">
                       {me.rules.profile.mode === "private"
-                        ? "Your profile and anything you share are hidden from other attendees."
+                        ? "Your profile, lists, plans, and room are private at " +
+                          event.name +
+                          "."
                         : me.rules.profile.mode === "selected"
-                          ? "Only the people you choose can see your profile and anything you share."
-                          : "Registered attendees can find your profile. You choose which lists, plans and check-ins to share."}
+                          ? "Only the people you choose at " +
+                            event.name +
+                            " can see what you share."
+                          : "People at " +
+                            event.name +
+                            " can see your profile. You choose whether to share your lists, plans, or room."}
                     </p>
                     <button
                       className="textBtn"
@@ -846,6 +934,7 @@ export default function NetworkUI() {
                     >
                       {roomOpen && (
                         <CheckInPanel
+                          event={event}
                           key={prefilledRoom || me.id}
                           prefilledRoom={prefilledRoom}
                           me={me}
@@ -904,7 +993,7 @@ export default function NetworkUI() {
                         title="Research and publications"
                         icon={<BookOpen size={19} />}
                       >
-                        <Research id={me.id} />
+                        <Research event={event} id={me.id} />
                       </ProfileDisclosure>
                     )}
                   </section>
@@ -1137,7 +1226,7 @@ export default function NetworkUI() {
       </main>
       {(profile || previewing) && (
         <Dialog
-          title={previewing ? "Attendee preview" : "Attendee profile"}
+          title={(previewing ? "Attendee preview" : "Attendee profile") + " · " + event.name}
           close={() => {
             setProfile(null);
             setPreviewing(false);
@@ -1197,7 +1286,7 @@ export default function NetworkUI() {
                     previewing
                       ? downloadJson(
                           selected.id + "-as-" + previewAs + ".json",
-                          { conferenceId: "chi26-demo", profile: selected },
+                          { conferenceId: event.id, profile: selected },
                         )
                       : exportProfile(selected)
                   }
@@ -1252,7 +1341,7 @@ export default function NetworkUI() {
                 </div>
               </section>
               {selected.links.website || selected.links.scholar ? (
-                <Research id={selected.id} />
+                <Research event={event} id={selected.id} />
               ) : (
                 <p>{selected.bio}</p>
               )}

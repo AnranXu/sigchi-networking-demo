@@ -1,11 +1,5 @@
-import {
-  people,
-  papers,
-  sessions,
-  rooms,
-  backgrounds,
-  type Person,
-} from "./demo-fixtures";
+import { people, backgrounds, type Person } from "./demo-fixtures";
+import { defaultConference } from "./conferences";
 export type Identity = { id: string; name: string };
 export type Audience = {
   mode: "private" | "attendees" | "selected";
@@ -100,14 +94,32 @@ function customPerson(id: string, name: string): Person {
     shared: [],
   };
 }
-export function restore(rows: Preference[], now = Date.now()): DemoPerson[] {
+export function restore(
+  rows: Preference[],
+  now = Date.now(),
+  event = defaultConference,
+): DemoPerson[] {
+  const { papers, sessions, rooms } = event;
+  const legacyDemo = event.id === defaultConference.id;
   return identities(rows).map(({ id, name }) => {
     const p = structuredClone(
       people.find((x) => x.id === id) ?? customPerson(id, name),
     );
+    if (!legacyDemo) {
+      p.profileVisible = false;
+      p.listVisible = false;
+      p.saved = [];
+      p.going = [];
+      p.shared = [];
+      p.authorKey = "";
+      if (people.some((person) => person.id === id)) {
+        const paper = papers.find((a) => a.authorNames.includes(name));
+        if (paper) p.authorKey = paper.authors[paper.authorNames.indexOf(name)];
+      }
+    }
     const rules: Record<string, Audience> = {
       profile: audience(p.profileVisible),
-      links: audience(true),
+      links: audience(legacyDemo),
       currentRoom: audience(false),
       "list.reading": audience(p.listVisible),
       "list.later": audience(false),
@@ -163,7 +175,12 @@ export function restore(rows: Preference[], now = Date.now()): DemoPerson[] {
     };
   });
 }
-export function publicProfile(p: DemoPerson, viewer: string): Profile {
+export function publicProfile(
+  p: DemoPerson,
+  viewer: string,
+  event = defaultConference,
+): Profile {
+  const { papers } = event;
   const see = (field: string) => permits(p.rules[field], viewer);
   const background = backgrounds.find((b) => b.id === p.id);
   return {
@@ -171,7 +188,9 @@ export function publicProfile(p: DemoPerson, viewer: string): Profile {
       ? {
           publicResearch: {
             source: background.source,
-            recommended: background.recommended,
+            recommended: background.recommended.filter((id) =>
+              papers.some((paper) => paper.id === id),
+            ),
           },
         }
       : {}),

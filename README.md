@@ -6,11 +6,12 @@ A SIGCHI hackathon prototype for sharing a profile, finding people through paper
 
 ## Try the sharing controls
 
-1. Enter a name, choose **Only me**, **Selected people**, or **All attendees**, and select **Create profile**. The default is **Only me**.
-2. Open **My profile**. Under **Who can see my profile?**, choose **All attendees**. Expand **Current room**, choose **Selected people**, and select Carla Griggio. Use **Detect room** to read a room sign, use **Scan QR code** with a [printable room code](https://anranxu.github.io/sigchi-networking-demo/room-codes/), or choose a room manually. Confirm with **Check in for 1 hour**. Audience changes save immediately.
+1. Choose a conference and enter a name, choose **Only me**, **Selected people**, or **All attendees**, and select **Create profile**. The default is **Only me**.
+2. Open **My profile** and select **CHI ’26 · Barcelona**. Under **Who can see my profile at this conference?**, choose **All attendees**. Expand **Current room**, choose **Selected people**, and select Carla Griggio. Use **Detect room** to read a room sign, use **Scan QR code** with a [printable room code](https://anranxu.github.io/sigchi-networking-demo/room-codes/), or choose a room manually. Confirm with **Check in for 1 hour**. Audience changes save immediately.
 3. Under **View as**, select Carla. In **People → Here now**, your name appears in that room. Switch to Yun Huang and it disappears. Leaving the room or waiting an hour ends the check-in. A planned session never creates a room check-in.
 4. Open a researcher’s profile to see public research, verified CHI contributions and suggested reading. In **Program**, save a real paper to your own reading list or add a session to your plan. Lists and plans have independent audiences.
-5. Open **API examples** to inspect or download a viewer-specific response. The source fixture and worked examples are linked there.
+5. In **My profile → Conference**, switch to **CHI ’25 · Yokohama**. Choose a different audience and preview as another attendee. Switching back restores the previous conference’s settings. New profiles are private by default in each conference. The Yokohama sample includes five papers from its [published program](https://files.sigchi.org/conference/cache/10127/224/program) and supports manual room selection.
+6. Open **API examples** to inspect or download a viewer-specific response. The source fixture and worked examples are linked there.
 
 ## Conference data and people
 

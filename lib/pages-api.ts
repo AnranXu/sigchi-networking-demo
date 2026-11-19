@@ -1,3 +1,4 @@
+import { conferenceForPath } from "./conferences";
 import { serve, type DemoStore } from "./demo-service";
 export const storageKey = "sigchi-networking-chi26.v2";
 export function pagesRequest(
@@ -17,7 +18,11 @@ export function pagesRequest(
   }
   if (r.message) {
     const id = (store.messages.at(-1)?.id ?? 0) + 1;
-    store.messages.push({ ...r.message, id });
+    store.messages.push({
+      ...r.message,
+      id,
+      conferenceId: conferenceForPath(path)!.id,
+    });
     r.data = { messageId: id };
   }
   if (r.changes || r.message)
