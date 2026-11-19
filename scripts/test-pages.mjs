@@ -209,22 +209,130 @@ assert.equal(get("yun", "attendees/" + localOnly).status, 404);
 assert.equal(get(localOnly, "state").data.own.rules.profile.mode, "private");
 
 const sampleSession = sessions[0];
-const samplePlan = { going: [sampleSession.id], lists: [{ paperIds: [sampleSession.papers[0]] }] };
+const samplePlan = {
+  going: [sampleSession.id],
+  lists: [{ paperIds: [sampleSession.papers[0]] }],
+};
 const duePlan = savedSessions(sessions, samplePlan);
-assert.equal(duePlan.filter(s => s.id === sampleSession.id).length, 1);
+assert.equal(duePlan.filter((s) => s.id === sampleSession.id).length, 1);
 assert.deepEqual(savedSessions(sessions, { going: [], lists: [] }), []);
 const alertAt = sampleSession.startsAt - 600000;
 assert.equal(reminderWindow([sampleSession], 10, alertAt - 1).next, alertAt);
 assert.deepEqual(reminderWindow([sampleSession], 10, alertAt - 1).due, []);
-assert.deepEqual(reminderWindow([sampleSession], 10, alertAt).due, [sampleSession]);
+assert.deepEqual(reminderWindow([sampleSession], 10, alertAt).due, [
+  sampleSession,
+]);
 assert.deepEqual(reminderWindow([sampleSession], 0, alertAt).due, []);
-assert.deepEqual(reminderWindow([sampleSession], 10, sampleSession.startsAt).due, []);
-assert.equal(req(id, "PATCH", "me/reminders", { minutesBefore: 15 }).status, 200);
+assert.deepEqual(
+  reminderWindow([sampleSession], 10, sampleSession.startsAt).due,
+  [],
+);
+assert.equal(
+  req(id, "PATCH", "me/reminders", { minutesBefore: 15 }).status,
+  200,
+);
 assert.equal(get(id, "state").data.own.reminderMinutes, 15);
 assert.equal(ky(id, "GET", "state").data.own.reminderMinutes, 10);
-assert.equal(req("guest", "PATCH", "me/reminders", { minutesBefore: 5 }).status, 403);
-assert.equal(req(id, "PATCH", "me/reminders", { minutesBefore: -2 }).status, 400);
+assert.equal(
+  req("guest", "PATCH", "me/reminders", { minutesBefore: 5 }).status,
+  403,
+);
+assert.equal(
+  req(id, "PATCH", "me/reminders", { minutesBefore: -2 }).status,
+  400,
+);
 assert.equal(get("yun", person).data.profile.reminderMinutes, undefined);
+
+// Room reports, simulated indoor badges and anonymous check-in totals are independent.
+const nearRoom = "P1 - Room 115",
+  fullRoom = "P1 - Room 116",
+  unmeasured = "Area 1 + 2 + 3: posters";
+const roomAt = (name, who = "yun") =>
+  get(who, "rooms").data.rooms.find((r) => r.room === name);
+const updateRoom = (who, path, body) =>
+  req(who, "PATCH", "rooms/" + path, body).status;
+assert.equal(roomAt(fullRoom).status, "full");
+assert.equal(roomAt(nearRoom).counted, 39);
+assert.equal(roomAt(unmeasured).status, "unknown");
+assert.equal(
+  updateRoom("guest", "report", { room: unmeasured, status: "full" }),
+  403,
+);
+assert.equal(
+  updateRoom("carla", "report", { room: "missing", status: "full" }),
+  400,
+);
+assert.equal(
+  updateRoom("carla", "report", { room: unmeasured, status: "bad" }),
+  400,
+);
+assert.equal(
+  updateRoom("carla", "report", { room: unmeasured, status: "full" }),
+  200,
+);
+assert.equal(roomAt(unmeasured).status, "full");
+assert.equal(roomAt(unmeasured).myReport, null);
+assert.equal(
+  updateRoom("carla", "report", { room: unmeasured, status: "open" }),
+  200,
+);
+assert.equal(roomAt(unmeasured).reports, 1);
+assert.equal(roomAt(unmeasured, "carla").myReport, "open");
+assert.equal(
+  updateRoom("yun", "report", { room: unmeasured, status: "full" }),
+  200,
+);
+assert.equal(roomAt(unmeasured).reports, 2);
+assert.equal(
+  updateRoom("yun", "report", { room: unmeasured, status: null }),
+  200,
+);
+assert.equal(roomAt(unmeasured).status, "open");
+try {
+  Date.now = () => at() + 900001;
+  assert.equal(roomAt(unmeasured).status, "unknown");
+  assert.equal(roomAt(unmeasured).reports, 0);
+} finally {
+  Date.now = at;
+}
+assert.equal(updateRoom("carla", "demo-badge", { room: unmeasured }), 400);
+assert.equal(updateRoom("carla", "demo-badge", { room: nearRoom }), 200);
+assert.equal(roomAt(nearRoom).status, "full");
+assert.equal(updateRoom("carla", "demo-badge", { room: nearRoom }), 200);
+assert.equal(roomAt(nearRoom).counted, 40);
+assert.equal(updateRoom("carla", "demo-badge", { room: "P1 - Room 120" }), 200);
+assert.equal(roomAt(nearRoom).counted, 39);
+assert.equal(roomAt("P1 - Room 120").counted, 34);
+assert.equal(updateRoom("carla", "demo-badge", { room: null }), 200);
+assert.equal(roomAt("P1 - Room 120").counted, 33);
+set("audience.profile", { mode: "private", people: [] });
+set("checkIn", { room: nearRoom });
+assert.equal(roomAt(nearRoom).checkIns, 0);
+set("checkIn", { room: nearRoom, countMe: true });
+assert.equal(roomAt(nearRoom).checkIns, 1);
+assert.equal(roomAt(nearRoom).counted, 39);
+assert.equal(get("yun", person).status, 404);
+assert.ok(!JSON.stringify(get("yun", "rooms").data).includes(id));
+assert.equal(
+  get("guest", "state").data.roomBoard.rooms.find((r) => r.room === nearRoom)
+    .checkIns,
+  0,
+);
+set("checkIn", { room: fullRoom, countMe: true });
+assert.equal(roomAt(nearRoom).checkIns, 0);
+try {
+  Date.now = () => at() + 3600001;
+  assert.equal(roomAt(fullRoom).checkIns, 0);
+} finally {
+  Date.now = at;
+}
+set("checkIn", null);
+assert.equal(roomAt(fullRoom).checkIns, 0);
+assert.equal(
+  read25("carla", "rooms").data.rooms.some((r) => r.room === nearRoom),
+  false,
+);
+assert.equal(read25("carla", "rooms").data.badgeRoom, null);
 
 for (const b of backgrounds) {
   assert.ok(b.source.startsWith("https://"));

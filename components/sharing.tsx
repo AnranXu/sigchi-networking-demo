@@ -156,9 +156,10 @@ export function CheckInPanel({
   busy: boolean;
 }) {
   const [room, setRoom] = useState(prefilledRoom || me.checkIn?.room || "");
+  const [countMe, setCountMe] = useState(me.checkIn?.countMe === true);
   const [mode, setMode] = useState<CaptureMode | null>(null);
   const [result, setResult] = useState(
-    prefilledRoom ? prefilledRoom + " selected from the room QR." : "",
+    prefilledRoom ? prefilledRoom + " selected. Confirm your check-in below." : "",
   );
   const trigger = useRef<HTMLButtonElement | null>(null);
   const closeCapture = useCallback(() => {
@@ -257,10 +258,11 @@ export function CheckInPanel({
         save={(a) => change("audience.currentRoom", a)}
         busy={busy}
       />
+      <label className="check roomCountChoice"><input type="checkbox" checked={countMe} disabled={busy} onChange={e => setCountMe(e.target.checked)} />Include my check-in in the room total without my name</label>
       {me.rules.profile.mode !== "attendees" && (
         <p className="hint">
           {me.rules.profile.mode === "private"
-            ? "Only you can see this check-in while your profile is private."
+            ? "Only you can see your name on this check-in while your profile is private."
             : "Only people in your profile audience can see shared check-ins."}
         </p>
       )}
@@ -270,7 +272,7 @@ export function CheckInPanel({
           disabled={busy || !room || !!mode}
           onClick={() => {
             setResult("");
-            change("checkIn", { room });
+            change("checkIn", { room, countMe });
           }}
         >
           {me.checkIn ? "Update check-in" : "Check in for 1 hour"}
@@ -279,7 +281,7 @@ export function CheckInPanel({
           <button
             className="outlined"
             disabled={busy}
-            onClick={() => change("checkIn", null)}
+            onClick={() => { setCountMe(false); change("checkIn", null); }}
           >
             Leave room
           </button>

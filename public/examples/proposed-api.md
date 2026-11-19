@@ -9,6 +9,9 @@ Paths below follow `/api/demo/conferences/{conferenceId}/`. Use `chi26-demo` for
 | Method | Resource | Result |
 | --- | --- | --- |
 | POST | `profiles` | Create a demo profile with a name. Defaults to private. An optional `audience` accepts the same mode and people as a sharing preference. |
+| GET | `rooms` | Read each room’s status, recent report count, sample badge count, and voluntary check-in total. The room list contains no attendee names. |
+| PATCH | `rooms/report` | Set your latest report for a room to `open`, `limited`, or `full`. Send `null` to remove it. Reports expire after 15 minutes. |
+| PATCH | `rooms/demo-badge` | Move one simulated indoor badge to a room with a demo counter, or send `room: null` to leave. |
 | GET | `attendees` | Return profiles visible to the viewer. |
 | GET | `attendees/{id}` | Download the viewer-specific profile, or 404 when the profile is private to them. Guests receive 403. |
 | GET | `attendees?paper={id}` | People who shared a reading list containing this paper with the viewer. |
@@ -20,7 +23,7 @@ Paths below follow `/api/demo/conferences/{conferenceId}/`. Use `chi26-demo` for
 
 ## Who can see what
 
-Every item has its own audience: only me, selected people or all registered conference attendees. The profile audience also applies to each item. Selecting someone for a check-in cannot give them access to a hidden profile. Reading-list downloads, session filters and room lookups use the same viewer-specific projection. A manual check-in expires in one hour and can be cleared early. Adding a session to a plan does not check someone into its room. The camera and photo readers resolve a CHI room locally from its sign or a demo QR. Only the confirmed room name goes into the existing check-in request. Simulated check-ins run on the visitor’s clock. Session times follow the selected conference’s local time.
+Every item has its own audience: only me, selected people or all registered conference attendees. The profile audience also applies to each item. Selecting someone for a check-in cannot give them access to a hidden profile. Reading-list downloads, session filters and room lookups use the same viewer-specific projection. A check-in contributes to the separate room total only when its owner sends `countMe: true`. The latest active room report takes priority over the simulated sensor reading. A manual check-in expires in one hour and can be cleared early. Adding a session to a plan does not check someone into its room. The camera and photo readers resolve a CHI room locally from its sign or a demo QR. Only the confirmed room name goes into the existing check-in request. Simulated check-ins run on the visitor’s clock. Session times follow the selected conference’s local time.
 
 For example, with the profile visible to attendees, the following audience limits room check-ins to Carla:
 ```json

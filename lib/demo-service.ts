@@ -13,6 +13,7 @@ import {
   type Message,
   type Preference,
 } from "./network-model";
+import { badgeField, demoSensor, hasDemoCounter, isSeatReport, reportField, roomBoard } from "./room-status";
 import { validReminder } from "./session-reminders";
 export type DemoStore = {
   rows: Preference[];
@@ -135,6 +136,7 @@ export function serve(
       ? result({
           viewer,
           own: null,
+          roomBoard: roomBoard(conference, [], [], viewer, now),
           directory: [],
           messages: [],
           identities: demoViewers,
@@ -150,6 +152,7 @@ export function serve(
     return result({
       viewer,
       own: me,
+      roomBoard: roomBoard(conference, rows, all, viewer, now),
       directory,
       identities: demoViewers,
       messages: store.messages.filter(
@@ -158,6 +161,20 @@ export function serve(
           (m.sender === viewer || m.recipient === viewer),
       ),
     });
+  if (method === "GET" && route === "rooms")
+    return result({ conferenceId: conference.id, ...roomBoard(conference, rows, all, viewer, now) });
+  if (method === "PATCH" && route === "rooms/report") {
+    const { room, status } = body ?? {};
+    if (!rooms.includes(room) || (status !== null && !isSeatReport(status)))
+      return error(400, "Choose a room and a room status.");
+    return { ...result({ room, status }), changes: [setting(viewer, scope + reportField(room), status === null ? null : { status, at: now })] };
+  }
+  if (method === "PATCH" && route === "rooms/demo-badge") {
+    const room = body?.room;
+    if (room !== null && (typeof room !== "string" || !hasDemoCounter(conference.id, room)))
+      return error(400, "Choose a room with a demo counter.");
+    return { ...result({ room }), changes: [setting(demoSensor, scope + badgeField, room)] };
+  }
   if (method === "GET" && route === "attendees") {
     const paper = url.searchParams.get("paper"),
       session = url.searchParams.get("session"),
@@ -234,11 +251,11 @@ export function serve(
       save(field, { website: value.website, scholar: value.scholar });
     else if (
       field === "checkIn" &&
-      (value === null || rooms.includes(value?.room))
+      (value === null || (rooms.includes(value?.room) && (value.countMe === undefined || typeof value.countMe === "boolean")))
     )
       save(
         field,
-        value ? { room: value.room, expiresAt: now + 3600000 } : null,
+        value ? { room: value.room, expiresAt: now + 3600000, ...(value.countMe === true ? {countMe: true} : {}) } : null,
       );
     else if (
       me.lists.some((l) => field === "papers." + l.id) &&

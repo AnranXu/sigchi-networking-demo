@@ -11,7 +11,10 @@ export async function callApi<T>(
 ): Promise<{ status: number; data: T }> {
   if (isStatic()) {
     const { pagesRequest } = await import("./pages-api");
-    return pagesRequest(path, method, viewer, body);
+    const run = () => pagesRequest(path, method, viewer, body);
+    if (method !== "GET" && navigator.locks)
+      return navigator.locks.request("sigchi-networking-store-write", run);
+    return run();
   }
   const res = await fetch("/api/demo/" + path, {
     method,

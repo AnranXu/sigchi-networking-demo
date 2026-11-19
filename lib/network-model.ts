@@ -1,5 +1,6 @@
 import { people, backgrounds, type Person } from "./demo-fixtures";
 import { defaultConference } from "./conferences";
+import type { RoomBoard } from "./room-status";
 export type Identity = { id: string; name: string };
 export type Audience = {
   mode: "private" | "attendees" | "selected";
@@ -12,7 +13,7 @@ export type ReadingList = {
   paperIds: string[];
   visible: boolean;
 };
-export type CheckIn = { room: string; expiresAt: number };
+export type CheckIn = { room: string; expiresAt: number; countMe?: boolean };
 export type DemoPerson = Person & {
   reminderMinutes: number;
   lists: ReadingList[];
@@ -46,6 +47,7 @@ export type Message = {
   sent: string;
 };
 export type View = {
+  roomBoard: RoomBoard;
   viewer: string;
   own: DemoPerson | null;
   directory: Profile[];
@@ -211,7 +213,7 @@ export function publicProfile(
       : [],
     lists: p.lists.filter((l) => see("list." + l.id)),
     shared: p.going.filter((id) => see("session." + id)),
-    checkIn: see("currentRoom") ? p.checkIn : null,
+    checkIn: see("currentRoom") && p.checkIn ? { room: p.checkIn.room, expiresAt: p.checkIn.expiresAt } : null,
   };
 }
 export function overlap(own: DemoPerson, p: Profile) {

@@ -48,6 +48,7 @@ import {
   type DemoConference,
 } from "../lib/conferences";
 import { roomFromHash } from "../lib/room-identification";
+import { RoomBadge, RoomStatusPage } from "./room-status";
 import { SessionReminders } from "./session-reminders";
 import { Research } from "./research";
 import PeopleBrowser from "./people-browser";
@@ -60,12 +61,14 @@ import {
 type Page =
   | "People"
   | "Program"
+  | "Rooms"
   | "My lists"
   | "My profile"
   | "Messages"
   | "API examples";
 const navigation: [Page, typeof Users][] = [
   ["Program", CalendarDays],
+  ["Rooms", MapPin],
   ["People", Users],
   ["My lists", Bookmark],
   ["My profile", UserRound],
@@ -230,12 +233,14 @@ function ConferenceUI({
     [scholar, setScholar] = useState("");
   const personas = view?.identities || seedViewers;
   const [phoneSearch, setPhoneSearch] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState("");
   const [roomOpen, setRoomOpen] = useState(false);
   const [incomingRoom, setIncomingRoom] = useState<string | null>(null),
     [prefilledRoom, setPrefilledRoom] = useState<string | null>(null);
   useEffect(() => {
     function readLink() {
       if (window.location.hash === "#reminders") setPage("My lists");
+      if (window.location.hash === "#rooms") setPage("Rooms");
       const name = roomFromHash(window.location.hash);
       if (event.roomReaders && name) setIncomingRoom(name);
     }
@@ -337,6 +342,7 @@ function ConferenceUI({
     ]
       .flatMap((c) => (c ? [c.expiresAt] : []))
       .filter((t) => t > Date.now());
+    if (view.roomBoard.refreshAt) deadlines.push(view.roomBoard.refreshAt);
     if (!deadlines.length) return;
     let live = true;
     const t = setTimeout(
@@ -354,6 +360,23 @@ function ConferenceUI({
       clearTimeout(t);
     };
   }, [view, viewer]);
+  useEffect(() => {
+    if (page !== "Rooms" || busy || viewer === "guest" || isStatic()) return;
+    let active = true;
+    let pending = false;
+    async function refreshRooms() {
+      if (document.hidden || pending) return;
+      pending = true;
+      try {
+        const res = await callApi<View["roomBoard"]>(prefix + "rooms", viewer);
+        if (active && res.status === 200) setView(old => old?.viewer === viewer ? { ...old, roomBoard: res.data } : old);
+      } catch { /* Keep the last reading until the next refresh. */ }
+      finally { pending = false; }
+    }
+    const timer = window.setInterval(refreshRooms, 30_000);
+    window.addEventListener("focus", refreshRooms);
+    return () => { active = false; window.clearInterval(timer); window.removeEventListener("focus", refreshRooms); };
+  }, [page, busy, viewer, prefix]);
   const me = view?.own;
   const directory = view?.directory || [];
   const external = directory.filter((p) => p.id !== viewer);
@@ -401,7 +424,7 @@ function ConferenceUI({
     }
   }
   function navigate(p: Page) {
-    if (p !== "My lists" && window.location.hash === "#reminders") {
+    if ((p !== "My lists" && window.location.hash === "#reminders") || (p !== "Rooms" && window.location.hash === "#rooms")) {
       history.replaceState(history.state, "", window.location.pathname + window.location.search);
     }
     setPrefilledRoom(null);
@@ -428,7 +451,7 @@ function ConferenceUI({
   function change(field: string, value: unknown) {
     return savePreference("me/sharing", { field, value });
   }
-  async function savePreference(route: string, body: unknown) {
+  async function savePreference(route: string, body: unknown, confirmation = "Changes saved for " + event.name) {
     if (busy) return;
     setBusy(true);
     setError("");
@@ -436,7 +459,7 @@ function ConferenceUI({
       const r = await request(route, "PATCH", body);
       if (r.status >= 400) throw Error(r.data.error);
       setView(await loadView(viewer, event.id));
-      setNotice("Changes saved for " + event.name);
+      setNotice(confirmation);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -637,9 +660,9 @@ function ConferenceUI({
           CHI {event.year} Home
         </a>
         <nav aria-label="Conference navigation">
-          {navigation.map(([n, I], i) => (
+          {navigation.map(([n, I]) => (
             <React.Fragment key={n}>
-              {(i === 2 || i === 5) && <hr />}
+              {(n === "My lists" || n === "API examples") && <hr />}
               <button
                 aria-current={page === n ? "page" : undefined}
                 onClick={() => navigate(n)}
@@ -775,6 +798,7 @@ function ConferenceUI({
                           Current check-ins · {r}
                         </option>
                       ))}
+                      <option value="rooms">Room status and capacity</option>
                       <option value="attendees">
                         All visible attendee profiles
                       </option>
@@ -854,6 +878,13 @@ function ConferenceUI({
                   </div>
                   <p className="footnote">{fixtureNote}</p>
                 </div>
+              ) : page === "Rooms" ? (
+                <RoomStatusPage board={view.roomBoard} selected={selectedRoom} select={setSelectedRoom} signedIn={!!me} busy={busy}
+                  tryAttendee={() => switchViewer("carla")}
+                  checkIn={room => { navigate("My profile"); setPrefilledRoom(room); setRoomOpen(true); }}
+                  report={(room,status) => savePreference("rooms/report", { room, status }, status ? "Room report saved" : "Room report removed")}
+                  move={room => savePreference("rooms/demo-badge", { room }, "Demo badge location updated")}
+                />
               ) : !me && page !== "Program" ? (
                 <div className="joinWrap">
                   {incomingRoom && (
@@ -1029,6 +1060,9 @@ function ConferenceUI({
                           {s.time} <span>·</span> {s.room}
                         </div>
                         <h2>{s.name}</h2>
+                        <button type="button" className="programRoomStatus" onClick={() => { setSelectedRoom(s.room); navigate("Rooms"); }} aria-label={"Room status for " + s.room}>
+                          <span>Room now</span><RoomBadge status={view.roomBoard.rooms.find(r => r.room === s.room)?.status ?? "unknown"}/>
+                        </button>
                         {me && (
                           <div className="sessionControls">
                             <label className="check">

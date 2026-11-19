@@ -14,6 +14,10 @@ A SIGCHI hackathon prototype for sharing a profile, finding people through paper
 6. Open [My lists and reminders](https://anranxu.github.io/sigchi-networking-demo/#reminders). Sessions in your plan and sessions with a saved paper appear together. Choose a lead time and keep the demo open. **Try a reminder** runs a three-second preview using a saved session from the selected conference. **Device alerts** also displays reminders through supported browsers when allowed.
 7. Open **API examples** to inspect or download a viewer-specific response. The source fixture and worked examples are linked there.
 
+## Room status and capacity
+
+Open [Rooms](https://anranxu.github.io/sigchi-networking-demo/#rooms) and choose **Try as Carla**. Report **Space available**, **Almost full**, or **Full**. Switch attendees to see the update. Each person has one report per room, and reports expire after 15 minutes. Open **Try indoor counting** and move the demo badge to **P1 - Room 115** to see the count go from 39 to 40. Moving the badge to another room updates both counts. The figures are simulated. A separate voluntary check-in total includes only people who checked the box when checking in. GitHub Pages keeps this demo in your browser.
+
 ## Conference data and people
 
 The demo uses 14 real conference items and their 17 scheduled sessions from [the CHI 2026 program snapshot](https://files.sigchi.org/conference/cache/10142/86/program). Paper links open official program entries with publication DOIs. Author matches use the program’s person IDs and verified affiliations. Suggested reading is an editorial match to public research interests. It does not assert authorship or personal preference.
