@@ -2001,3 +2001,285 @@ main {
   display: inline-block;
 }
 .reading{grid-template-columns:minmax(0,1fr)}.reading>.record{min-width:0}.recordHead{flex-wrap:wrap}.recordHead>.row{min-width:0;flex-wrap:wrap}.recordHead .row>div{min-width:0;overflow-wrap:anywhere}.recordHead>.outlined{max-width:100%;white-space:normal}.recordHead .row h3{overflow-wrap:anywhere}
+.simpleProfile,
+.simpleSignup {
+  max-width: 720px;
+}
+.profileMain,
+.simpleSignup {
+  padding: clamp(16px, 3vw, 28px);
+}
+.profileIdentity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+.profileIdentity > div {
+  min-width: 0;
+}
+.profileIdentity h2,
+.profileIdentity p {
+  overflow-wrap: anywhere;
+}
+.profileIdentity p {
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+.audienceChoice,
+.audienceMembers {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.audienceChoice legend {
+  font-size: 1.04rem;
+  font-weight: 650;
+  padding: 0;
+  margin-bottom: 10px;
+}
+.audienceOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.audienceOptions label,
+.simpleSignup .audienceOptions label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 9px 13px;
+  min-height: 44px;
+  border: 1px solid #c8d0df;
+  border-radius: 7px;
+  background: white;
+  color: #35405a;
+  font-size: 0.88rem;
+  font-weight: 520;
+  cursor: pointer;
+}
+.audienceOptions label.chosen {
+  color: #23469a;
+  background: #edf2ff;
+  border: 2px solid #4768bf;
+  padding: 8px 12px;
+  font-weight: 650;
+}
+.audienceOptions label input[type="radio"] {
+  position: static;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  margin: 0;
+  accent-color: #315ecb;
+}
+.audienceOptions label:has(input:focus-visible) {
+  outline: 3px solid #244997;
+  outline-offset: 3px;
+}
+.audienceMembers {
+  margin-top: 12px;
+}
+.audienceMembers legend {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.audienceMembers .personChoices {
+  margin: 0;
+}
+.audienceMembers .personChoices label,
+.simpleSignup .personChoices label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 450;
+  font-size: 0.875rem;
+  min-height: 38px;
+  margin: 0;
+  cursor: pointer;
+}
+.sharingExplanation,
+.roomEditor > p {
+  font-size: 0.875rem;
+  margin: 11px 0;
+  line-height: 1.5;
+}
+.profileMain .textBtn {
+  font-size: 0.875rem;
+}
+.profileExtras {
+  padding: 0 18px;
+}
+.profileDisclosure {
+  min-width: 0;
+}
+.profileDisclosure + .profileDisclosure {
+  border-top: 1px solid var(--line);
+}
+.profileDisclosure summary,
+.listSharing summary {
+  cursor: pointer;
+}
+.profileDisclosure summary {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 15px 2px;
+  min-height: 54px;
+  list-style: none;
+  font-weight: 590;
+}
+.profileDisclosure summary::-webkit-details-marker {
+  display: none;
+}
+.disclosureIcon {
+  color: #50688f;
+  display: inline-flex;
+}
+.disclosureLabel {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.disclosureLabel small {
+  font-weight: 400;
+  margin-left: 9px;
+  font-size: 0.8rem;
+}
+.profileDisclosure[open] > summary > svg {
+  transform: rotate(180deg);
+}
+.disclosureBody {
+  padding: 0 2px 16px;
+}
+.audienceSelect,
+.reading .linksForm > label,
+.simpleSignup .nameField {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  margin: 8px 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.audienceSelect select,
+.simpleSignup .nameField input,
+.linksForm input {
+  min-width: 0;
+  max-width: 100%;
+  font: inherit;
+  font-weight: 450;
+  border: 1px solid #c8d0df;
+  border-radius: 6px;
+  background: white;
+  color: var(--text);
+  min-height: 44px;
+  padding: 8px 11px;
+}
+.simpleSignup .nameField {
+  margin: 17px 0 20px;
+}
+.simpleSignup .nameField input,
+.reading .linksForm input {
+  width: 100%;
+  margin: 0;
+}
+.simpleSignup > .primary {
+  margin-top: 18px;
+}
+.roomEditor .formRow {
+  margin-top: 12px;
+}
+.roomEditor .hint,
+.listSharing .hint {
+  font-size: 0.83rem;
+}
+.linksForm {
+  margin: 0 0 13px;
+}
+.profileExtras .research h3 {
+  margin-top: 0;
+}
+.listSharing {
+  margin: 8px 0;
+  font-size: 0.875rem;
+}
+.listSharing summary {
+  color: #304e86;
+  min-height: 32px;
+  padding: 7px 0;
+}
+.listSharing .audienceSelect,
+.sessionControls .audienceSelect {
+  margin: 4px 0;
+}
+.sessionControls > .audienceInline {
+  min-width: 0;
+}
+.simpleSignup .audienceMembers input {
+  width: 18px;
+}
+.joinWrap .simpleSignup > h2 {
+  font-size: 1.35rem;
+}
+.audienceOptions label:has(input:disabled) {
+  cursor: default;
+}
+.simpleProfile .recordHead,
+.profileExtras {
+  min-width: 0;
+}
+@media (max-width: 680px) {
+  .profileExtras {
+    padding-inline: 14px;
+  }
+  .disclosureLabel small {
+    display: block;
+    margin: 3px 0 0;
+  }
+  .audienceOptions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+  }
+  .audienceOptions label,
+  .simpleSignup .audienceOptions label {
+    justify-content: flex-start;
+  }
+  .audienceMembers .personChoices label,
+  .simpleSignup .personChoices label {
+    min-height: 44px;
+  }
+  .audienceSelect select,
+  .simpleSignup .nameField input,
+  .linksForm input {
+    font-size: 1rem;
+  }
+  .listSharing summary {
+    min-height: 44px;
+  }
+  .profileMain .textBtn {
+    white-space: normal;
+  }
+  .canvas > .simpleProfile {
+    margin: 14px;
+  }
+  .roomEditor .formRow {
+    flex-wrap: wrap;
+  }
+  .simpleSignup .primary {
+    width: 100%;
+  }
+}
+@media (forced-colors: active) {
+  .audienceOptions label.chosen {
+    border-color: Highlight;
+  }
+}

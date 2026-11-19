@@ -92,6 +92,27 @@ assert.equal(
 );
 set("audience.profile", { mode: "private", people: [] });
 assert.equal(get("carla", person).status, 404);
+const namedAudience = req("guest", "POST", "profiles", {
+  name: "Invite only",
+  audience: only(["carla"]),
+});
+assert.equal(namedAudience.status, 201);
+assert.equal(get("carla", "attendees/" + namedAudience.data.id).status, 200);
+assert.equal(get("yun", "attendees/" + namedAudience.data.id).status, 404);
+const openProfile = req("guest", "POST", "profiles", {
+  name: "Open profile",
+  audience: everyone,
+});
+assert.equal(get("yun", "attendees/" + openProfile.data.id).status, 200);
+const countBefore = get("guest", "state").data.identities.length;
+assert.equal(
+  req("guest", "POST", "profiles", {
+    name: "Invalid",
+    audience: only(["missing-id"]),
+  }).status,
+  400,
+);
+assert.equal(get("guest", "state").data.identities.length, countBefore);
 for (const b of backgrounds) {
   assert.ok(b.source.startsWith("https://"));
   assert.ok(b.recommended.every((id) => papers.some((p) => p.id === id)));

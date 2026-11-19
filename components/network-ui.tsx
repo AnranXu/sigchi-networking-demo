@@ -4,6 +4,8 @@ import {
   Users,
   UserRound,
   CalendarDays,
+  MapPin,
+  Link2,
   Network,
   MessagesSquare,
   Code2,
@@ -36,6 +38,7 @@ import {
   permits,
   audienceName,
   publicProfile,
+  type Audience,
   type Profile,
   type View,
 } from "@/lib/network-model";
@@ -50,7 +53,7 @@ import { Research } from "./research";
 import PeopleBrowser from "./people-browser";
 import {
   AudienceControl,
-  SharingPanel,
+  ProfileDisclosure,
   CheckInPanel,
   CreateProfile,
 } from "./sharing";
@@ -166,6 +169,7 @@ export default function NetworkUI() {
     [scholar, setScholar] = useState("");
   const personas = view?.identities || seedViewers;
   const [phoneSearch, setPhoneSearch] = useState(false);
+  const [roomOpen, setRoomOpen] = useState(false);
   const [previewViewer, setPreviewViewer] = useState("carla");
   const mobileMenu = useRef<HTMLButtonElement>(null),
     sideNav = useRef<HTMLElement>(null),
@@ -267,7 +271,11 @@ export default function NetworkUI() {
   const me = view?.own;
   const directory = view?.directory || [];
   const external = directory.filter((p) => p.id !== viewer);
+  const recipients = personas.filter(
+    (p) => p.id !== viewer && p.id !== "guest",
+  );
   function switchViewer(id: string) {
+    setRoomOpen(false);
     setViewer(id);
     localStorage.setItem("sigchi.chi26.persona", id);
     setProfile(null);
@@ -282,7 +290,7 @@ export default function NetworkUI() {
     setFilter("");
     setNavOpen(false);
   }
-  async function createProfile(name: string) {
+  async function createProfile(name: string, audience: Audience) {
     if (busy) return;
     setBusy(true);
     setError("");
@@ -291,13 +299,13 @@ export default function NetworkUI() {
         prefix + "profiles",
         viewer,
         "POST",
-        { name },
+        { name, audience },
       );
       if (r.status !== 201)
         throw Error(r.data.error || "Could not create profile.");
       switchViewer(r.data.id);
       navigate("People");
-      setNotice("Your private profile is ready");
+      setNotice("Your profile is ready");
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -305,6 +313,7 @@ export default function NetworkUI() {
     }
   }
   function navigate(p: Page) {
+    setRoomOpen(false);
     requestAnimationFrame(() => pageTitle.current?.focus());
     setPage(p);
     setNavOpen(false);
@@ -410,17 +419,26 @@ export default function NetworkUI() {
                   <small>{l.paperIds.length} papers</small>
                 </div>
               </div>
-              <button
-                className="outlined"
-                onClick={() => navigate("My profile")}
-              >
-                Edit audience
-              </button>
             </div>
-            <p className="muted">
-              Audience · {audienceName(me.rules["list." + l.id])}
-              {!me.profileVisible ? " · Profile is private" : ""}
-            </p>
+            <details className="listSharing">
+              <summary>
+                Sharing · {audienceName(me.rules["list." + l.id])}
+              </summary>
+              <AudienceControl
+                label={"Who can see " + l.name + "?"}
+                rule={me.rules["list." + l.id]}
+                people={recipients}
+                busy={busy}
+                save={(a) => change("audience.list." + l.id, a)}
+              />
+              {me.rules.profile.mode !== "attendees" && (
+                <p className="hint">
+                  {me.profileVisible
+                    ? "Your profile audience also applies to this list."
+                    : "This list is hidden while your profile is private."}
+                </p>
+              )}
+            </details>
             <ul className="lines">
               {l.paperIds.map((id) => (
                 <li key={id}>
@@ -586,7 +604,7 @@ export default function NetworkUI() {
               Hackathon demo · Public research profiles · Simulated plans and
               room check-ins.
             </span>
-            {me && (
+            {me && page !== "My profile" && (
               <button
                 className="textBtn"
                 onClick={() => navigate("My profile")}
@@ -714,7 +732,11 @@ export default function NetworkUI() {
                 </div>
               ) : !me && page !== "Program" ? (
                 <div className="joinWrap">
-                  <CreateProfile onCreate={createProfile} busy={busy} />
+                  <CreateProfile
+                    onCreate={createProfile}
+                    people={recipients}
+                    busy={busy}
+                  />
                   <p>
                     To explore an existing example, choose a name under{" "}
                     <b>View as</b>.
@@ -730,109 +752,120 @@ export default function NetworkUI() {
                   filter={filter}
                   setFilter={setFilter}
                   open={setProfile}
-                  manage={() => navigate("My profile")}
+                  manage={() => {
+                    navigate("My profile");
+                    setRoomOpen(true);
+                  }}
                   query={q}
                   setQuery={setQ}
                 />
               ) : page === "My lists" ? (
                 <div className="reading">{myLists()}</div>
               ) : page === "My profile" && me ? (
-                <div className="reading">
-                  <section className="panel record">
-                    <div className="row">
+                <div className="reading simpleProfile" key={me.id}>
+                  <section className="panel profileMain">
+                    <div className="profileIdentity">
                       <Avatar name={me.name} color={me.color} large />
                       <div>
                         <h2>{me.name}</h2>
-                        <p>{me.affiliation}</p>
+                        {me.affiliation && <p>{me.affiliation}</p>}
                       </div>
                     </div>
-                    <p className="privacySummary">
-                      Profile audience · {audienceName(me.rules.profile)}
+                    <AudienceControl
+                      primary
+                      label="Who can see my profile?"
+                      rule={me.rules.profile}
+                      people={recipients}
+                      busy={busy}
+                      save={(a) => change("audience.profile", a)}
+                    />
+                    <p className="sharingExplanation">
+                      {me.rules.profile.mode === "private"
+                        ? "Your profile and anything you share are hidden from other attendees."
+                        : me.rules.profile.mode === "selected"
+                          ? "Only the people you choose can see your profile and anything you share."
+                          : "Registered attendees can find your profile. You choose which lists, plans and check-ins to share."}
                     </p>
                     <button
-                      className="outlined"
+                      className="textBtn"
                       onClick={() => setPreviewing(true)}
                     >
                       <Eye size={16} />
                       Preview as another attendee
                     </button>
                   </section>
-                  {seedViewers.some((p) => p.id === me.id) && (
-                    <section className="panel record">
-                      <Research id={me.id} />
-                    </section>
-                  )}
-                  <CheckInPanel
-                    key={me.id}
-                    me={me}
-                    change={change}
-                    busy={busy}
-                  />
-                  <SharingPanel
-                    me={me}
-                    identities={personas}
-                    change={change}
-                    busy={busy}
-                  />
-                  <section className="panel record">
-                    <h2>Research links</h2>
-                    <p>
-                      Research link audience · {audienceName(me.rules.links)}
-                    </p>
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        change("links", {
-                          website: web.trim(),
-                          scholar: scholar.trim(),
-                        });
-                      }}
+                  <section
+                    className="panel profileExtras"
+                    aria-label="Optional profile settings"
+                  >
+                    <ProfileDisclosure
+                      title="Current room"
+                      status={
+                        me.checkIn ? me.checkIn.room : "No active check-in"
+                      }
+                      icon={<MapPin size={19} />}
+                      open={roomOpen}
+                      onToggle={setRoomOpen}
                     >
-                      <label>
-                        Personal website
-                        <input
-                          type="url"
-                          value={web}
-                          onChange={(e) => setWeb(e.target.value)}
-                          placeholder="https://…"
-                        />
-                      </label>
-                      <label>
-                        Google Scholar
-                        <input
-                          type="url"
-                          value={scholar}
-                          onChange={(e) => setScholar(e.target.value)}
-                          placeholder="https://scholar.google.com/…"
-                        />
-                      </label>
-                      <button className="outlined" disabled={busy}>
-                        Save links
-                      </button>
-                    </form>
-                  </section>
-                  <section className="panel record">
-                    <h2>Lists and session plans</h2>
-                    <p>
-                      Choose individual lists and sessions to share. A private
-                      profile hides them all from other attendees.
-                    </p>
-                    <div className="formRow">
-                      <button
-                        className="outlined"
-                        onClick={() => navigate("My lists")}
+                      <CheckInPanel
+                        me={me}
+                        people={recipients}
+                        change={change}
+                        busy={busy}
+                      />
+                    </ProfileDisclosure>
+                    <ProfileDisclosure
+                      title="Research links"
+                      icon={<Link2 size={19} />}
+                    >
+                      <form
+                        className="linksForm"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          change("links", {
+                            website: web.trim(),
+                            scholar: scholar.trim(),
+                          });
+                        }}
                       >
-                        <Bookmark size={16} />
-                        My lists
-                      </button>
-                      <button
-                        className="outlined"
-                        onClick={() => navigate("Program")}
+                        <label>
+                          Personal website
+                          <input
+                            type="url"
+                            value={web}
+                            onChange={(e) => setWeb(e.target.value)}
+                            placeholder="https://…"
+                          />
+                        </label>
+                        <label>
+                          Google Scholar
+                          <input
+                            type="url"
+                            value={scholar}
+                            onChange={(e) => setScholar(e.target.value)}
+                            placeholder="https://scholar.google.com/…"
+                          />
+                        </label>
+                        <button className="outlined" disabled={busy}>
+                          Save links
+                        </button>
+                      </form>
+                      <AudienceControl
+                        label="Who can see my research links?"
+                        rule={me.rules.links}
+                        people={recipients}
+                        busy={busy}
+                        save={(a) => change("audience.links", a)}
+                      />
+                    </ProfileDisclosure>
+                    {seedViewers.some((p) => p.id === me.id) && (
+                      <ProfileDisclosure
+                        title="Research and publications"
+                        icon={<BookOpen size={19} />}
                       >
-                        <CalendarDays size={16} />
-                        Session visibility
-                      </button>
-                    </div>
+                        <Research id={me.id} />
+                      </ProfileDisclosure>
+                    )}
                   </section>
                 </div>
               ) : page === "Program" ? (
@@ -864,11 +897,9 @@ export default function NetworkUI() {
                             </label>
                             {going && (
                               <AudienceControl
-                                label={"Plan · " + s.name}
+                                label="Who can see this plan?"
                                 rule={me.rules["session." + s.id]}
-                                people={personas.filter(
-                                  (p) => p.id !== viewer && p.id !== "guest",
-                                )}
+                                people={recipients}
                                 busy={busy}
                                 save={(a) =>
                                   change("audience.session." + s.id, a)

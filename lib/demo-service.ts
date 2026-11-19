@@ -40,6 +40,26 @@ function safeLink(value: unknown, scholar = false) {
     return false;
   }
 }
+function readAudience(value: unknown, allowedIds: string[]): Audience | null {
+  if (
+    !value ||
+    typeof value !== "object" ||
+    !("mode" in value) ||
+    !("people" in value)
+  )
+    return null;
+  const { mode, people } = value;
+  if (
+    (mode !== "private" && mode !== "attendees" && mode !== "selected") ||
+    !Array.isArray(people) ||
+    !people.every((id) => typeof id === "string" && allowedIds.includes(id))
+  )
+    return null;
+  return {
+    mode,
+    people: mode === "selected" ? [...new Set<string>(people)] : [],
+  };
+}
 export function serve(
   path: string,
   method: string,
@@ -60,10 +80,21 @@ export function serve(
     const name = typeof body?.name === "string" ? body.name.trim() : "";
     if (!name || name.length > 80 || /[\u0000-\u001f\u007f]/.test(name))
       return error(400, "Enter a name between 1 and 80 characters.");
+    const visibility =
+      body.audience === undefined
+        ? audience(false)
+        : readAudience(
+            body.audience,
+            people.map((p) => p.id),
+          );
+    if (!visibility) return error(400, "Choose a valid profile audience.");
     const id = "member-" + crypto.randomUUID();
     return {
       ...result({ id, name }, 201),
-      changes: [setting(id, "identity", name)],
+      changes: [
+        setting(id, "identity", name),
+        setting(id, "audience.profile", visibility),
+      ],
     };
   }
   const all = restore(store.rows, now),
@@ -134,18 +165,12 @@ export function serve(
       field.startsWith("audience.") &&
       Object.hasOwn(me.rules, field.slice(9))
     ) {
-      const a = value as Audience;
-      if (
-        !a ||
-        !["private", "attendees", "selected"].includes(a.mode) ||
-        !Array.isArray(a.people) ||
-        a.people.some((id) => id === viewer || !people.some((p) => p.id === id))
-      )
-        return error(400, "Choose a valid audience.");
-      save(field, {
-        mode: a.mode,
-        people: a.mode === "selected" ? [...new Set(a.people)] : [],
-      });
+      const a = readAudience(
+        value,
+        people.filter((p) => p.id !== viewer).map((p) => p.id),
+      );
+      if (!a) return error(400, "Choose a valid audience.");
+      save(field, a);
     } else if (
       (field === "profile" || me.lists.some((l) => field === "list." + l.id)) &&
       typeof value === "boolean"

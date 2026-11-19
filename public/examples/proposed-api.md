@@ -8,7 +8,7 @@ Paths below follow `/api/demo/conferences/chi26-demo/`.
 
 | Method | Resource | Result |
 | --- | --- | --- |
-| POST | `profiles` | Create a private, name-only demo profile. Input `{"name":"Jamie Example"}`. |
+| POST | `profiles` | Create a demo profile with a name. Defaults to private. An optional `audience` accepts the same mode and people as a sharing preference. |
 | GET | `attendees` | Return profiles visible to the viewer. |
 | GET | `attendees/{id}` | Download the viewer-specific profile, or 404 when the profile is private to them. Guests receive 403. |
 | GET | `attendees?paper={id}` | People who shared a reading list containing this paper with the viewer. |

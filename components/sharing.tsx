@@ -1,180 +1,194 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { MapPin, ShieldCheck } from "lucide-react";
-import { rooms, sessions } from "../lib/demo-fixtures";
+import React, { useId, useState, type ReactNode } from "react";
+import { ChevronDown } from "lucide-react";
+import { rooms } from "../lib/demo-fixtures";
 import {
-  audienceName,
+  audience,
   type Audience,
   type DemoPerson,
   type Identity,
 } from "../lib/network-model";
+
+const choices = [
+  { mode: "private", label: "Only me" },
+  { mode: "selected", label: "Selected people" },
+  { mode: "attendees", label: "All attendees" },
+] as const;
 type Save = (field: string, value: unknown) => Promise<void>;
+
 export function AudienceControl({
   label,
   rule,
   people,
   save,
   busy,
+  primary = false,
 }: {
   label: string;
   rule: Audience;
   people: Identity[];
   save: (rule: Audience) => void;
   busy: boolean;
+  primary?: boolean;
 }) {
-  const [mode, setMode] = useState(rule.mode),
-    [selected, setSelected] = useState(rule.people);
-  const signature = JSON.stringify(rule);
-  useEffect(() => {
-    setMode(rule.mode);
-    setSelected(rule.people);
-  }, [signature]);
-  const value = { mode, people: mode === "selected" ? selected : [] };
-  const changed = JSON.stringify(value) !== signature;
+  const name = useId();
+  function choose(mode: Audience["mode"]) {
+    if (mode !== rule.mode) save({ mode, people: [] });
+  }
   return (
-    <div className="permissionRow">
-      <div className="permissionHead">
-        <b>{label}</b>
-        <select
-          aria-label={"Audience for " + label}
-          value={mode}
-          disabled={busy}
-          onChange={(e) => {
-            const m = e.target.value as Audience["mode"];
-            setMode(m);
-            if (m !== "selected") save({ mode: m, people: [] });
-          }}
-        >
-          <option value="private">Only me</option>
-          <option value="selected">Selected people</option>
-          <option value="attendees">Conference attendees</option>
-        </select>
-      </div>
-      {mode === "selected" && (
-        <fieldset>
-          <legend>People who can see {label.toLowerCase()}</legend>
+    <div className={primary ? "audiencePrimary" : "audienceInline"}>
+      {primary ? (
+        <fieldset className="audienceChoice" disabled={busy}>
+          <legend>{label}</legend>
+          <div className="audienceOptions">
+            {choices.map(({ mode, label: option }) => (
+              <label key={mode} className={rule.mode === mode ? "chosen" : ""}>
+                <input
+                  type="radio"
+                  name={name}
+                  checked={rule.mode === mode}
+                  onChange={() => choose(mode)}
+                />
+                <span>{option}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      ) : (
+        <label className="audienceSelect">
+          <span id={name}>{label}</span>
+          <select aria-labelledby={name}
+            disabled={busy}
+            value={rule.mode}
+            onChange={(e) => choose(e.target.value as Audience["mode"])}
+          >
+            {choices.map((c) => (
+              <option key={c.mode} value={c.mode}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      {rule.mode === "selected" && (
+        <fieldset className="audienceMembers" disabled={busy}>
+          <legend>Choose people</legend>
           <div className="personChoices">
             {people.map((p) => (
               <label key={p.id}>
                 <input
                   type="checkbox"
-                  checked={selected.includes(p.id)}
+                  checked={rule.people.includes(p.id)}
                   onChange={(e) =>
-                    setSelected(
-                      e.target.checked
-                        ? [...selected, p.id]
-                        : selected.filter((id) => id !== p.id),
-                    )
+                    save({
+                      mode: "selected",
+                      people: e.target.checked
+                        ? [...rule.people, p.id]
+                        : rule.people.filter((id) => id !== p.id),
+                    })
                   }
                 />
                 {p.name}
               </label>
             ))}
           </div>
-          <button
-            className="outlined"
-            disabled={busy || !changed}
-            onClick={() => save(value)}
-          >
-            Save audience
-          </button>
         </fieldset>
       )}
     </div>
   );
 }
-export function SharingPanel({
-  me,
-  identities,
-  change,
-  busy,
+
+export function ProfileDisclosure({
+  title,
+  status,
+  icon,
+  children,
+  open,
+  onToggle,
 }: {
-  me: DemoPerson;
-  identities: Identity[];
-  change: Save;
-  busy: boolean;
+  title: string;
+  status?: string;
+  icon: ReactNode;
+  children: ReactNode;
+  open?: boolean;
+  onToggle?: (open: boolean) => void;
 }) {
-  const fields = [
-    ["profile", "Conference profile"],
-    ["links", "Research links"],
-    ["currentRoom", "Current room"],
-    ...me.lists.map((l) => ["list." + l.id, l.name]),
-    ...sessions.map((s) => ["session." + s.id, "Plan · " + s.name]),
-  ];
   return (
-    <section className="panel record permissionPanel">
-      <h2>
-        <ShieldCheck size={21} />
-        Who can see my information?
-      </h2>
-      <p>
-        Your profile audience sets the outer limit. Each item can have a smaller
-        audience. Session plans appear only for sessions in your plan.
-      </p>
-      {fields.map(([key, label]) => (
-        <AudienceControl
-          key={me.id + key}
-          label={label}
-          rule={me.rules[key]}
-          people={identities.filter((p) => p.id !== me.id && p.id !== "guest")}
-          busy={busy}
-          save={(rule) => change("audience." + key, rule)}
-        />
-      ))}
-    </section>
+    <details
+      className="profileDisclosure"
+      open={open}
+      onToggle={onToggle ? (e) => onToggle(e.currentTarget.open) : undefined}
+    >
+      <summary>
+        <span className="disclosureIcon">{icon}</span>
+        <span className="disclosureLabel">
+          {title}
+          {status && <small>{status}</small>}
+        </span>
+        <ChevronDown aria-hidden="true" size={17} />
+      </summary>
+      <div className="disclosureBody">{children}</div>
+    </details>
   );
 }
+
 export function CheckInPanel({
   me,
+  people,
   change,
   busy,
 }: {
   me: DemoPerson;
+  people: Identity[];
   change: Save;
   busy: boolean;
 }) {
   const [room, setRoom] = useState(me.checkIn?.room || rooms[0]);
-  const until = me.checkIn
-    ? new Date(me.checkIn.expiresAt).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "";
   return (
-    <section className="panel record checkInPanel">
-      <h2>
-        <MapPin size={20} />
-        My current room
-      </h2>
-      <p>
-        Check in manually for one demo hour. You can leave at any time. Your
-        session plan stays separate.
-      </p>
-      <div className="checkStatus">
-        {me.checkIn ? (
-          <>
-            <strong>{me.checkIn.room}</strong> · until {until}
-          </>
-        ) : (
-          "No active check-in"
-        )}
-      </div>
-      <div className="formRow">
+    <div className="roomEditor">
+      {me.checkIn && (
+        <p>
+          Checked into <strong>{me.checkIn.room}</strong> until{" "}
+          {new Date(me.checkIn.expiresAt).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+          .
+        </p>
+      )}
+      <label className="audienceSelect">
+        <span>Room</span>
         <select
-          aria-label="Choose my current room"
           value={room}
+          disabled={busy}
           onChange={(e) => setRoom(e.target.value)}
         >
           {rooms.map((r) => (
             <option key={r}>{r}</option>
           ))}
         </select>
+      </label>
+      <AudienceControl
+        label="Who can see this check-in?"
+        rule={me.rules.currentRoom}
+        people={people}
+        save={(a) => change("audience.currentRoom", a)}
+        busy={busy}
+      />
+      {me.rules.profile.mode !== "attendees" && (
+        <p className="hint">
+          {me.rules.profile.mode === "private"
+            ? "Only you can see this check-in while your profile is private."
+            : "Only people in your profile audience can see shared check-ins."}
+        </p>
+      )}
+      <div className="formRow">
         <button
           className="primary"
           disabled={busy}
           onClick={() => change("checkIn", { room })}
         >
-          {me.checkIn ? "Update check-in" : "Check in"}
+          {me.checkIn ? "Update check-in" : "Check in for 1 hour"}
         </button>
         {me.checkIn && (
           <button
@@ -186,49 +200,60 @@ export function CheckInPanel({
           </button>
         )}
       </div>
-      <p className="hint">
-        Room audience · {audienceName(me.rules.currentRoom)}
-        {!me.profileVisible ? " · Profile is private" : ""}
-      </p>
-    </section>
+    </div>
   );
 }
+
 export function CreateProfile({
   onCreate,
+  people,
   busy,
 }: {
-  onCreate: (name: string) => void;
+  onCreate: (name: string, rule: Audience) => void;
+  people: Identity[];
   busy: boolean;
 }) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState(""),
+    [rule, setRule] = useState<Audience>(audience(false));
   return (
     <form
-      className="joinCard panel"
+      className="joinCard panel simpleSignup"
       onSubmit={(e) => {
         e.preventDefault();
-        if (name.trim()) onCreate(name.trim());
+        if (name.trim()) onCreate(name.trim(), rule);
       }}
     >
       <h2>Create your conference profile</h2>
-      <p>
-        Enter your name to start. Your profile is private until you choose who
-        can see it.
-      </p>
-      <label htmlFor="display-name">Your name</label>
-      <div className="formRow">
+      <label className="nameField" htmlFor="display-name">
+        Your name
         <input
           id="display-name"
-          autoComplete="off"
+          autoComplete="name"
           maxLength={80}
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Name to display"
         />
-        <button className="primary" disabled={busy || !name.trim()}>
-          Create profile
-        </button>
-      </div>
+      </label>
+      <AudienceControl
+        primary
+        label="Who can see my profile?"
+        rule={rule}
+        people={people}
+        save={setRule}
+        busy={busy}
+      />
+      <button
+        className="primary"
+        disabled={
+          busy ||
+          !name.trim() ||
+          (rule.mode === "selected" && !rule.people.length)
+        }
+      >
+        Create profile
+      </button>
     </form>
   );
 }
