@@ -24,9 +24,17 @@ import {
   Orbit,
   FlaskConical,
 } from "lucide-react";
-import { sessions, papers, personas, fixtureNote } from "@/lib/demo-fixtures";
+import {
+  sessions,
+  papers,
+  personas as seedViewers,
+  rooms,
+  fixtureNote,
+} from "@/lib/demo-fixtures";
 import {
   overlap,
+  permits,
+  audienceName,
   publicProfile,
   type Profile,
   type View,
@@ -38,6 +46,14 @@ import {
   downloadJson,
   isStatic,
 } from "@/lib/client-api";
+import { Research } from "./research";
+import PeopleBrowser from "./people-browser";
+import {
+  AudienceControl,
+  SharingPanel,
+  CheckInPanel,
+  CreateProfile,
+} from "./sharing";
 type Page =
   | "People"
   | "Program"
@@ -78,30 +94,6 @@ function Avatar({
     >
       {initials(name)}
     </span>
-  );
-}
-function Toggle({
-  on,
-  label,
-  change,
-  disabled = false,
-}: {
-  on: boolean;
-  label: string;
-  change: () => void;
-  disabled?: boolean;
-}) {
-  return (
-    <button
-      role="switch"
-      aria-checked={on}
-      aria-label={label}
-      disabled={disabled}
-      className={"switch " + (on ? "on" : "")}
-      onClick={change}
-    >
-      <span />
-    </button>
   );
 }
 function Dialog({
@@ -151,25 +143,14 @@ function Dialog({
     </dialog>
   );
 }
-const captions: Record<Page, string> = {
-  People: "Find attendees by research interest, paper, or session.",
-  Program: "Explore the demo program and choose which session plans to share.",
-  "My lists": "Choose which reading lists other attendees can discover.",
-  "My profile": "Manage what registered attendees can see at this conference.",
-  Messages: "Conversations between fictional attendees in this demo.",
-  "API examples":
-    "Inspect and download the responses behind the networking features.",
-};
 type Trace = { method: string; path: string; status: number; data: any };
 export default function NetworkUI() {
-  const [viewer, setViewer] = useState("mira"),
+  const [viewer, setViewer] = useState("guest"),
     [view, setView] = useState<View | null>(null),
     [page, setPage] = useState<Page>("People");
   const [tab, setTab] = useState("all"),
     [q, setQ] = useState(""),
-    [filter, setFilter] = useState(""),
-    [filtersOpen, setFiltersOpen] = useState(false),
-    [authorOnly, setAuthorOnly] = useState(false);
+    [filter, setFilter] = useState("");
   const [profile, setProfile] = useState<string | null>(null),
     [previewing, setPreviewing] = useState(false),
     [thread, setThread] = useState<string | null>(null),
@@ -183,11 +164,36 @@ export default function NetworkUI() {
     [probe, setProbe] = useState("attendees"),
     [web, setWeb] = useState(""),
     [scholar, setScholar] = useState("");
+  const personas = view?.identities || seedViewers;
+  const [phoneSearch, setPhoneSearch] = useState(false);
+  const [previewViewer, setPreviewViewer] = useState("carla");
+  const mobileMenu = useRef<HTMLButtonElement>(null),
+    sideNav = useRef<HTMLElement>(null),
+    pageTitle = useRef<HTMLHeadingElement>(null);
+  function closeMobile() {
+    setNavOpen(false);
+    requestAnimationFrame(() => mobileMenu.current?.focus());
+  }
+  useEffect(() => {
+    if (!navOpen) return;
+    const mq = window.matchMedia("(min-width:991px)");
+    const close = () => {
+      if (mq.matches) setNavOpen(false);
+    };
+    mq.addEventListener("change", close);
+    sideNav.current?.querySelector<HTMLButtonElement>(".mobileClose")?.focus();
+    return () => mq.removeEventListener("change", close);
+  }, [navOpen]);
   const generation = useRef(0);
   useEffect(() => {
     try {
-      const s = localStorage.getItem("sigchi.demo.persona");
-      if (personas.some((p) => p.id === s)) setViewer(s!);
+      const s = localStorage.getItem("sigchi.chi26.persona");
+      if (
+        s &&
+        (seedViewers.some((p) => p.id === s) ||
+          /^member-[a-f0-9-]{36}$/.test(s))
+      )
+        setViewer(s);
     } catch {}
   }, []);
   useEffect(() => {
@@ -199,7 +205,11 @@ export default function NetworkUI() {
       const data = await loadView(viewer);
       if (id === generation.current) setView(data);
     })().catch((e) => {
-      if (id === generation.current) setError(e.message);
+      if (id === generation.current) {
+        if (viewer.startsWith("member-") && e.message.includes("registered"))
+          switchViewer("guest");
+        else setError(e.message);
+      }
     });
     return () => {
       generation.current++;
@@ -218,7 +228,7 @@ export default function NetworkUI() {
     if (!isStatic()) return;
     let live = true;
     const sync = async (e: StorageEvent) => {
-      if (e.key === "sigchi-networking-lab.v1") {
+      if (e.key === "sigchi-networking-chi26.v2") {
         const d = await loadView(viewer);
         if (live) setView(d);
       }
@@ -229,12 +239,37 @@ export default function NetworkUI() {
       window.removeEventListener("storage", sync);
     };
   }, [viewer]);
+  useEffect(() => {
+    if (!view) return;
+    const deadlines = [
+      view.own?.checkIn,
+      ...view.directory.map((p) => p.checkIn),
+    ]
+      .flatMap((c) => (c ? [c.expiresAt] : []))
+      .filter((t) => t > Date.now());
+    if (!deadlines.length) return;
+    let live = true;
+    const t = setTimeout(
+      () => {
+        loadView(viewer)
+          .then((v) => {
+            if (live) setView(v);
+          })
+          .catch(() => {});
+      },
+      Math.max(0, Math.min(...deadlines) - Date.now() + 10),
+    );
+    return () => {
+      live = false;
+      clearTimeout(t);
+    };
+  }, [view, viewer]);
   const me = view?.own;
   const directory = view?.directory || [];
   const external = directory.filter((p) => p.id !== viewer);
   function switchViewer(id: string) {
     setViewer(id);
-    localStorage.setItem("sigchi.demo.persona", id);
+    localStorage.setItem("sigchi.chi26.persona", id);
     setProfile(null);
     setPreviewing(false);
     setThread(null);
@@ -247,13 +282,36 @@ export default function NetworkUI() {
     setFilter("");
     setNavOpen(false);
   }
+  async function createProfile(name: string) {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      const r = await callApi<{ id: string; error?: string }>(
+        prefix + "profiles",
+        viewer,
+        "POST",
+        { name },
+      );
+      if (r.status !== 201)
+        throw Error(r.data.error || "Could not create profile.");
+      switchViewer(r.data.id);
+      navigate("People");
+      setNotice("Your private profile is ready");
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
   function navigate(p: Page) {
+    requestAnimationFrame(() => pageTitle.current?.focus());
     setPage(p);
     setNavOpen(false);
     setThread(null);
     setProfile(null);
     setPreviewing(false);
-    setFiltersOpen(false);
+
     setError("");
   }
   async function request(path: string, method = "GET", body?: unknown) {
@@ -286,45 +344,16 @@ export default function NetworkUI() {
     setTab("all");
     setQ("");
     setFilter(value);
-    setAuthorOnly(false);
   }
-  const filtered = external
-    .filter((p) => {
-      if (authorOnly && !p.authored.length) return false;
-      if (
-        filter.startsWith("paper:") &&
-        !p.lists.some((l) => l.paperIds.includes(filter.slice(6)))
-      )
-        return false;
-      if (filter.startsWith("session:") && !p.shared.includes(filter.slice(8)))
-        return false;
-      const words = [
-        p.name,
-        p.affiliation,
-        ...p.topics,
-        ...p.authored.map(paperName),
-        ...p.lists.flatMap((l) => l.paperIds.map(paperName)),
-        ...p.shared.map(sessionName),
-      ]
-        .join(" ")
-        .toLocaleLowerCase();
-      return (
-        words.includes(q.trim().toLocaleLowerCase()) &&
-        (tab !== "matches" || !!(me && overlap(me, p).score))
-      );
-    })
-    .sort((a, b) =>
-      tab === "matches" && me ? overlap(me, b).score - overlap(me, a).score : 0,
-    );
-  const selected =
-    previewing && me?.profileVisible
-      ? publicProfile(me)
-      : directory.find((p) => p.id === profile);
-  const filterLabel = filter.startsWith("paper:")
-    ? paperName(filter.slice(6))
-    : filter.startsWith("session:")
-      ? sessionName(filter.slice(8))
-      : "";
+  const previewAs =
+    previewViewer === viewer
+      ? personas.find((p) => p.id !== viewer && p.id !== "guest")?.id || "guest"
+      : previewViewer;
+  const selected = previewing
+    ? me && permits(me.rules.profile, previewAs)
+      ? publicProfile(me, previewAs)
+      : undefined
+    : directory.find((p) => p.id === profile);
   async function exportProfile(p: Profile) {
     try {
       const r = await request("attendees/" + p.id);
@@ -366,106 +395,6 @@ export default function NetworkUI() {
       setError(e.message);
     }
   }
-  function myRail() {
-    if (!me) return null;
-    return (
-      <aside className="rail">
-        <section className="panel selfCard">
-          <div className="railHeading">
-            <UserRound size={17} />
-            My conference profile
-          </div>
-          <div className="myIdentity">
-            <Avatar name={me.name} color={me.color} large />
-            <h3>{me.name}</h3>
-            <p>{me.affiliation}</p>
-          </div>
-          <div className="visibility">
-            <div>
-              <strong>Visible to attendees</strong>
-              <small>
-                {me.profileVisible ? "In the directory" : "Only you can see it"}
-              </small>
-            </div>
-            <Toggle
-              label="Visible to registered attendees"
-              on={me.profileVisible}
-              disabled={busy}
-              change={() => change("profile", !me.profileVisible)}
-            />
-          </div>
-          <button
-            className="outlined wide"
-            onClick={() => navigate("My profile")}
-          >
-            Manage profile <ChevronRight size={16} />
-          </button>
-        </section>
-        <section className="railNote">
-          <div>
-            <FlaskConical size={17} />
-            <b>Try another perspective</b>
-          </div>
-          <p>
-            Switch between fictional attendees to see how sharing changes the
-            directory.
-          </p>
-          <label htmlFor="railViewer">Demo attendee</label>
-          <select
-            id="railViewer"
-            value={viewer}
-            onChange={(e) => switchViewer(e.target.value)}
-          >
-            {personas.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
-        </section>
-      </aside>
-    );
-  }
-  function card(p: Profile) {
-    const match = me ? overlap(me, p) : null;
-    return (
-      <button
-        className="personCard"
-        key={p.id}
-        onClick={() => setProfile(p.id)}
-      >
-        <div className="personTop">
-          <Avatar name={p.name} color={p.color} />
-          <div>
-            <h3>{p.name}</h3>
-            <p>{p.affiliation}</p>
-          </div>
-        </div>
-        <div className="chips">
-          {p.topics.slice(0, 2).map((t) => (
-            <span key={t}>{t}</span>
-          ))}
-        </div>
-        <div className="cardFoot">
-          <span>
-            {tab === "matches" && match ? (
-              <>
-                <Network size={14} />
-                {match.score} shared {match.score === 1 ? "signal" : "signals"}
-              </>
-            ) : (
-              <>
-                <BookOpen size={14} />
-                {p.lists.length} shared{" "}
-                {p.lists.length === 1 ? "list" : "lists"}
-              </>
-            )}
-          </span>
-          <ChevronRight size={16} />
-        </div>
-      </button>
-    );
-  }
   function myLists() {
     return (
       <>
@@ -481,19 +410,16 @@ export default function NetworkUI() {
                   <small>{l.paperIds.length} papers</small>
                 </div>
               </div>
-              <Toggle
-                label={"Share " + l.name}
-                on={l.visible}
-                disabled={busy}
-                change={() => change("list." + l.id, !l.visible)}
-              />
+              <button
+                className="outlined"
+                onClick={() => navigate("My profile")}
+              >
+                Edit audience
+              </button>
             </div>
             <p className="muted">
-              {l.visible
-                ? me.profileVisible
-                  ? "Visible to registered attendees"
-                  : "Selected for sharing when your profile is visible"
-                : "Private list"}
+              Audience · {audienceName(me.rules["list." + l.id])}
+              {!me.profileVisible ? " · Profile is private" : ""}
             </p>
             <ul className="lines">
               {l.paperIds.map((id) => (
@@ -510,31 +436,73 @@ export default function NetworkUI() {
   }
   return (
     <div className="shell">
+      <a className="skipLink" href="#main-content">
+        Skip to main content
+      </a>
       {navOpen && (
         <button
           className="scrim"
           aria-label="Close navigation"
-          onClick={() => setNavOpen(false)}
+          onClick={closeMobile}
         />
       )}
-      <aside className={"sidebar " + (navOpen ? "open" : "")}>
+      <aside
+        ref={sideNav}
+        role={navOpen ? "dialog" : undefined}
+        aria-modal={navOpen ? true : undefined}
+        aria-label="Conference menu"
+        className={"sidebar " + (navOpen ? "open" : "")}
+        onKeyDown={(e) => {
+          if (!navOpen) return;
+          if (e.key === "Escape") {
+            e.preventDefault();
+            closeMobile();
+          }
+          if (e.key === "Tab") {
+            const items = Array.from(
+              sideNav.current!.querySelectorAll<HTMLElement>(
+                "a[href],button:not(:disabled)",
+              ),
+            );
+            const first = items[0],
+              last = items[items.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }}
+      >
+        <button
+          className="mobileClose iconBtn"
+          aria-label="Close menu"
+          onClick={closeMobile}
+        >
+          <X />
+        </button>
         <div className="brand">
-          <Orbit className="brandmark" size={36} />
-          <span>
-            SIG<b>CHI</b>
-          </span>
+          <span aria-hidden="true">⠿</span>
+          <img alt="SIGCHI" src={isStatic() ? "./sigchi.svg" : "/sigchi.svg"} />
         </div>
-        <div className="sideContext">Conference Programs</div>
-        <div className="sideConf">
+        <button className="sideUser" onClick={() => navigate("My profile")}>
+          <UserRound size={19} />
+          {me?.name || "Create profile"}
+        </button>
+        <a
+          className="confHome"
+          href="https://chi2026.acm.org/"
+          target="_blank"
+          rel="noreferrer"
+        >
           <img
             src={isStatic() ? "./conference.png" : "/conference.png"}
             alt=""
           />
-          <div>
-            <b>UIST ’25</b>
-            <small>Busan, Korea</small>
-          </div>
-        </div>
+          CHI 2026 Home
+        </a>
         <nav aria-label="Conference navigation">
           {navigation.map(([n, I], i) => (
             <React.Fragment key={n}>
@@ -550,14 +518,16 @@ export default function NetworkUI() {
           ))}
         </nav>
         <div className="sideBottom">
-          <FlaskConical size={16} /> Hackathon demo · Fictional data
+          <FlaskConical size={16} /> Hackathon prototype
         </div>
       </aside>
-      <main>
+      <main id="main-content" tabIndex={-1} inert={navOpen || undefined}>
         <header className="topbar">
           <div className="row">
             <button
               className="iconBtn mobileMenu"
+              ref={mobileMenu}
+              aria-expanded={navOpen}
               aria-label="Open navigation"
               onClick={() => setNavOpen(true)}
             >
@@ -569,43 +539,59 @@ export default function NetworkUI() {
               alt=""
             />
             <div>
-              <div className="topSmall">Conference Programs</div>
-              <strong>UIST ’25</strong>
+              <div className="topSmall">
+                Barcelona, Spain · April 13–17, 2026 · CEST
+              </div>
+              <h1 ref={pageTitle} tabIndex={-1}>
+                CHI ’26 {page}
+              </h1>
             </div>
           </div>
           <label className="persona">
-            <span>Demo attendee</span>
+            <UserRound size={19} aria-hidden="true" />
+            <span>View as</span>
             <select
               value={viewer}
               disabled={busy}
-              aria-label="Switch demo attendee"
-              onChange={(e) => switchViewer(e.target.value)}
+              aria-label="View as demo attendee"
+              onChange={(e) => {
+                if (e.target.value === "new") {
+                  switchViewer("guest");
+                  navigate("My profile");
+                } else switchViewer(e.target.value);
+              }}
             >
               {personas.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.name}
                 </option>
               ))}
+              <option value="new">Create a new profile…</option>
             </select>
           </label>
+          {page === "People" && me && (
+            <button
+              className="phoneSearchBtn iconBtn"
+              aria-label="Search people"
+              aria-expanded={phoneSearch}
+              onClick={() => setPhoneSearch((v) => !v)}
+            >
+              <Search />
+            </button>
+          )}
         </header>
         <div className="canvas">
-          <div className="path">
-            UIST ’25 <ChevronRight size={13} />
-            {page}
-          </div>
-          <div className="pageHead">
-            <div>
-              <h1>{page}</h1>
-              <p>{captions[page]}</p>
-            </div>
-            {page === "People" && me && (
+          <div className="demoContext">
+            <span>
+              Hackathon demo · Public research profiles · Simulated plans and
+              room check-ins.
+            </span>
+            {me && (
               <button
-                className="outlined topProfile"
+                className="textBtn"
                 onClick={() => navigate("My profile")}
               >
-                <UserRound size={17} />
-                My profile
+                My sharing settings
               </button>
             )}
           </div>
@@ -639,6 +625,14 @@ export default function NetworkUI() {
                       value={probe}
                       onChange={(e) => setProbe(e.target.value)}
                     >
+                      {rooms.map((r) => (
+                        <option
+                          key={r}
+                          value={"attendees?room=" + encodeURIComponent(r)}
+                        >
+                          Current check-ins · {r}
+                        </option>
+                      ))}
                       <option value="attendees">
                         All visible attendee profiles
                       </option>
@@ -719,151 +713,27 @@ export default function NetworkUI() {
                   <p className="footnote">{fixtureNote}</p>
                 </div>
               ) : !me && page !== "Program" ? (
-                <section className="panel empty">
-                  <LockKeyhole />
-                  <h2>For registered attendees</h2>
+                <div className="joinWrap">
+                  <CreateProfile onCreate={createProfile} busy={busy} />
                   <p>
-                    Switch to Mira or Leo to explore the attendee directory and
-                    sharing controls.
+                    To explore an existing example, choose a name under{" "}
+                    <b>View as</b>.
                   </p>
-                </section>
-              ) : page === "People" ? (
-                <>
-                  <div className="tabs">
-                    <button
-                      className={tab === "all" ? "active" : ""}
-                      onClick={() => setTab("all")}
-                    >
-                      <Users size={16} />
-                      Attendees <i>{external.length}</i>
-                    </button>
-                    <button
-                      className={tab === "matches" ? "active" : ""}
-                      onClick={() => setTab("matches")}
-                    >
-                      <Network size={16} />
-                      My matches
-                    </button>
-                  </div>
-                  <div className="directoryLayout">
-                    <section>
-                      <div className="searchRow">
-                        <label className="search">
-                          <Search size={18} />
-                          <input
-                            aria-label="Search attendees"
-                            placeholder="Search names or interests"
-                            value={q}
-                            onChange={(e) => setQ(e.target.value)}
-                          />
-                          {q && (
-                            <button
-                              aria-label="Clear search"
-                              onClick={() => setQ("")}
-                            >
-                              <X size={15} />
-                            </button>
-                          )}
-                        </label>
-                        <button
-                          className={
-                            "outlined " + (filter || authorOnly ? "tinted" : "")
-                          }
-                          aria-expanded={filtersOpen}
-                          onClick={() => setFiltersOpen(!filtersOpen)}
-                        >
-                          <SlidersHorizontal size={16} />
-                          Filters
-                        </button>
-                      </div>
-                      {filtersOpen && (
-                        <div className="filterPanel">
-                          <label>
-                            Paper or session
-                            <select
-                              value={filter}
-                              onChange={(e) => setFilter(e.target.value)}
-                            >
-                              <option value="">All papers and sessions</option>
-                              <optgroup label="Interest in a shared list">
-                                {papers.map((p) => (
-                                  <option key={p.id} value={"paper:" + p.id}>
-                                    {p.title}
-                                  </option>
-                                ))}
-                              </optgroup>
-                              <optgroup label="Shared session plans">
-                                {sessions.map((s) => (
-                                  <option key={s.id} value={"session:" + s.id}>
-                                    {s.name}
-                                  </option>
-                                ))}
-                              </optgroup>
-                            </select>
-                          </label>
-                          <label className="check">
-                            <input
-                              type="checkbox"
-                              checked={authorOnly}
-                              onChange={(e) => setAuthorOnly(e.target.checked)}
-                            />
-                            Linked authors only
-                          </label>
-                        </div>
-                      )}
-                      {(filter || authorOnly) && (
-                        <button
-                          className="clearFilter"
-                          onClick={() => {
-                            setFilter("");
-                            setAuthorOnly(false);
-                          }}
-                        >
-                          <X size={13} />
-                          {[filterLabel, authorOnly ? "Linked authors" : ""]
-                            .filter(Boolean)
-                            .join(" · ")}
-                        </button>
-                      )}
-                      <div className="sectionLine">
-                        <h2>
-                          {tab === "all"
-                            ? "Attendee directory"
-                            : "Suggested matches"}
-                        </h2>
-                        <small>
-                          {filtered.length}{" "}
-                          {filtered.length === 1 ? "person" : "people"}
-                        </small>
-                      </div>
-                      {tab === "matches" && (
-                        <p className="matchExplain">
-                          Ranked by shared topics, reading-list papers, and
-                          session plans. Open a profile to see the overlap.
-                        </p>
-                      )}
-                      <div className="grid">{filtered.map(card)}</div>
-                      {!filtered.length && (
-                        <div className="panel empty">
-                          <Search />
-                          <h3>No matching attendees</h3>
-                          <button
-                            className="outlined"
-                            onClick={() => {
-                              setQ("");
-                              setFilter("");
-                              setAuthorOnly(false);
-                              setTab("all");
-                            }}
-                          >
-                            Clear filters
-                          </button>
-                        </div>
-                      )}
-                    </section>
-                    {myRail()}
-                  </div>
-                </>
+                </div>
+              ) : page === "People" && me ? (
+                <PeopleBrowser
+                  phoneSearch={phoneSearch}
+                  me={me}
+                  people={external}
+                  tab={tab}
+                  setTab={setTab}
+                  filter={filter}
+                  setFilter={setFilter}
+                  open={setProfile}
+                  manage={() => navigate("My profile")}
+                  query={q}
+                  setQuery={setQ}
+                />
               ) : page === "My lists" ? (
                 <div className="reading">{myLists()}</div>
               ) : page === "My profile" && me ? (
@@ -876,22 +746,9 @@ export default function NetworkUI() {
                         <p>{me.affiliation}</p>
                       </div>
                     </div>
-                    <div className="setting">
-                      <div>
-                        <strong>Show my profile to UIST attendees</strong>
-                        <p>
-                          Other registered attendees can discover your profile
-                          and see the lists and session plans you choose to
-                          share.
-                        </p>
-                      </div>
-                      <Toggle
-                        label="Show my profile to UIST attendees"
-                        on={me.profileVisible}
-                        change={() => change("profile", !me.profileVisible)}
-                        disabled={busy}
-                      />
-                    </div>
+                    <p className="privacySummary">
+                      Profile audience · {audienceName(me.rules.profile)}
+                    </p>
                     <button
                       className="outlined"
                       onClick={() => setPreviewing(true)}
@@ -900,9 +757,28 @@ export default function NetworkUI() {
                       Preview as another attendee
                     </button>
                   </section>
+                  {seedViewers.some((p) => p.id === me.id) && (
+                    <section className="panel record">
+                      <Research id={me.id} />
+                    </section>
+                  )}
+                  <CheckInPanel
+                    key={me.id}
+                    me={me}
+                    change={change}
+                    busy={busy}
+                  />
+                  <SharingPanel
+                    me={me}
+                    identities={personas}
+                    change={change}
+                    busy={busy}
+                  />
                   <section className="panel record">
                     <h2>Research links</h2>
-                    <p>These links follow your profile visibility.</p>
+                    <p>
+                      Research link audience · {audienceName(me.rules.links)}
+                    </p>
                     <form
                       onSubmit={(e) => {
                         e.preventDefault();
@@ -986,20 +862,19 @@ export default function NetworkUI() {
                               />
                               In my plan
                             </label>
-                            <label className="check">
-                              <Toggle
-                                label={"Share my plan for " + s.name}
-                                on={shared}
-                                disabled={!going || busy}
-                                change={() =>
-                                  change("session." + s.id, {
-                                    going: true,
-                                    shared: !shared,
-                                  })
+                            {going && (
+                              <AudienceControl
+                                label={"Plan · " + s.name}
+                                rule={me.rules["session." + s.id]}
+                                people={personas.filter(
+                                  (p) => p.id !== viewer && p.id !== "guest",
+                                )}
+                                busy={busy}
+                                save={(a) =>
+                                  change("audience.session." + s.id, a)
                                 }
                               />
-                              Share my plan
-                            </label>
+                            )}
                           </div>
                         )}
                         {me && shared && !me.profileVisible && (
@@ -1012,13 +887,64 @@ export default function NetworkUI() {
                         >
                           <Users size={15} />
                           See shared session plans
+                        </button>{" "}
+                        <button
+                          className="textBtn"
+                          disabled={!me}
+                          onClick={() => listFor("room:" + s.room)}
+                        >
+                          Who is here now?
                         </button>
                         <ul className="lines">
                           {s.papers.map((id) => (
                             <li key={id}>
                               <BookOpen size={16} />
                               <div>
-                                <strong>{paperName(id)}</strong>
+                                <strong>
+                                  <a
+                                    href={papers.find((p) => p.id === id)?.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {paperName(id)}
+                                  </a>
+                                </strong>
+                                <details className="paperInfo">
+                                  <summary>Authors and publication</summary>
+                                  <p>
+                                    {papers
+                                      .find((p) => p.id === id)
+                                      ?.authorNames.join(", ")}
+                                  </p>
+                                  <a
+                                    href={papers.find((p) => p.id === id)?.doi}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    {papers.find((p) => p.id === id)?.track} ·
+                                    DOI
+                                  </a>
+                                </details>
+                                {me && (
+                                  <button
+                                    className="textBtn"
+                                    disabled={busy}
+                                    onClick={() => {
+                                      const ids = me.lists[0].paperIds;
+                                      change(
+                                        "papers.reading",
+                                        ids.includes(id)
+                                          ? ids.filter((v) => v !== id)
+                                          : [...ids, id],
+                                      );
+                                    }}
+                                  >
+                                    <Bookmark size={14} />
+                                    {me.lists[0].paperIds.includes(id)
+                                      ? "Remove from reading list"
+                                      : "Save to reading list"}
+                                  </button>
+                                )}
                                 {me && (
                                   <button
                                     className="textBtn"
@@ -1145,12 +1071,39 @@ export default function NetworkUI() {
             setPreviewing(false);
           }}
         >
+          {previewing && (
+            <label className="previewWho">
+              Preview as
+              <select
+                aria-label="Preview audience member"
+                value={previewAs}
+                onChange={(e) => setPreviewViewer(e.target.value)}
+              >
+                {personas
+                  .filter((p) => p.id !== viewer)
+                  .map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+              </select>
+            </label>
+          )}
           {selected ? (
             <div className="details">
               <Avatar name={selected.name} color={selected.color} large />
               <h2>{selected.name}</h2>
               <p>{selected.affiliation}</p>
-              <p className="bio">{selected.bio}</p>
+              {selected.checkIn && (
+                <div className="checkStatus">
+                  <b>Current room</b> · {selected.checkIn.room} · until{" "}
+                  {new Date(selected.checkIn.expiresAt).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </div>
+              )}
+
               <div className="chips">
                 {selected.topics.map((t) => (
                   <span key={t}>{t}</span>
@@ -1168,7 +1121,14 @@ export default function NetworkUI() {
                 )}
                 <button
                   className="outlined"
-                  onClick={() => exportProfile(selected)}
+                  onClick={() =>
+                    previewing
+                      ? downloadJson(
+                          selected.id + "-as-" + previewAs + ".json",
+                          { conferenceId: "chi26-demo", profile: selected },
+                        )
+                      : exportProfile(selected)
+                  }
                 >
                   <Download size={15} />
                   Download profile
@@ -1219,18 +1179,10 @@ export default function NetworkUI() {
                   )}
                 </div>
               </section>
-              {selected.authored.length > 0 && (
-                <section>
-                  <h3>Authored papers</h3>
-                  <p className="hint">
-                    ORCID match simulation · {selected.authorKey}
-                  </p>
-                  <ul className="lines">
-                    {selected.authored.map((id) => (
-                      <li key={id}>{paperName(id)}</li>
-                    ))}
-                  </ul>
-                </section>
+              {selected.links.website || selected.links.scholar ? (
+                <Research id={selected.id} />
+              ) : (
+                <p>{selected.bio}</p>
               )}
               <section>
                 <h3>Shared lists</h3>
@@ -1262,7 +1214,7 @@ export default function NetworkUI() {
             <div className="empty">
               <LockKeyhole />
               <h2>Private profile</h2>
-              <p>Other attendees cannot discover or download this profile.</p>
+              <p>This viewer cannot discover or download this profile.</p>
             </div>
           )}
         </Dialog>

@@ -1,23 +1,45 @@
-import { people, papers, type Person } from "./demo-fixtures";
+import {
+  people,
+  papers,
+  sessions,
+  rooms,
+  backgrounds,
+  type Person,
+} from "./demo-fixtures";
+export type Identity = { id: string; name: string };
+export type Audience = {
+  mode: "private" | "attendees" | "selected";
+  people: string[];
+};
+export type Preference = { person: string; field: string; value: string };
 export type ReadingList = {
   id: string;
   name: string;
   paperIds: string[];
   visible: boolean;
 };
-export type DemoPerson = Person & { lists: ReadingList[] };
-export type Profile = {
-  id: string;
-  name: string;
-  affiliation: string;
-  bio: string;
-  topics: string[];
-  color: string;
-  links: Person["links"];
-  authorKey: string;
+export type CheckIn = { room: string; expiresAt: number };
+export type DemoPerson = Person & {
+  lists: ReadingList[];
+  rules: Record<string, Audience>;
+  checkIn: CheckIn | null;
+};
+export type Profile = Pick<
+  Person,
+  | "id"
+  | "name"
+  | "affiliation"
+  | "bio"
+  | "topics"
+  | "color"
+  | "links"
+  | "authorKey"
+> & {
   authored: string[];
   lists: ReadingList[];
   shared: string[];
+  checkIn: CheckIn | null;
+  publicResearch?: { source: string; recommended: string[] };
 };
 export type Message = {
   id: number;
@@ -31,66 +53,145 @@ export type View = {
   own: DemoPerson | null;
   directory: Profile[];
   messages: Message[];
+  identities: Identity[];
 };
-export type Change = { field: string; value: unknown };
-export function restore(
-  rows: { person: string; field: string; value: string }[],
-): DemoPerson[] {
-  return people.map((base) => {
-    const p = structuredClone(base);
+export const audience = (on: boolean): Audience => ({
+  mode: on ? "attendees" : "private",
+  people: [],
+});
+export const audienceName = (a: Audience) =>
+  a.mode === "attendees"
+    ? "Conference attendees"
+    : a.mode === "selected"
+      ? "Selected people"
+      : "Only me";
+export function permits(a: Audience | undefined, id: string) {
+  return (
+    !!a &&
+    id !== "guest" &&
+    (a.mode === "attendees" || (a.mode === "selected" && a.people.includes(id)))
+  );
+}
+export function identities(rows: Preference[]): Identity[] {
+  return [
+    ...people.map(({ id, name }) => ({ id, name })),
+    ...rows
+      .filter((r) => r.field === "identity")
+      .map((r) => ({ id: r.person, name: JSON.parse(r.value) })),
+  ];
+}
+function customPerson(id: string, name: string): Person {
+  return {
+    id,
+    name,
+    affiliation: "",
+    bio: "",
+    topics: [],
+    color: "blue",
+    authorKey: "",
+    links: { website: "", scholar: "" },
+    profileVisible: false,
+    listVisible: false,
+    listName: "My reading list",
+    saved: [],
+    going: [],
+    shared: [],
+  };
+}
+export function restore(rows: Preference[], now = Date.now()): DemoPerson[] {
+  return identities(rows).map(({ id, name }) => {
+    const p = structuredClone(
+      people.find((x) => x.id === id) ?? customPerson(id, name),
+    );
+    const rules: Record<string, Audience> = {
+      profile: audience(p.profileVisible),
+      links: audience(true),
+      currentRoom: audience(false),
+      "list.reading": audience(p.listVisible),
+      "list.later": audience(false),
+    };
+    for (const s of sessions)
+      rules["session." + s.id] = audience(p.shared.includes(s.id));
+    const byKey = new Map(
+      rows
+        .filter((r) => r.person === id)
+        .map((r) => [r.field, JSON.parse(r.value)]),
+    );
     const lists = [
       {
         id: "reading",
         name: p.listName,
-        paperIds: [...p.saved],
-        visible: p.listVisible,
+        paperIds: byKey.get("papers.reading") ?? p.saved,
+        visible: false,
       },
       {
         id: "later",
         name: "Read after the conference",
-        paperIds: ["p8"],
+        paperIds: byKey.get("papers.later") ?? [],
         visible: false,
       },
     ];
-    for (const r of rows.filter((r) => r.person === p.id)) {
-      const v = JSON.parse(r.value);
-      if (r.field === "profile") p.profileVisible = v;
-      if (r.field === "links") p.links = v;
-      if (r.field.startsWith("list.")) {
-        const list = lists.find((l) => l.id === r.field.slice(5));
-        if (list) list.visible = v;
-      }
-      if (r.field.startsWith("session.")) {
-        const id = r.field.slice(8);
-        p.going = p.going.filter((s) => s !== id);
-        p.shared = p.shared.filter((s) => s !== id);
-        if (v.going) p.going.push(id);
-        if (v.going && v.shared) p.shared.push(id);
+    for (const k of Object.keys(rules)) {
+      const override = byKey.get("audience." + k);
+      if (override) rules[k] = override;
+    }
+    for (const s of sessions) {
+      const going = byKey.get("going." + s.id);
+      if (going !== undefined) {
+        p.going = p.going.filter((x) => x !== s.id);
+        if (going) p.going.push(s.id);
       }
     }
-    return { ...p, lists };
+    p.shared = p.going.filter(
+      (id) => rules["session." + id].mode !== "private",
+    );
+    p.profileVisible = rules.profile.mode !== "private";
+    for (const list of lists)
+      list.visible = rules["list." + list.id].mode !== "private";
+    p.links = byKey.get("links") ?? p.links;
+    const checkIn = byKey.get("checkIn") as CheckIn | null | undefined;
+    return {
+      ...p,
+      lists,
+      rules,
+      checkIn:
+        checkIn && checkIn.expiresAt > now && rooms.includes(checkIn.room)
+          ? checkIn
+          : null,
+    };
   });
 }
-export function publicProfile(p: DemoPerson): Profile {
+export function publicProfile(p: DemoPerson, viewer: string): Profile {
+  const see = (field: string) => permits(p.rules[field], viewer);
+  const background = backgrounds.find((b) => b.id === p.id);
   return {
+    ...(background && see("links")
+      ? {
+          publicResearch: {
+            source: background.source,
+            recommended: background.recommended,
+          },
+        }
+      : {}),
     id: p.id,
     name: p.name,
     affiliation: p.affiliation,
     bio: p.bio,
     topics: p.topics,
     color: p.color,
-    links: p.links,
+    links: see("links") ? p.links : { website: "", scholar: "" },
     authorKey: p.authorKey,
     authored: p.authorKey
       ? papers.filter((a) => a.authors.includes(p.authorKey)).map((a) => a.id)
       : [],
-    lists: p.lists.filter((l) => l.visible),
-    shared: p.shared.filter((s) => p.going.includes(s)),
+    lists: p.lists.filter((l) => see("list." + l.id)),
+    shared: p.going.filter((id) => see("session." + id)),
+    checkIn: see("currentRoom") ? p.checkIn : null,
   };
 }
 export function overlap(own: DemoPerson, p: Profile) {
-  const interests = p.topics.filter((t) => own.topics.includes(t));
-  const saved = new Set(own.lists.flatMap((l) => l.paperIds));
+  const interests = p.topics.filter((t) => own.topics.includes(t)),
+    saved = new Set(own.lists.flatMap((l) => l.paperIds));
   const commonPapers = [...new Set(p.lists.flatMap((l) => l.paperIds))].filter(
     (id) => saved.has(id),
   );

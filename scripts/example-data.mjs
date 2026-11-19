@@ -17,6 +17,8 @@ const {
   papers,
   personas,
   fixtureNote,
+  rooms,
+  backgrounds,
   restore,
   pagesRequest,
 } = await import(
@@ -31,9 +33,10 @@ globalThis.localStorage = {
 const records = {
   description: fixtureNote,
   scope:
-    "Entire fictional seed, including private examples. The attendee endpoint returns an audience-filtered subset.",
+    "Public research and program metadata with synthetic sharing settings. Downloads through the attendees endpoint depend on the viewer.",
   conference,
   personas,
+  backgrounds,
   sessions,
   papers,
   attendees: restore([]),
@@ -50,16 +53,30 @@ function example(as, method, path, body) {
     response: { status, data },
   });
 }
-example("leo", "GET", "attendees/mira");
-example("mira", "PATCH", "me/sharing", { field: "profile", value: true });
-example("leo", "GET", "attendees/mira");
-example("mira", "PATCH", "me/sharing", { field: "list.reading", value: true });
-example("mira", "PATCH", "me/sharing", {
-  field: "session.s1",
-  value: { going: true, shared: true },
+// Freeze the clock so the worked check-in example rebuilds identically.
+Date.now = () => Date.parse("2026-04-14T08:00:00.000Z");
+example("anran", "PATCH", "me/sharing", {
+  field: "audience.profile",
+  value: { mode: "attendees", people: [] },
 });
-example("leo", "GET", "attendees/mira");
-example("guest", "GET", "attendees/mira");
+example("anran", "PATCH", "me/sharing", {
+  field: "audience.currentRoom",
+  value: { mode: "selected", people: ["carla"] },
+});
+example("anran", "PATCH", "me/sharing", {
+  field: "checkIn",
+  value: { room: rooms[0] },
+});
+example("carla", "GET", "attendees/anran");
+example("yun", "GET", "attendees/anran");
+example("carla", "GET", "attendees?room=" + encodeURIComponent(rooms[0]));
+example("anran", "PATCH", "me/sharing", { field: "checkIn", value: null });
+example("anran", "PATCH", "me/sharing", {
+  field: "audience.profile",
+  value: { mode: "private", people: [] },
+});
+example("carla", "GET", "attendees/anran");
+example("guest", "GET", "attendees/anran");
 await mkdir("public/examples", { recursive: true });
 for (const [name, value] of Object.entries({
   "synthetic-data": records,

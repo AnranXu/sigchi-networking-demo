@@ -1,47 +1,31 @@
-# Proposed SIGCHI conference networking API
+# CHI 2026 networking API proposal
 
-This is a hackathon design for discussion. The [published SIGCHI Cloud API](https://services.sigchi.org/assets/pdf/cloud-api.pdf?version=4.9.24) describes access to the conference catalog, program and authorized personal agenda. The profiles, opt-in sharing, attendee lookup and messaging below are prototype extensions.
+The [SIGCHI Cloud API](https://services.sigchi.org/assets/pdf/cloud-api.pdf?version=4.9.24) documents conference discovery, conference programs and an authorized personal agenda. The networking resources below are proposed extensions. The demo uses a curated public [CHI 2026 program](https://programs.sigchi.org/chi/2026/program). Session times are in Barcelona local time.
 
-The GitHub Pages demo simulates requests inside your browser. The demo persona selector represents a registered attendee or a guest. Settings and messages persist in this browser. All fixtures are public and fictional. For a production API, the server would authenticate the viewer, verify registration for the specific conference and derive the owner from that verified identity, independent of any persona selector.
+## Resources
 
-## Resource examples
+Paths below follow `/api/demo/conferences/chi26-demo/`.
 
-All paths below follow `/api/demo/conferences/uist-demo/`.
-
-| Method | Resource | Meaning |
+| Method | Resource | Result |
 | --- | --- | --- |
-| GET | `attendees` | Registered viewers get only opted-in profiles. Each record includes explicitly shared lists, planned sessions and research links. |
-| GET | `attendees/{id}` | Download the public projection of one visible attendee. Another viewer gets 404 for a private or unknown profile. An unregistered guest gets 403. |
-| GET | `attendees?paper=p1` | Show people with the paper in a shared list. Private bookmarks cannot put someone in these results. |
-| GET | `attendees?session=s1` | Show people who chose to share their plan for that session. A plan expresses intent and does not measure room occupancy. |
-| PATCH | `me/sharing` | Change the viewer’s own profile, individual lists, individual session plans, or research links. |
-| POST | `messages` | Send a fictional message between two visible demo profiles. In GitHub Pages it stays in the same browser. |
+| POST | `profiles` | Create a private, name-only demo profile. Input `{"name":"Jamie Example"}`. |
+| GET | `attendees` | Return profiles visible to the viewer. |
+| GET | `attendees/{id}` | Download the viewer-specific profile, or 404 when the profile is private to them. Guests receive 403. |
+| GET | `attendees?paper={id}` | People who shared a reading list containing this paper with the viewer. |
+| GET | `attendees?session={id}` | People who shared a plan for this session with the viewer. |
+| GET | `attendees?room={room}` | People who explicitly checked into the room and shared it with the viewer. |
+| PATCH | `me/sharing` | Change profile, research link, list, session, or current-room sharing. Also used for manual check-in and check-out. |
+| POST | `messages` | Send a demo message when sender and recipient can see each other’s profile. |
 
-The `state` route and `POST /api/demo/start` support the demo UI. They are scaffolding for the prototype.
+## Who can see what
 
-## Sharing rules
+Every item has its own audience: only me, selected people or all registered conference attendees. The profile audience also applies to each item. Selecting someone for a check-in cannot give them access to a hidden profile. Reading-list downloads, session filters and room lookups use the same viewer-specific projection. A manual check-in expires in one hour and can be cleared early. Adding a session to a plan does not check someone into its room. The simulated check-in runs on the visitor’s clock while the program retains its historical April 2026 dates.
 
-- A private conference profile hides all lists and session plans from other attendees. Turning a profile on restores its individual sharing choices. Lists and session plans start private for the Mira persona.
-- Lists and plans are independent. Adding a session to a plan leaves its sharing switch off.
-- Paper matches use membership in a shared reading list. Session matches use a shared plan. Suggested people are ranked by the number of common subjects, distinct papers and sessions. A viewer can use their own private interests to find a match. Other viewers only see signals the person shared.
-- The author link requires an exact match on a fictional author identifier. Real ORCID integration would require verified linkage and handling authors without accounts. Personal website links use example.org, and Scholar links lead to topic searches.
-
-## Example request bodies
-
+For example, with the profile visible to attendees, the following audience limits room check-ins to Carla:
 ```json
-{"field":"profile","value":true}
+{"field":"audience.currentRoom","value":{"mode":"selected","people":["carla"]}}
 ```
 
-```json
-{"field":"list.reading","value":true}
-```
+GitHub Pages simulates all requests in the current browser. Name-only sign-up and the viewer switch are demo controls. A production service would authenticate users and enforce conference membership and permissions on the server. The demo does not verify that a typed name belongs to the visitor.
 
-```json
-{"field":"session.s1","value":{"going":true,"shared":true}}
-```
-
-```json
-{"recipient":"leo","body":"Which paper would you like to discuss?"}
-```
-
-See [worked request and response examples](./requests-and-responses.json) and [the full synthetic seed](./synthetic-data.json).
+[Example data](./synthetic-data.json) · [Worked requests and responses](./requests-and-responses.json)

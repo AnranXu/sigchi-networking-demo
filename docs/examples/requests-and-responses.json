@@ -1,8 +1,275 @@
 [
   {
-    "as": "leo",
+    "as": "anran",
+    "method": "PATCH",
+    "path": "/api/demo/conferences/chi26-demo/me/sharing",
+    "body": {
+      "field": "audience.profile",
+      "value": {
+        "mode": "attendees",
+        "people": []
+      }
+    },
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "chi26-demo",
+        "field": "audience.profile",
+        "value": {
+          "mode": "attendees",
+          "people": []
+        }
+      }
+    }
+  },
+  {
+    "as": "anran",
+    "method": "PATCH",
+    "path": "/api/demo/conferences/chi26-demo/me/sharing",
+    "body": {
+      "field": "audience.currentRoom",
+      "value": {
+        "mode": "selected",
+        "people": [
+          "carla"
+        ]
+      }
+    },
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "chi26-demo",
+        "field": "audience.currentRoom",
+        "value": {
+          "mode": "selected",
+          "people": [
+            "carla"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "as": "anran",
+    "method": "PATCH",
+    "path": "/api/demo/conferences/chi26-demo/me/sharing",
+    "body": {
+      "field": "checkIn",
+      "value": {
+        "room": "Area 1 + 2 + 3: posters"
+      }
+    },
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "chi26-demo",
+        "field": "checkIn",
+        "value": {
+          "room": "Area 1 + 2 + 3: posters",
+          "expiresAt": 1776157200000
+        }
+      }
+    }
+  },
+  {
+    "as": "carla",
     "method": "GET",
-    "path": "/api/demo/conferences/uist-demo/attendees/mira",
+    "path": "/api/demo/conferences/chi26-demo/attendees/anran",
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "chi26-demo",
+        "profile": {
+          "publicResearch": {
+            "source": "https://anranxu.com/",
+            "recommended": [
+              "222959",
+              "221960"
+            ]
+          },
+          "id": "anran",
+          "name": "Anran Xu",
+          "affiliation": "RIKEN Center for Advanced Intelligence Project",
+          "bio": "Anran studies how people make privacy decisions about images and how interactive AI systems can support those decisions.",
+          "topics": [
+            "Privacy",
+            "Human–AI interaction",
+            "Usable security"
+          ],
+          "color": "lilac",
+          "links": {
+            "website": "https://anranxu.com/",
+            "scholar": ""
+          },
+          "authorKey": "",
+          "authored": [],
+          "lists": [
+            {
+              "id": "reading",
+              "name": "Demo reading list",
+              "paperIds": [
+                "222959",
+                "221960"
+              ],
+              "visible": true
+            }
+          ],
+          "shared": [],
+          "checkIn": {
+            "room": "Area 1 + 2 + 3: posters",
+            "expiresAt": 1776157200000
+          }
+        }
+      }
+    }
+  },
+  {
+    "as": "yun",
+    "method": "GET",
+    "path": "/api/demo/conferences/chi26-demo/attendees/anran",
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "chi26-demo",
+        "profile": {
+          "publicResearch": {
+            "source": "https://anranxu.com/",
+            "recommended": [
+              "222959",
+              "221960"
+            ]
+          },
+          "id": "anran",
+          "name": "Anran Xu",
+          "affiliation": "RIKEN Center for Advanced Intelligence Project",
+          "bio": "Anran studies how people make privacy decisions about images and how interactive AI systems can support those decisions.",
+          "topics": [
+            "Privacy",
+            "Human–AI interaction",
+            "Usable security"
+          ],
+          "color": "lilac",
+          "links": {
+            "website": "https://anranxu.com/",
+            "scholar": ""
+          },
+          "authorKey": "",
+          "authored": [],
+          "lists": [
+            {
+              "id": "reading",
+              "name": "Demo reading list",
+              "paperIds": [
+                "222959",
+                "221960"
+              ],
+              "visible": true
+            }
+          ],
+          "shared": [],
+          "checkIn": null
+        }
+      }
+    }
+  },
+  {
+    "as": "carla",
+    "method": "GET",
+    "path": "/api/demo/conferences/chi26-demo/attendees?room=Area%201%20%2B%202%20%2B%203%3A%20posters",
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "chi26-demo",
+        "attendees": [
+          {
+            "publicResearch": {
+              "source": "https://anranxu.com/",
+              "recommended": [
+                "222959",
+                "221960"
+              ]
+            },
+            "id": "anran",
+            "name": "Anran Xu",
+            "affiliation": "RIKEN Center for Advanced Intelligence Project",
+            "bio": "Anran studies how people make privacy decisions about images and how interactive AI systems can support those decisions.",
+            "topics": [
+              "Privacy",
+              "Human–AI interaction",
+              "Usable security"
+            ],
+            "color": "lilac",
+            "links": {
+              "website": "https://anranxu.com/",
+              "scholar": ""
+            },
+            "authorKey": "",
+            "authored": [],
+            "lists": [
+              {
+                "id": "reading",
+                "name": "Demo reading list",
+                "paperIds": [
+                  "222959",
+                  "221960"
+                ],
+                "visible": true
+              }
+            ],
+            "shared": [],
+            "checkIn": {
+              "room": "Area 1 + 2 + 3: posters",
+              "expiresAt": 1776157200000
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    "as": "anran",
+    "method": "PATCH",
+    "path": "/api/demo/conferences/chi26-demo/me/sharing",
+    "body": {
+      "field": "checkIn",
+      "value": null
+    },
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "chi26-demo",
+        "field": "checkIn",
+        "value": null
+      }
+    }
+  },
+  {
+    "as": "anran",
+    "method": "PATCH",
+    "path": "/api/demo/conferences/chi26-demo/me/sharing",
+    "body": {
+      "field": "audience.profile",
+      "value": {
+        "mode": "private",
+        "people": []
+      }
+    },
+    "response": {
+      "status": 200,
+      "data": {
+        "conferenceId": "chi26-demo",
+        "field": "audience.profile",
+        "value": {
+          "mode": "private",
+          "people": []
+        }
+      }
+    }
+  },
+  {
+    "as": "carla",
+    "method": "GET",
+    "path": "/api/demo/conferences/chi26-demo/attendees/anran",
     "response": {
       "status": 404,
       "data": {
@@ -11,141 +278,9 @@
     }
   },
   {
-    "as": "mira",
-    "method": "PATCH",
-    "path": "/api/demo/conferences/uist-demo/me/sharing",
-    "body": {
-      "field": "profile",
-      "value": true
-    },
-    "response": {
-      "status": 200,
-      "data": {
-        "conferenceId": "uist-demo",
-        "field": "profile",
-        "value": true
-      }
-    }
-  },
-  {
-    "as": "leo",
-    "method": "GET",
-    "path": "/api/demo/conferences/uist-demo/attendees/mira",
-    "response": {
-      "status": 200,
-      "data": {
-        "conferenceId": "uist-demo",
-        "profile": {
-          "id": "mira",
-          "name": "Mira Patel",
-          "affiliation": "Northbank Design Lab",
-          "bio": "I study how people work together with accessible creative tools.",
-          "topics": [
-            "Accessibility",
-            "Collaboration",
-            "Design tools"
-          ],
-          "color": "lilac",
-          "links": {
-            "website": "https://example.org/research/mira",
-            "scholar": "https://scholar.google.com/scholar?q=Accessibility%20interaction%20design"
-          },
-          "authorKey": "",
-          "authored": [],
-          "lists": [],
-          "shared": []
-        }
-      }
-    }
-  },
-  {
-    "as": "mira",
-    "method": "PATCH",
-    "path": "/api/demo/conferences/uist-demo/me/sharing",
-    "body": {
-      "field": "list.reading",
-      "value": true
-    },
-    "response": {
-      "status": 200,
-      "data": {
-        "conferenceId": "uist-demo",
-        "field": "list.reading",
-        "value": true
-      }
-    }
-  },
-  {
-    "as": "mira",
-    "method": "PATCH",
-    "path": "/api/demo/conferences/uist-demo/me/sharing",
-    "body": {
-      "field": "session.s1",
-      "value": {
-        "going": true,
-        "shared": true
-      }
-    },
-    "response": {
-      "status": 200,
-      "data": {
-        "conferenceId": "uist-demo",
-        "field": "session.s1",
-        "value": {
-          "going": true,
-          "shared": true
-        }
-      }
-    }
-  },
-  {
-    "as": "leo",
-    "method": "GET",
-    "path": "/api/demo/conferences/uist-demo/attendees/mira",
-    "response": {
-      "status": 200,
-      "data": {
-        "conferenceId": "uist-demo",
-        "profile": {
-          "id": "mira",
-          "name": "Mira Patel",
-          "affiliation": "Northbank Design Lab",
-          "bio": "I study how people work together with accessible creative tools.",
-          "topics": [
-            "Accessibility",
-            "Collaboration",
-            "Design tools"
-          ],
-          "color": "lilac",
-          "links": {
-            "website": "https://example.org/research/mira",
-            "scholar": "https://scholar.google.com/scholar?q=Accessibility%20interaction%20design"
-          },
-          "authorKey": "",
-          "authored": [],
-          "lists": [
-            {
-              "id": "reading",
-              "name": "Access & collaboration",
-              "paperIds": [
-                "p1",
-                "p2",
-                "p3"
-              ],
-              "visible": true
-            }
-          ],
-          "shared": [
-            "s1"
-          ]
-        }
-      }
-    }
-  },
-  {
     "as": "guest",
     "method": "GET",
-    "path": "/api/demo/conferences/uist-demo/attendees/mira",
+    "path": "/api/demo/conferences/chi26-demo/attendees/anran",
     "response": {
       "status": 403,
       "data": {

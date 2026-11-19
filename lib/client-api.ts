@@ -1,5 +1,5 @@
 import type { View } from "./network-model";
-export const prefix = "conferences/uist-demo/";
+export const prefix = "conferences/chi26-demo/";
 export const isStatic = () =>
   typeof document !== "undefined" &&
   !!document.querySelector('meta[name="pages-demo"]');

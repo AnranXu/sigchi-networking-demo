@@ -1,602 +1,1484 @@
 {
-  "description": "All attendees, papers, affiliations, author identifiers, and plans are synthetic. ORCID matching is illustrated with demo identifiers; website links use example.org and Scholar links open topic searches.",
-  "scope": "Entire fictional seed, including private examples. The attendee endpoint returns an audience-filtered subset.",
+  "description": "Research profiles summarize public sources. Papers and session details come from the CHI 2026 program. Reading lists, plans, messages and historical-conference room check-ins are simulated. A name-only profile is private by default.",
+  "scope": "Public research and program metadata with synthetic sharing settings. Downloads through the attendees endpoint depend on the viewer.",
   "conference": {
-    "id": "uist-demo",
-    "name": "UIST ’25",
-    "city": "Busan",
-    "edition": "Fictional program"
+    "id": "chi26-demo",
+    "name": "CHI ’26",
+    "city": "Barcelona",
+    "dates": "April 13–17, 2026",
+    "edition": "Curated conference program",
+    "source": "https://programs.sigchi.org/chi/2026/program",
+    "snapshot": "https://files.sigchi.org/conference/cache/10142/86/program"
   },
   "personas": [
     {
-      "id": "mira",
-      "name": "Mira Patel"
+      "id": "anran",
+      "name": "Anran Xu"
     },
     {
-      "id": "leo",
-      "name": "Leo Kim"
+      "id": "carla",
+      "name": "Carla Griggio"
+    },
+    {
+      "id": "gonzalo",
+      "name": "Gonzalo Gabriel Méndez"
+    },
+    {
+      "id": "nathalie",
+      "name": "Nathalie Bressa"
+    },
+    {
+      "id": "vincent",
+      "name": "Vincent Cavez"
+    },
+    {
+      "id": "yun",
+      "name": "Yun Huang"
     },
     {
       "id": "guest",
       "name": "Unregistered guest"
     }
   ],
-  "sessions": [
+  "backgrounds": [
     {
-      "id": "s1",
-      "name": "Designing for access",
-      "room": "Capri",
-      "time": "Mon · 09:00",
-      "papers": [
-        "p1",
-        "p2"
-      ]
-    },
-    {
-      "id": "s2",
-      "name": "Collaboration in practice",
-      "room": "Sicily",
-      "time": "Mon · 11:00",
-      "papers": [
-        "p3",
-        "p4"
-      ]
-    },
-    {
-      "id": "s3",
-      "name": "Tangible interfaces",
-      "room": "Palermo",
-      "time": "Tue · 09:00",
-      "papers": [
-        "p5",
-        "p6"
-      ]
-    },
-    {
-      "id": "s4",
-      "name": "Tools for creative work",
-      "room": "Capri",
-      "time": "Tue · 14:00",
-      "papers": [
-        "p7",
-        "p8"
-      ]
-    }
-  ],
-  "papers": [
-    {
-      "id": "p1",
-      "title": "Tactile Paths for Shared Diagrams",
-      "authors": [
-        "orcid-demo-02",
-        "orcid-demo-03"
-      ],
+      "id": "anran",
+      "name": "Anran Xu",
+      "affiliation": "RIKEN Center for Advanced Intelligence Project",
+      "bio": "Anran studies how people make privacy decisions about images and how interactive AI systems can support those decisions.",
       "topics": [
-        "Accessibility",
-        "Haptics"
-      ]
-    },
-    {
-      "id": "p2",
-      "title": "Describing Changes in Collaborative Canvases",
-      "authors": [
-        "orcid-demo-04"
-      ],
-      "topics": [
-        "Accessibility",
-        "Collaboration"
-      ]
-    },
-    {
-      "id": "p3",
-      "title": "Small Signals in Hybrid Teamwork",
-      "authors": [
-        "orcid-demo-05"
-      ],
-      "topics": [
-        "Collaboration",
-        "Social computing"
-      ]
-    },
-    {
-      "id": "p4",
-      "title": "Finding Common Ground in Design Critiques",
-      "authors": [
-        "orcid-demo-07"
-      ],
-      "topics": [
-        "Collaboration",
-        "Design tools"
-      ]
-    },
-    {
-      "id": "p5",
-      "title": "Sketching with Programmable Surfaces",
-      "authors": [
-        "orcid-demo-06"
-      ],
-      "topics": [
-        "Haptics",
-        "Fabrication"
-      ]
-    },
-    {
-      "id": "p6",
-      "title": "Listening to Materials Through Touch",
-      "authors": [
-        "orcid-demo-03"
-      ],
-      "topics": [
-        "Haptics",
-        "Accessibility"
-      ]
-    },
-    {
-      "id": "p7",
-      "title": "A Shared Notebook for Creative Coding",
-      "authors": [
-        "orcid-demo-08"
-      ],
-      "topics": [
-        "Design tools",
-        "Collaboration"
-      ]
-    },
-    {
-      "id": "p8",
-      "title": "Prototyping Interfaces with Paper Circuits",
-      "authors": [
-        "orcid-demo-09"
-      ],
-      "topics": [
-        "Fabrication",
-        "Design tools"
-      ]
-    }
-  ],
-  "attendees": [
-    {
-      "id": "mira",
-      "name": "Mira Patel",
-      "affiliation": "Northbank Design Lab",
-      "bio": "I study how people work together with accessible creative tools.",
-      "topics": [
-        "Accessibility",
-        "Collaboration",
-        "Design tools"
+        "Privacy",
+        "Human–AI interaction",
+        "Usable security"
       ],
       "color": "lilac",
       "authorKey": "",
       "links": {
-        "website": "https://example.org/research/mira",
-        "scholar": "https://scholar.google.com/scholar?q=Accessibility%20interaction%20design"
+        "website": "https://anranxu.com/",
+        "scholar": ""
       },
-      "profileVisible": false,
-      "listVisible": false,
-      "listName": "Access & collaboration",
-      "saved": [
-        "p1",
-        "p2",
-        "p3"
+      "source": "https://anranxu.com/",
+      "recommended": [
+        "222959",
+        "221960"
       ],
-      "going": [
-        "s1",
-        "s2"
-      ],
-      "shared": [],
-      "lists": [
-        {
-          "id": "reading",
-          "name": "Access & collaboration",
-          "paperIds": [
-            "p1",
-            "p2",
-            "p3"
-          ],
-          "visible": false
-        },
-        {
-          "id": "later",
-          "name": "Read after the conference",
-          "paperIds": [
-            "p8"
-          ],
-          "visible": false
-        }
-      ]
+      "reason": "Visual privacy controls and explanations of privacy policies connect to Anran’s work on how people understand and manage privacy.",
+      "otherWork": {
+        "title": "Examining Human Perception of Generative Content Replacement in Image Privacy Protection",
+        "venue": "CHI 2024",
+        "url": "https://doi.org/10.1145/3613904.3642103"
+      }
     },
     {
-      "id": "leo",
-      "name": "Leo Kim",
-      "affiliation": "Harbor Interaction Lab",
-      "bio": "I build tactile interfaces that make collaborative diagrams easier to explore.",
+      "id": "carla",
+      "name": "Carla Griggio",
+      "affiliation": "Aalborg University",
+      "bio": "Carla studies how people maintain relationships across messaging apps and how interoperability changes privacy and social boundaries. She serves as SIGCHI’s VP for Operations.",
       "topics": [
-        "Accessibility",
-        "Haptics",
-        "Collaboration"
+        "Messaging",
+        "Privacy",
+        "Social computing"
       ],
       "color": "teal",
-      "authorKey": "orcid-demo-02",
+      "authorKey": "",
       "links": {
-        "website": "https://example.org/research/leo",
-        "scholar": "https://scholar.google.com/scholar?q=Accessibility%20interaction%20design"
+        "website": "https://carlagriggio.com/",
+        "scholar": "https://scholar.google.com/citations?user=1S79G5AAAAAJ"
       },
-      "profileVisible": true,
-      "listVisible": true,
-      "listName": "Tangible access",
-      "saved": [
-        "p1",
-        "p2",
-        "p6"
+      "source": "https://carlagriggio.com/",
+      "orcid": "https://orcid.org/0000-0001-9133-3828",
+      "recommended": [
+        "222912",
+        "230142"
       ],
-      "going": [
-        "s1",
-        "s3"
-      ],
-      "shared": [
-        "s1"
-      ],
-      "lists": [
-        {
-          "id": "reading",
-          "name": "Tangible access",
-          "paperIds": [
-            "p1",
-            "p2",
-            "p6"
-          ],
-          "visible": true
-        },
-        {
-          "id": "later",
-          "name": "Read after the conference",
-          "paperIds": [
-            "p8"
-          ],
-          "visible": false
-        }
-      ]
+      "reason": "Unsent messages and the boundaries of group chats connect to Carla’s research on interpersonal messaging.",
+      "otherWork": {
+        "title": "User Perceptions and Attitudes Toward Untraceability in Messaging Platforms",
+        "venue": "PoPETs 2026",
+        "url": "https://doi.org/10.56553/popets-2026-0007"
+      }
     },
     {
-      "id": "ines",
-      "name": "Inés Costa",
-      "affiliation": "Studio for Inclusive Systems",
-      "bio": "My work brings touch and sound into everyday information design.",
+      "id": "gonzalo",
+      "name": "Gonzalo Gabriel Méndez",
+      "affiliation": "HASP Lab · València",
+      "bio": "Gonzalo develops tools for authoring visualizations and studies how visual interfaces can give people more control over privacy in AI systems.",
       "topics": [
-        "Haptics",
-        "Accessibility"
+        "Visualization",
+        "Privacy",
+        "Human–AI interaction"
       ],
       "color": "rose",
-      "authorKey": "orcid-demo-03",
+      "authorKey": "218070",
       "links": {
-        "website": "https://example.org/research/ines",
-        "scholar": "https://scholar.google.com/scholar?q=Haptics%20interaction%20design"
+        "website": "https://hasp-lab.github.io/members/",
+        "scholar": ""
       },
-      "profileVisible": true,
-      "listVisible": false,
-      "listName": "Touch and sound",
-      "saved": [
-        "p1",
-        "p5",
-        "p6"
+      "source": "https://hasp-lab.github.io/members/",
+      "recommended": [
+        "222959"
       ],
-      "going": [
-        "s1",
-        "s3"
-      ],
-      "shared": [
-        "s1"
-      ],
-      "lists": [
-        {
-          "id": "reading",
-          "name": "Touch and sound",
-          "paperIds": [
-            "p1",
-            "p5",
-            "p6"
-          ],
-          "visible": false
-        },
-        {
-          "id": "later",
-          "name": "Read after the conference",
-          "paperIds": [
-            "p8"
-          ],
-          "visible": false
-        }
-      ]
+      "reason": "This paper offers another example of using an interface to make privacy choices tangible."
     },
     {
-      "id": "noah",
-      "name": "Noah Brooks",
-      "affiliation": "Eastwell University",
-      "bio": "I design collaborative canvases with blind and low-vision creators.",
+      "id": "nathalie",
+      "name": "Nathalie Bressa",
+      "affiliation": "Télécom Paris, Institut Polytechnique de Paris",
+      "bio": "Nathalie studies situated visualization, physical representations of data, and ways to use visualizations for data input.",
       "topics": [
-        "Accessibility",
-        "Collaboration"
+        "Visualization",
+        "Data physicalization",
+        "Interaction design"
       ],
       "color": "blue",
-      "authorKey": "orcid-demo-04",
+      "authorKey": "214665",
       "links": {
-        "website": "https://example.org/research/noah",
-        "scholar": "https://scholar.google.com/scholar?q=Accessibility%20interaction%20design"
+        "website": "https://www.bressa.de/",
+        "scholar": "https://scholar.google.com/citations?user=H12w2vgAAAAJ"
       },
-      "profileVisible": true,
-      "listVisible": true,
-      "listName": "Shared canvases",
-      "saved": [
-        "p1",
-        "p2",
-        "p4"
+      "source": "https://www.bressa.de/",
+      "recommended": [
+        "222312"
       ],
-      "going": [
-        "s1",
-        "s2"
-      ],
-      "shared": [],
-      "lists": [
-        {
-          "id": "reading",
-          "name": "Shared canvases",
-          "paperIds": [
-            "p1",
-            "p2",
-            "p4"
-          ],
-          "visible": true
-        },
-        {
-          "id": "later",
-          "name": "Read after the conference",
-          "paperIds": [
-            "p8"
-          ],
-          "visible": false
-        }
-      ]
+      "reason": "This full paper studies how children make sense of data through embodied interaction with physicalizations."
     },
     {
-      "id": "yuna",
-      "name": "Yuna Park",
-      "affiliation": "Fieldwork Studio",
-      "bio": "I look at the subtle cues people use to coordinate hybrid work.",
+      "id": "vincent",
+      "name": "Vincent Cavez",
+      "affiliation": "Former postdoctoral scholar, Stanford University",
+      "bio": "Vincent studies pen-based interaction and creative tools, including how musicians annotate scores and how people learn with AI and sketching interfaces.",
       "topics": [
-        "Social computing",
-        "Collaboration"
+        "Pen-based interaction",
+        "Creativity support",
+        "Human–AI interaction"
       ],
       "color": "amber",
-      "authorKey": "orcid-demo-05",
+      "authorKey": "228755",
       "links": {
-        "website": "https://example.org/research/yuna",
-        "scholar": "https://scholar.google.com/scholar?q=Social%20computing%20interaction%20design"
+        "website": "https://www.vincentcavez.com/",
+        "scholar": "https://scholar.google.com/citations?user=JSY1rtEAAAAJ"
       },
-      "profileVisible": true,
-      "listVisible": true,
-      "listName": "Hybrid teamwork",
-      "saved": [
-        "p3",
-        "p4"
+      "source": "https://www.vincentcavez.com/",
+      "recommended": [
+        "222678"
       ],
-      "going": [
-        "s2"
-      ],
-      "shared": [
-        "s2"
-      ],
-      "lists": [
-        {
-          "id": "reading",
-          "name": "Hybrid teamwork",
-          "paperIds": [
-            "p3",
-            "p4"
-          ],
-          "visible": true
-        },
-        {
-          "id": "later",
-          "name": "Read after the conference",
-          "paperIds": [
-            "p8"
-          ],
-          "visible": false
-        }
-      ]
+      "reason": "This full paper combines pen-based document annotation with human–AI collaboration."
     },
     {
-      "id": "sol",
-      "name": "Sol Rivera",
-      "affiliation": "Form & Fabric Lab",
-      "bio": "I make programmable materials people can shape with their hands.",
+      "id": "yun",
+      "name": "Yun Huang",
+      "affiliation": "University of Illinois Urbana-Champaign",
+      "bio": "Yun co-directs the Social Computing Systems Lab and studies crowdsourcing and human–AI collaboration. Her PapersClaw.fun project explores paper and people discovery at conferences.",
       "topics": [
-        "Fabrication",
-        "Haptics"
+        "Social computing",
+        "Human–AI interaction",
+        "Crowdsourcing"
       ],
       "color": "mint",
-      "authorKey": "orcid-demo-06",
+      "authorKey": "217367",
       "links": {
-        "website": "https://example.org/research/sol",
-        "scholar": "https://scholar.google.com/scholar?q=Fabrication%20interaction%20design"
+        "website": "https://yunhuang.web.illinois.edu/",
+        "scholar": ""
+      },
+      "source": "https://ischool.illinois.edu/people/yun-huang",
+      "recommended": [
+        "222678"
+      ],
+      "reason": "This paper offers a related perspective on designing tools for human–AI collaboration."
+    }
+  ],
+  "sessions": [
+    {
+      "id": "225155",
+      "name": "AI Governance and Accountability",
+      "room": "Area 1 + 2 + 3: theatre",
+      "time": "Mon, 13 Apr · 13:15–14:45 CEST",
+      "papers": [
+        "222959"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225155"
+    },
+    {
+      "id": "225713",
+      "name": "Video Presentations (Papers)",
+      "room": "Area 1 + 2 + 3: videos",
+      "time": "Mon, 13 Apr · 13:15–13:15 CEST",
+      "papers": [
+        "221897"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225713"
+    },
+    {
+      "id": "251863",
+      "name": "Video Presentations (Posters)",
+      "room": "Area 1 + 2 + 3: videos",
+      "time": "Mon, 13 Apr · 16:15–16:15 CEST",
+      "papers": [
+        "230142"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/251863"
+    },
+    {
+      "id": "251931",
+      "name": "Posters (Monday)",
+      "room": "Area 1 + 2 + 3: posters",
+      "time": "Mon, 13 Apr · 16:15–17:45 CEST",
+      "papers": [
+        "230155"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/251931"
+    },
+    {
+      "id": "252068",
+      "name": "Posters (Monday)",
+      "room": "Area 1 + 2 + 3: posters",
+      "time": "Mon, 13 Apr · 20:00–21:30 CEST",
+      "papers": [
+        "230155"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/252068"
+    },
+    {
+      "id": "225050",
+      "name": "The Workplace",
+      "room": "P1 - Room 120",
+      "time": "Tue, 14 Apr · 11:00–12:30 CEST",
+      "papers": [
+        "222546"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225050"
+    },
+    {
+      "id": "225103",
+      "name": "Privacy Policies",
+      "room": "P1 - Room 133",
+      "time": "Tue, 14 Apr · 11:00–12:30 CEST",
+      "papers": [
+        "221960"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225103"
+    },
+    {
+      "id": "224984",
+      "name": "Human-AI Interaction & GenAI",
+      "room": "P1 - Room 116",
+      "time": "Wed, 15 Apr · 13:15–14:45 CEST",
+      "papers": [
+        "222678"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/224984"
+    },
+    {
+      "id": "225026",
+      "name": "VR and Immersive Technologies for Mental Health",
+      "room": "P1 - Room 132",
+      "time": "Wed, 15 Apr · 13:15–14:45 CEST",
+      "papers": [
+        "222996"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225026"
+    },
+    {
+      "id": "214974",
+      "name": "Craft-Based Data Physicalization: Opportunities and Challenges",
+      "room": "P1 - Room 115",
+      "time": "Wed, 15 Apr · 16:15–17:45 CEST",
+      "papers": [
+        "214803"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/214974"
+    },
+    {
+      "id": "251934",
+      "name": "Posters (Wednesday)",
+      "room": "Area 1 + 2 + 3: posters",
+      "time": "Wed, 15 Apr · 16:15–17:45 CEST",
+      "papers": [
+        "229861"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/251934"
+    },
+    {
+      "id": "215410",
+      "name": "Craft-Based Data Physicalization: Opportunities and Challenges",
+      "room": "P1 - Room 115",
+      "time": "Wed, 15 Apr · 18:30–20:00 CEST",
+      "papers": [
+        "214803"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/215410"
+    },
+    {
+      "id": "252070",
+      "name": "Posters (Wednesday)",
+      "room": "Area 1 + 2 + 3: posters",
+      "time": "Wed, 15 Apr · 18:30–20:00 CEST",
+      "papers": [
+        "229861"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/252070"
+    },
+    {
+      "id": "224954",
+      "name": "Educational Support",
+      "room": "P1 - Room 121",
+      "time": "Thu, 16 Apr · 11:00–12:30 CEST",
+      "papers": [
+        "222240"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/224954"
+    },
+    {
+      "id": "224952",
+      "name": "Multi-Agent Reasoning Systems for Sensemaking and Planning",
+      "room": "P1 - Room 134",
+      "time": "Fri, 17 Apr · 11:00–12:30 CEST",
+      "papers": [
+        "222461"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/224952"
+    },
+    {
+      "id": "225056",
+      "name": "Expression and Affective Wellbeing",
+      "room": "P1 - Room 124",
+      "time": "Fri, 17 Apr · 11:00–12:30 CEST",
+      "papers": [
+        "222912"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225056"
+    },
+    {
+      "id": "225063",
+      "name": "AI for Youth Learning",
+      "room": "P1 - Room 129",
+      "time": "Fri, 17 Apr · 11:00–12:30 CEST",
+      "papers": [
+        "222312"
+      ],
+      "url": "https://programs.sigchi.org/chi/2026/program/session/225063"
+    }
+  ],
+  "papers": [
+    {
+      "id": "222959",
+      "title": "VisGuardian: A Lightweight Group-based Visual Privacy Control Technique For Smart Glasses in Home Environments",
+      "authors": [
+        "220195",
+        "221679",
+        "218023",
+        "216851",
+        "219859",
+        "218442",
+        "218974",
+        "218279",
+        "221522",
+        "218493"
+      ],
+      "authorNames": [
+        "Shuning Zhang",
+        "Qucheng Zang",
+        "Yongquan 'Owen' Hu",
+        "Jiachen Du",
+        "Xueyang Wang",
+        "Yan Kong",
+        "Xinyi Fu",
+        "Suranga Nanayakkara",
+        "Xin Yi",
+        "Hewu Li"
+      ],
+      "track": "Papers",
+      "doi": "https://doi.org/10.1145/3772318.3790288",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/222959"
+    },
+    {
+      "id": "222912",
+      "title": "The Words That Can't Be Shared: Exploring the Design of Unsent Messages",
+      "authors": [
+        "214280",
+        "214170"
+      ],
+      "authorNames": [
+        "Michael Yin",
+        "Robert Xiao"
+      ],
+      "track": "Papers",
+      "doi": "https://doi.org/10.1145/3772318.3790639",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/222912"
+    },
+    {
+      "id": "221960",
+      "title": "Scrollytelling as an Alternative Format for Privacy Policies",
+      "authors": [
+        "218070",
+        "220138"
+      ],
+      "authorNames": [
+        "Gonzalo Gabriel Méndez",
+        "Jose Such"
+      ],
+      "track": "Papers",
+      "doi": "https://doi.org/10.1145/3772318.3790704",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/221960"
+    },
+    {
+      "id": "214803",
+      "title": "Craft-Based Data Physicalization: Opportunities and Challenges",
+      "authors": [
+        "214768",
+        "214143",
+        "214722",
+        "214665",
+        "214554",
+        "214047",
+        "214480",
+        "214049",
+        "214492"
+      ],
+      "authorNames": [
+        "Bahare Bakhtiari",
+        "Foroozan Daneshzand",
+        "Kim Sauvé",
+        "Nathalie Bressa",
+        "Samuel Huron",
+        "Lora Oehlberg",
+        "Sheelagh Carpendale",
+        "Sowmya Somanath",
+        "Charles Perin"
+      ],
+      "track": "Workshops",
+      "doi": "https://doi.org/10.1145/3772363.3778766",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/214803"
+    },
+    {
+      "id": "230155",
+      "title": "Opportunities to Support Musicians' Score-based Practice with Context-Specific Annotations on Tablet",
+      "authors": [
+        "229064",
+        "228755"
+      ],
+      "authorNames": [
+        "Xintian Fu",
+        "Vincent Cavez"
+      ],
+      "track": "Posters",
+      "doi": "https://doi.org/10.1145/3772363.3798332",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/230155"
+    },
+    {
+      "id": "222461",
+      "title": "Perspectra: Choosing Your Experts Enhances Critical Thinking in Multi-Agent Research Ideation",
+      "authors": [
+        "216369",
+        "218844",
+        "218615",
+        "217925",
+        "214604",
+        "217367"
+      ],
+      "authorNames": [
+        "Yiren Liu",
+        "Viraj Nischal Shah",
+        "Sangho Suh",
+        "Pao Siangliulue",
+        "Tal August",
+        "Yun Huang"
+      ],
+      "track": "Papers",
+      "doi": "https://doi.org/10.1145/3772318.3791560",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/222461"
+    },
+    {
+      "id": "222312",
+      "title": "From Squishing to Meaning: Exploring Data Physicalization Through  Children’s Embodied Experiences",
+      "authors": [
+        "218302",
+        "219605",
+        "216996",
+        "214414",
+        "219610",
+        "220316",
+        "218098"
+      ],
+      "authorNames": [
+        "Andres Alberto Ramirez Duque",
+        "Dushani Perera",
+        "Dorsey B. Kaufmann",
+        "Ayça Atabey",
+        "Uta Hinrichs",
+        "Andrew Manches",
+        "Stephen Anthony Brewster"
+      ],
+      "track": "Papers",
+      "doi": "https://doi.org/10.1145/3772318.3791846",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/222312"
+    },
+    {
+      "id": "222678",
+      "title": "AnnotateGPT: Designing Human–AI Collaboration in Pen-Based Document Annotation",
+      "authors": [
+        "220159",
+        "217027",
+        "217560"
+      ],
+      "authorNames": [
+        "Benedict Leung",
+        "Mariana Shimabukuro",
+        "Christopher Collins"
+      ],
+      "track": "Papers",
+      "doi": "https://doi.org/10.1145/3772318.3790867",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/222678"
+    },
+    {
+      "id": "221897",
+      "title": "Empowered XR through Generative AI: Balancing Superpowers and Risks",
+      "authors": [
+        "215559",
+        "219034",
+        "219351",
+        "217171",
+        "220075",
+        "217367"
+      ],
+      "authorNames": [
+        "Yiliu Tang",
+        "Mengke Wu",
+        "Jason Situ",
+        "Jingyi Liu",
+        "Andrea Yaoyun Cui",
+        "Yun Huang"
+      ],
+      "track": "Papers",
+      "doi": "https://doi.org/10.1145/3772318.3791307",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/221897"
+    },
+    {
+      "id": "222240",
+      "title": "Redesigning Educational Videos for Deaf and Hard-of-Hearing Learners",
+      "authors": [
+        "214454",
+        "216856",
+        "221473",
+        "219562",
+        "215820",
+        "217464",
+        "217367"
+      ],
+      "authorNames": [
+        "Si Chen",
+        "Haocong Cheng",
+        "Suzy Su",
+        "Lu Ming",
+        "Sarah Masud",
+        "Qi Wang",
+        "Yun Huang"
+      ],
+      "track": "Papers",
+      "doi": "https://doi.org/10.1145/3772318.3791470",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/222240"
+    },
+    {
+      "id": "222546",
+      "title": "Envisioning an Ethical and Sustainable Metaverse Workplace: Beyond AI-Driven Surveillance",
+      "authors": [
+        "215692",
+        "220877",
+        "216191",
+        "217367"
+      ],
+      "authorNames": [
+        "Hyanghee Park",
+        "Daehwan Ahn",
+        "Jae Eun Kim",
+        "Yun Huang"
+      ],
+      "track": "Papers",
+      "doi": "https://doi.org/10.1145/3772318.3791525",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/222546"
+    },
+    {
+      "id": "222996",
+      "title": "AReframedChair: Reframing the Empty Chair through Dyadic and Triadic AR-Mediated Self-Embodiment",
+      "authors": [
+        "217456",
+        "216544",
+        "215537",
+        "217367",
+        "216697"
+      ],
+      "authorNames": [
+        "Yongming Li",
+        "Ling Ling",
+        "Yunpeng Song",
+        "Yun Huang",
+        "Zhongmin Cai"
+      ],
+      "track": "Papers",
+      "doi": "https://doi.org/10.1145/3772318.3790406",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/222996"
+    },
+    {
+      "id": "229861",
+      "title": "Mosaic: A Multi-Level Framework for Observing and Evaluating Performance of Multi-Agent Systems",
+      "authors": [
+        "216369",
+        "217367",
+        "219074"
+      ],
+      "authorNames": [
+        "Yiren Liu",
+        "Yun Huang",
+        "Shunan Guo"
+      ],
+      "track": "Posters",
+      "doi": "https://doi.org/10.1145/3772363.3798830",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/229861"
+    },
+    {
+      "id": "230142",
+      "title": "Read the Room: Exploring When LLM Agents Should Participate in Everyday Mixed-Context Group Chats on Mobile Messaging Platforms",
+      "authors": [
+        "229041"
+      ],
+      "authorNames": [
+        "Sunkyeung YOO"
+      ],
+      "track": "Posters",
+      "doi": "https://doi.org/10.1145/3772363.3798392",
+      "url": "https://programs.sigchi.org/chi/2026/program/content/230142"
+    }
+  ],
+  "attendees": [
+    {
+      "id": "anran",
+      "name": "Anran Xu",
+      "affiliation": "RIKEN Center for Advanced Intelligence Project",
+      "bio": "Anran studies how people make privacy decisions about images and how interactive AI systems can support those decisions.",
+      "topics": [
+        "Privacy",
+        "Human–AI interaction",
+        "Usable security"
+      ],
+      "color": "lilac",
+      "authorKey": "",
+      "links": {
+        "website": "https://anranxu.com/",
+        "scholar": ""
       },
       "profileVisible": true,
       "listVisible": true,
-      "listName": "Material studies",
+      "listName": "Demo reading list",
       "saved": [
-        "p5",
-        "p6",
-        "p8"
+        "222959",
+        "221960"
       ],
       "going": [
-        "s3"
-      ],
-      "shared": [
-        "s3"
-      ],
-      "lists": [
-        {
-          "id": "reading",
-          "name": "Material studies",
-          "paperIds": [
-            "p5",
-            "p6",
-            "p8"
-          ],
-          "visible": true
-        },
-        {
-          "id": "later",
-          "name": "Read after the conference",
-          "paperIds": [
-            "p8"
-          ],
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": "amara",
-      "name": "Amara Diallo",
-      "affiliation": "Neighbourhood Computing",
-      "bio": "I study how groups exchange feedback during creative work.",
-      "topics": [
-        "Design tools",
-        "Collaboration"
-      ],
-      "color": "coral",
-      "authorKey": "orcid-demo-07",
-      "links": {
-        "website": "https://example.org/research/amara",
-        "scholar": "https://scholar.google.com/scholar?q=Design%20tools%20interaction%20design"
-      },
-      "profileVisible": true,
-      "listVisible": true,
-      "listName": "Design conversations",
-      "saved": [
-        "p4",
-        "p7"
-      ],
-      "going": [
-        "s2",
-        "s4"
-      ],
-      "shared": [
-        "s2"
-      ],
-      "lists": [
-        {
-          "id": "reading",
-          "name": "Design conversations",
-          "paperIds": [
-            "p4",
-            "p7"
-          ],
-          "visible": true
-        },
-        {
-          "id": "later",
-          "name": "Read after the conference",
-          "paperIds": [
-            "p8"
-          ],
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": "eli",
-      "name": "Eli Chen",
-      "affiliation": "Open Instrument Studio",
-      "bio": "I prototype new tools for live coding and collective sketching.",
-      "topics": [
-        "Design tools",
-        "Creative coding"
-      ],
-      "color": "periwinkle",
-      "authorKey": "orcid-demo-08",
-      "links": {
-        "website": "https://example.org/research/eli",
-        "scholar": "https://scholar.google.com/scholar?q=Design%20tools%20interaction%20design"
-      },
-      "profileVisible": true,
-      "listVisible": true,
-      "listName": "Creative instruments",
-      "saved": [
-        "p7",
-        "p8"
-      ],
-      "going": [
-        "s4"
-      ],
-      "shared": [
-        "s4"
-      ],
-      "lists": [
-        {
-          "id": "reading",
-          "name": "Creative instruments",
-          "paperIds": [
-            "p7",
-            "p8"
-          ],
-          "visible": true
-        },
-        {
-          "id": "later",
-          "name": "Read after the conference",
-          "paperIds": [
-            "p8"
-          ],
-          "visible": false
-        }
-      ]
-    },
-    {
-      "id": "robin",
-      "name": "Robin Vale",
-      "affiliation": "Maker Studies Group",
-      "bio": "I explore low-cost circuits for rapid prototyping.",
-      "topics": [
-        "Fabrication",
-        "Design tools"
-      ],
-      "color": "olive",
-      "authorKey": "orcid-demo-09",
-      "links": {
-        "website": "https://example.org/research/robin",
-        "scholar": "https://scholar.google.com/scholar?q=Fabrication%20interaction%20design"
-      },
-      "profileVisible": false,
-      "listVisible": false,
-      "listName": "Making together",
-      "saved": [
-        "p5",
-        "p8"
-      ],
-      "going": [
-        "s4"
+        "225155",
+        "225103"
       ],
       "shared": [],
       "lists": [
         {
           "id": "reading",
-          "name": "Making together",
+          "name": "Demo reading list",
           "paperIds": [
-            "p5",
-            "p8"
+            "222959",
+            "221960"
+          ],
+          "visible": true
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [],
+          "visible": false
+        }
+      ],
+      "rules": {
+        "profile": {
+          "mode": "attendees",
+          "people": []
+        },
+        "links": {
+          "mode": "attendees",
+          "people": []
+        },
+        "currentRoom": {
+          "mode": "private",
+          "people": []
+        },
+        "list.reading": {
+          "mode": "attendees",
+          "people": []
+        },
+        "list.later": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225155": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225713": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251863": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251931": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252068": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225050": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225103": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224984": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225026": {
+          "mode": "private",
+          "people": []
+        },
+        "session.214974": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251934": {
+          "mode": "private",
+          "people": []
+        },
+        "session.215410": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252070": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224954": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224952": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225056": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225063": {
+          "mode": "private",
+          "people": []
+        }
+      },
+      "checkIn": null
+    },
+    {
+      "id": "carla",
+      "name": "Carla Griggio",
+      "affiliation": "Aalborg University",
+      "bio": "Carla studies how people maintain relationships across messaging apps and how interoperability changes privacy and social boundaries. She serves as SIGCHI’s VP for Operations.",
+      "topics": [
+        "Messaging",
+        "Privacy",
+        "Social computing"
+      ],
+      "color": "teal",
+      "authorKey": "",
+      "links": {
+        "website": "https://carlagriggio.com/",
+        "scholar": "https://scholar.google.com/citations?user=1S79G5AAAAAJ"
+      },
+      "profileVisible": true,
+      "listVisible": true,
+      "listName": "Demo reading list",
+      "saved": [
+        "222912",
+        "230142"
+      ],
+      "going": [
+        "251863",
+        "225056"
+      ],
+      "shared": [
+        "251863"
+      ],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Demo reading list",
+          "paperIds": [
+            "222912",
+            "230142"
+          ],
+          "visible": true
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [],
+          "visible": false
+        }
+      ],
+      "rules": {
+        "profile": {
+          "mode": "attendees",
+          "people": []
+        },
+        "links": {
+          "mode": "attendees",
+          "people": []
+        },
+        "currentRoom": {
+          "mode": "private",
+          "people": []
+        },
+        "list.reading": {
+          "mode": "attendees",
+          "people": []
+        },
+        "list.later": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225155": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225713": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251863": {
+          "mode": "attendees",
+          "people": []
+        },
+        "session.251931": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252068": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225050": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225103": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224984": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225026": {
+          "mode": "private",
+          "people": []
+        },
+        "session.214974": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251934": {
+          "mode": "private",
+          "people": []
+        },
+        "session.215410": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252070": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224954": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224952": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225056": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225063": {
+          "mode": "private",
+          "people": []
+        }
+      },
+      "checkIn": null
+    },
+    {
+      "id": "gonzalo",
+      "name": "Gonzalo Gabriel Méndez",
+      "affiliation": "HASP Lab · València",
+      "bio": "Gonzalo develops tools for authoring visualizations and studies how visual interfaces can give people more control over privacy in AI systems.",
+      "topics": [
+        "Visualization",
+        "Privacy",
+        "Human–AI interaction"
+      ],
+      "color": "rose",
+      "authorKey": "218070",
+      "links": {
+        "website": "https://hasp-lab.github.io/members/",
+        "scholar": ""
+      },
+      "profileVisible": true,
+      "listVisible": false,
+      "listName": "Demo reading list",
+      "saved": [
+        "222959",
+        "221960"
+      ],
+      "going": [
+        "225155",
+        "225103"
+      ],
+      "shared": [],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Demo reading list",
+          "paperIds": [
+            "222959",
+            "221960"
           ],
           "visible": false
         },
         {
           "id": "later",
           "name": "Read after the conference",
-          "paperIds": [
-            "p8"
-          ],
+          "paperIds": [],
           "visible": false
         }
-      ]
+      ],
+      "rules": {
+        "profile": {
+          "mode": "attendees",
+          "people": []
+        },
+        "links": {
+          "mode": "attendees",
+          "people": []
+        },
+        "currentRoom": {
+          "mode": "private",
+          "people": []
+        },
+        "list.reading": {
+          "mode": "private",
+          "people": []
+        },
+        "list.later": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225155": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225713": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251863": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251931": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252068": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225050": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225103": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224984": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225026": {
+          "mode": "private",
+          "people": []
+        },
+        "session.214974": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251934": {
+          "mode": "private",
+          "people": []
+        },
+        "session.215410": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252070": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224954": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224952": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225056": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225063": {
+          "mode": "private",
+          "people": []
+        }
+      },
+      "checkIn": null
+    },
+    {
+      "id": "nathalie",
+      "name": "Nathalie Bressa",
+      "affiliation": "Télécom Paris, Institut Polytechnique de Paris",
+      "bio": "Nathalie studies situated visualization, physical representations of data, and ways to use visualizations for data input.",
+      "topics": [
+        "Visualization",
+        "Data physicalization",
+        "Interaction design"
+      ],
+      "color": "blue",
+      "authorKey": "214665",
+      "links": {
+        "website": "https://www.bressa.de/",
+        "scholar": "https://scholar.google.com/citations?user=H12w2vgAAAAJ"
+      },
+      "profileVisible": true,
+      "listVisible": true,
+      "listName": "Demo reading list",
+      "saved": [
+        "222312",
+        "214803"
+      ],
+      "going": [
+        "214974",
+        "215410"
+      ],
+      "shared": [
+        "214974"
+      ],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Demo reading list",
+          "paperIds": [
+            "222312",
+            "214803"
+          ],
+          "visible": true
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [],
+          "visible": false
+        }
+      ],
+      "rules": {
+        "profile": {
+          "mode": "attendees",
+          "people": []
+        },
+        "links": {
+          "mode": "attendees",
+          "people": []
+        },
+        "currentRoom": {
+          "mode": "private",
+          "people": []
+        },
+        "list.reading": {
+          "mode": "attendees",
+          "people": []
+        },
+        "list.later": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225155": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225713": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251863": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251931": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252068": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225050": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225103": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224984": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225026": {
+          "mode": "private",
+          "people": []
+        },
+        "session.214974": {
+          "mode": "attendees",
+          "people": []
+        },
+        "session.251934": {
+          "mode": "private",
+          "people": []
+        },
+        "session.215410": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252070": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224954": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224952": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225056": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225063": {
+          "mode": "private",
+          "people": []
+        }
+      },
+      "checkIn": null
+    },
+    {
+      "id": "vincent",
+      "name": "Vincent Cavez",
+      "affiliation": "Former postdoctoral scholar, Stanford University",
+      "bio": "Vincent studies pen-based interaction and creative tools, including how musicians annotate scores and how people learn with AI and sketching interfaces.",
+      "topics": [
+        "Pen-based interaction",
+        "Creativity support",
+        "Human–AI interaction"
+      ],
+      "color": "amber",
+      "authorKey": "228755",
+      "links": {
+        "website": "https://www.vincentcavez.com/",
+        "scholar": "https://scholar.google.com/citations?user=JSY1rtEAAAAJ"
+      },
+      "profileVisible": true,
+      "listVisible": true,
+      "listName": "Demo reading list",
+      "saved": [
+        "222678",
+        "230155"
+      ],
+      "going": [
+        "251931",
+        "252068"
+      ],
+      "shared": [],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Demo reading list",
+          "paperIds": [
+            "222678",
+            "230155"
+          ],
+          "visible": true
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [],
+          "visible": false
+        }
+      ],
+      "rules": {
+        "profile": {
+          "mode": "attendees",
+          "people": []
+        },
+        "links": {
+          "mode": "attendees",
+          "people": []
+        },
+        "currentRoom": {
+          "mode": "private",
+          "people": []
+        },
+        "list.reading": {
+          "mode": "attendees",
+          "people": []
+        },
+        "list.later": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225155": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225713": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251863": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251931": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252068": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225050": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225103": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224984": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225026": {
+          "mode": "private",
+          "people": []
+        },
+        "session.214974": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251934": {
+          "mode": "private",
+          "people": []
+        },
+        "session.215410": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252070": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224954": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224952": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225056": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225063": {
+          "mode": "private",
+          "people": []
+        }
+      },
+      "checkIn": null
+    },
+    {
+      "id": "yun",
+      "name": "Yun Huang",
+      "affiliation": "University of Illinois Urbana-Champaign",
+      "bio": "Yun co-directs the Social Computing Systems Lab and studies crowdsourcing and human–AI collaboration. Her PapersClaw.fun project explores paper and people discovery at conferences.",
+      "topics": [
+        "Social computing",
+        "Human–AI interaction",
+        "Crowdsourcing"
+      ],
+      "color": "mint",
+      "authorKey": "217367",
+      "links": {
+        "website": "https://yunhuang.web.illinois.edu/",
+        "scholar": ""
+      },
+      "profileVisible": true,
+      "listVisible": true,
+      "listName": "Demo reading list",
+      "saved": [
+        "222678",
+        "222461",
+        "221897"
+      ],
+      "going": [
+        "225713",
+        "224984"
+      ],
+      "shared": [
+        "225713"
+      ],
+      "lists": [
+        {
+          "id": "reading",
+          "name": "Demo reading list",
+          "paperIds": [
+            "222678",
+            "222461",
+            "221897"
+          ],
+          "visible": true
+        },
+        {
+          "id": "later",
+          "name": "Read after the conference",
+          "paperIds": [],
+          "visible": false
+        }
+      ],
+      "rules": {
+        "profile": {
+          "mode": "attendees",
+          "people": []
+        },
+        "links": {
+          "mode": "attendees",
+          "people": []
+        },
+        "currentRoom": {
+          "mode": "private",
+          "people": []
+        },
+        "list.reading": {
+          "mode": "attendees",
+          "people": []
+        },
+        "list.later": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225155": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225713": {
+          "mode": "attendees",
+          "people": []
+        },
+        "session.251863": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251931": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252068": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225050": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225103": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224984": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225026": {
+          "mode": "private",
+          "people": []
+        },
+        "session.214974": {
+          "mode": "private",
+          "people": []
+        },
+        "session.251934": {
+          "mode": "private",
+          "people": []
+        },
+        "session.215410": {
+          "mode": "private",
+          "people": []
+        },
+        "session.252070": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224954": {
+          "mode": "private",
+          "people": []
+        },
+        "session.224952": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225056": {
+          "mode": "private",
+          "people": []
+        },
+        "session.225063": {
+          "mode": "private",
+          "people": []
+        }
+      },
+      "checkIn": null
     }
   ]
 }

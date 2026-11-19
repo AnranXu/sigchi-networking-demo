@@ -13,7 +13,7 @@
   font-family: "Segoe UI", Arial, sans-serif;
   color: var(--text);
   background: var(--canvas);
-  font-size: 15px;
+  font-size: 0.9375rem;
 }
 body {
   margin: 0;
@@ -48,11 +48,11 @@ p {
   margin: 0;
 }
 h2 {
-  font-size: 21px;
+  font-size: 1.312rem;
   letter-spacing: -0.035em;
 }
 h3 {
-  font-size: 17px;
+  font-size: 1.062rem;
   letter-spacing: -0.025em;
 }
 p {
@@ -61,7 +61,7 @@ p {
 }
 small {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 button,
 select,
@@ -90,7 +90,7 @@ svg {
   display: flex;
   align-items: center;
   gap: 11px;
-  font-size: 32px;
+  font-size: 2rem;
   letter-spacing: -0.075em;
   font-weight: 350;
   padding-left: 12px;
@@ -106,7 +106,7 @@ svg {
 .sideContext {
   padding: 7px 0 0 60px;
   color: #ced0e5;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .sideConf {
   display: flex;
@@ -170,7 +170,7 @@ svg {
   gap: 10px;
   align-items: center;
   color: #ced0e1;
-  font-size: 13px;
+  font-size: 0.8125rem;
   padding: 20px 12px 0;
 }
 main {
@@ -211,14 +211,14 @@ main {
   gap: 12px;
 }
 .topbar strong {
-  font-size: 17px;
+  font-size: 1.062rem;
 }
 .topSmall {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 .persona {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--muted);
 }
 select,
@@ -244,7 +244,7 @@ input[type="url"],
   align-items: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .pageHead {
   margin: 19px 0 25px;
@@ -258,7 +258,7 @@ input[type="url"],
 }
 .pageHead p {
   margin-top: 6px;
-  font-size: 16px;
+  font-size: 1rem;
 }
 .outlined,
 .primary,
@@ -278,7 +278,7 @@ input[type="url"],
   border-radius: 7px;
   padding: 9px 13px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.875rem;
   min-height: 38px;
 }
 .outlined:hover,
@@ -316,7 +316,7 @@ input[type="url"],
   background: #e6e9f7;
   padding: 1px 6px;
   border-radius: 7px;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-style: normal;
 }
 .directoryLayout {
@@ -409,7 +409,7 @@ input[type="url"],
 }
 .personTop p,
 .myIdentity p {
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.35;
   margin-top: 3px;
 }
@@ -421,13 +421,13 @@ input[type="url"],
   display: inline-grid;
   place-items: center;
   font-weight: 650;
-  font-size: 15px;
+  font-size: 0.9375rem;
   letter-spacing: 0.01em;
 }
 .avatar.large {
   width: 56px;
   height: 56px;
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 .lilac,
 .periwinkle {
@@ -467,7 +467,7 @@ input[type="url"],
 .chips span {
   border-radius: 5px;
   padding: 4px 7px;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #49537a;
   background: #f0f2f9;
   line-height: 1.2;
@@ -477,7 +477,7 @@ input[type="url"],
   border-top: 1px solid #edf0f5;
   padding-top: 11px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 0.75rem;
   width: 100%;
 }
 .cardFoot span {
@@ -495,7 +495,7 @@ input[type="url"],
 .railHeading,
 .railNote > div {
   gap: 7px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 650;
 }
 .myIdentity {
@@ -516,11 +516,11 @@ input[type="url"],
   padding: 14px 0;
 }
 .visibility strong {
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .visibility small {
   margin-top: 3px;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .switch {
   display: inline-flex;
@@ -558,7 +558,7 @@ input[type="url"],
 }
 .railNote p {
   margin: 8px 0 12px;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .railNote label,
 .api > label,
@@ -566,7 +566,7 @@ form label,
 .filterPanel label {
   display: block;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .railNote select,
 .filterPanel select,
@@ -575,7 +575,7 @@ form label input {
   width: 100%;
 }
 .railNote select {
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .filterPanel,
 .inlineNotice {
@@ -590,7 +590,7 @@ form label input {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 0.875rem;
   margin: 8px 0;
 }
 .check input {
@@ -608,7 +608,7 @@ form label input {
   padding: 5px 8px;
 }
 .matchExplain {
-  font-size: 14px;
+  font-size: 0.875rem;
   margin: -2px 0 13px;
 }
 .reading {
@@ -640,7 +640,7 @@ form label input {
 .record .muted,
 .hint,
 .footnote {
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 .lines {
   padding: 0;
@@ -669,7 +669,7 @@ form label input {
   border-block: 1px solid var(--line);
 }
 .setting p {
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .reading form label {
   margin: 13px 0;
@@ -683,7 +683,7 @@ form label input {
   min-width: 0;
 }
 .eyebrow {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--muted);
   margin-bottom: 6px;
 }
@@ -693,7 +693,7 @@ form label input {
   margin: 8px 0;
 }
 .textBtn {
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   padding: 3px 0;
 }
@@ -718,7 +718,7 @@ form label input {
   padding: 14px 20px;
   border-bottom: 1px solid var(--line);
   color: var(--muted);
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .details {
   padding: 22px;
@@ -744,7 +744,7 @@ form label input {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 .empty {
@@ -783,7 +783,7 @@ form label input {
 .contacts .avatar {
   width: 32px;
   height: 32px;
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 .contacts h2,
 .chat h2 {
@@ -823,7 +823,7 @@ form label input {
   background: #f0f2f7;
   border-radius: 7px;
   padding: 11px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   overflow: auto;
   line-height: 1.45;
 }
@@ -933,7 +933,7 @@ form label input {
     margin: 16px 0 20px;
   }
   .pageHead p {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
   .personTop {
     align-items: flex-start;
@@ -1008,7 +1008,7 @@ form label input {
     flex-direction: column;
   }
   .persona select {
-    font-size: 13px;
+    font-size: 0.8125rem;
   }
   .rail {
     margin-top: 4px;
@@ -1020,3 +1020,984 @@ form label input {
     scroll-behavior: auto !important;
   }
 }
+/* Match the live Programs People shell and its surname index. */
+:root {
+  --nav: #282a3d;
+  --blue: #315ecb;
+  --canvas: #f4f5f9;
+  --text: #212837;
+  --muted: #5c6475;
+  font-family: Montserrat, "Segoe UI", Arial, sans-serif;
+  font-size: 1rem;
+}
+.sidebar {
+  width: clamp(220px, 21.5vw, 275px);
+  padding: 0 0 13px;
+  border-radius: 0;
+}
+.brand {
+  display: flex;
+  gap: 15px;
+  height: 65px;
+  padding: 9px 20px;
+}
+.brand img {
+  width: 180px;
+  max-width: 76%;
+  height: 48px;
+  object-fit: contain;
+}
+.brand > span {
+  color: #8592a5;
+  font-size: 1.625rem;
+  letter-spacing: 0;
+}
+.sideUser,
+.confHome {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 54px;
+  padding: 12px 20px;
+  background: none;
+  color: #fff;
+  border: 0;
+  text-decoration: none;
+  text-align: left;
+  font-weight: 550;
+  font-size: 0.9375rem;
+}
+.sideUser svg {
+  border-radius: 50%;
+  background: #364057;
+  padding: 5px;
+  width: 32px;
+  height: 32px;
+}
+.confHome img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  background: #fff;
+}
+.sidebar nav button {
+  margin: 0;
+  border-radius: 0;
+  padding: 16px 21px;
+  min-height: 53px;
+  gap: 17px;
+}
+.sidebar nav button[aria-current="page"] {
+  background: #303b56;
+  box-shadow: inset 4px 0 #61a5ff;
+}
+.sidebar hr {
+  margin: 3px 0;
+  background: #171b2b;
+  height: 3px;
+}
+.sideBottom {
+  padding: 12px 20px;
+}
+.sidebar {
+  overflow: auto;
+}
+main {
+  margin-left: clamp(220px, 21.5vw, 275px);
+}
+.topbar {
+  min-height: 102px;
+  height: auto;
+  gap: 14px;
+  border-bottom: 0;
+  padding: 21px 30px 10px;
+  align-items: flex-start;
+}
+.topbar .row {
+  gap: 16px;
+}
+.confMark {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  box-shadow: 0 2px 10px #0002;
+  background: #fff;
+  padding: 4px;
+}
+.topbar h1 {
+  font-size: clamp(21px, 2vw, 29px);
+  font-weight: 550;
+  letter-spacing: -0.035em;
+  margin-top: 8px;
+}
+.topSmall {
+  font-size: 0.75rem;
+}
+.persona {
+  align-self: center;
+}
+.canvas {
+  max-width: none;
+  padding: 0 0 45px;
+}
+.canvas > .reading,
+.canvas > .chatLayout,
+.canvas > .api,
+.canvas > .alert,
+.canvas > .record {
+  margin: 20px 30px;
+}
+.demoContext {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 30px 9px;
+  background: white;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.demoContext button {
+  font-size: 0.75rem;
+}
+.peopleTools {
+  display: flex;
+  background: white;
+  padding: 4px 30px 8px;
+  gap: 8px;
+}
+.peopleTools .search {
+  flex: 1;
+  min-width: 0;
+}
+.peopleTools input {
+  font-size: 0.875rem;
+}
+.peoplePwa > .filterPanel {
+  margin: 0 30px 9px;
+}
+.pwaTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  background: white;
+  padding: 0 30px;
+  border-bottom: 1px solid var(--line);
+}
+.pwaTabs button {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  padding: 15px 20px 12px;
+  border-bottom: 3px solid transparent;
+  color: var(--text);
+}
+.pwaTabs button.active {
+  color: #315ecb;
+  border-color: #4f7dff;
+}
+.azBar {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  flex-wrap: wrap;
+  background: white;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 30px;
+}
+.azBar button {
+  width: 23px;
+  height: 23px;
+  text-align: center;
+  border: 0;
+  background: none;
+  border-radius: 50%;
+  padding: 0;
+  color: var(--text);
+  font-size: 0.875rem;
+}
+.azBar button:disabled {
+  opacity: 0.48;
+}
+.azBar button[aria-pressed="true"] {
+  background: #4d78ff;
+  color: white;
+}
+.peopleBody {
+  padding: 20px 30px;
+}
+.alphaGroup {
+  display: grid;
+  grid-template-columns: minmax(125px, 25%) 1fr;
+  align-items: baseline;
+  gap: 18px;
+  margin: 16px 0 26px;
+}
+.alphaGroup.initialGroup {
+  grid-template-columns: 22px 1fr;
+}
+.alphaGroup h3 {
+  font-size: 1.062rem;
+  font-weight: 550;
+  margin: 0;
+}
+.alphaPeople {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 18px;
+}
+.alphaPeople button {
+  background: none;
+  padding: 3px 0;
+  border: 0;
+  text-align: left;
+  color: #263f66;
+  font-size: 0.9375rem;
+}
+.alphaPeople button:hover span {
+  text-decoration: underline;
+}
+.alphaPeople small {
+  display: block;
+  margin-top: 4px;
+}
+.sectionIntro,
+.permissionHead,
+.checkInPanel h2,
+.permissionPanel h2 {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.sectionIntro,
+.permissionHead {
+  justify-content: space-between;
+}
+.sectionIntro p {
+  font-size: 0.875rem;
+}
+.joinWrap {
+  padding: 22px 30px;
+  max-width: 760px;
+}
+.joinWrap > p {
+  margin: 11px 2px;
+  font-size: 0.875rem;
+}
+.joinCard {
+  padding: 22px;
+}
+.joinCard h2,
+.checkInPanel h2,
+.permissionPanel h2 {
+  font-weight: 600;
+}
+.joinCard p {
+  margin: 7px 0 16px;
+}
+.joinCard label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.joinCard .formRow input {
+  flex: 1;
+  min-width: 120px;
+  padding: 10px 12px;
+  border: 1px solid #ccd1df;
+  border-radius: 7px;
+}
+.permissionRow {
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+.permissionHead b {
+  font-size: 0.875rem;
+}
+.permissionHead select {
+  font-size: 0.875rem;
+}
+.permissionRow fieldset {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  margin: 10px 0 0;
+  padding: 12px;
+}
+.permissionRow legend {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.personChoices {
+  display: flex;
+  gap: 8px 16px;
+  flex-wrap: wrap;
+  margin: 0 0 10px;
+}
+.personChoices label {
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.checkStatus {
+  border-radius: 7px;
+  background: #edf2fc;
+  color: #344566;
+  padding: 10px 12px;
+  margin: 11px 0;
+}
+.checkInPanel .hint {
+  margin: 10px 0 0;
+}
+.previewWho {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.875rem;
+}
+.privacySummary {
+  margin: 12px 0;
+}
+.joinCard .primary,
+.permissionRow .outlined {
+  white-space: nowrap;
+}
+.demoContext > span {
+  line-height: 1.4;
+}
+.record > .textBtn + .textBtn {
+  margin-left: 12px;
+}
+@media (max-width: 990px) {
+  .sidebar {
+    width: 260px;
+  }
+  main {
+    margin: 0;
+  }
+  .topbar .mobileMenu {
+    display: inline-grid;
+  }
+}
+@media (max-width: 680px) {
+  .topbar {
+    padding: 12px 14px 7px;
+    align-items: center;
+    gap: 6px;
+    min-height: 65px;
+  }
+  .topbar .row {
+    gap: 7px;
+  }
+  .topbar h1 {
+    font-size: 1.188rem;
+    margin-top: 3px;
+  }
+  .topSmall {
+    font-size: 0.625rem;
+  }
+  .confMark {
+    display: none;
+  }
+  .persona select {
+    max-width: 122px;
+  }
+  .demoContext {
+    padding: 3px 14px 9px;
+    align-items: flex-start;
+  }
+  .demoContext .textBtn {
+    white-space: nowrap;
+  }
+  .peopleTools,
+  .pwaTabs {
+    padding-inline: 14px;
+  }
+  .pwaTabs {
+    gap: 0;
+  }
+  .pwaTabs button {
+    font-size: 0.875rem;
+    padding: 12px 9px;
+  }
+  .azBar {
+    padding: 7px 14px;
+    gap: 3px;
+  }
+  .azBar button {
+    width: 20px;
+    height: 22px;
+  }
+  .peopleBody,
+  .joinWrap {
+    padding: 16px 14px;
+  }
+  .alphaPeople {
+    grid-template-columns: 1fr;
+  }
+  .sectionIntro {
+    display: block;
+  }
+  .canvas > .reading,
+  .canvas > .chatLayout,
+  .canvas > .api {
+    margin: 14px;
+  }
+  .permissionHead {
+    flex-wrap: wrap;
+  }
+  .joinCard {
+    padding: 17px;
+  }
+  .peoplePwa > .filterPanel {
+    margin-inline: 14px;
+  }
+  .alphaGroup {
+    grid-template-columns: 100px 1fr;
+  }
+  .permissionRow fieldset {
+    min-width: 0;
+  }
+  .permissionHead select {
+    max-width: 100%;
+  }
+}
+
+.skipLink {
+  position: fixed;
+  top: 5px;
+  left: 6px;
+  z-index: 20;
+  background: #fff;
+  padding: 10px 15px;
+  transform: translateY(-170%);
+}
+.skipLink:focus {
+  transform: none;
+}
+.mobileClose {
+  display: none;
+}
+.permissionRow {
+  min-width: 0;
+}
+.sessionControls {
+  align-items: flex-start;
+}
+.sessionControls > .permissionRow {
+  flex: 1;
+  min-width: min(100%, 250px);
+}
+.chat,
+.chatLayout > *,
+.contacts,
+.reading,
+.formRow > *,
+.joinWrap,
+.record,
+.permissionPanel,
+.topbar .row {
+  min-width: 0;
+}
+.alphaPeople span,
+.sideUser,
+.details,
+.privacySummary,
+.permissionHead b,
+.bubble,
+.record h2,
+.contacts button,
+.myIdentity {
+  overflow-wrap: anywhere;
+}
+.azBar button {
+  min-width: 24px;
+  min-height: 24px;
+}
+.check input,
+.personChoices input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--blue);
+}
+.personChoices label {
+  min-height: 32px;
+}
+.mobileMenu,
+.iconBtn,
+.textBtn {
+  min-height: 32px;
+}
+.mobileMenu,
+.iconBtn {
+  min-width: 32px;
+}
+.topbar .mobileMenu {
+  display: none;
+}
+.persona select,
+.checkInPanel select {
+  max-width: 100%;
+}
+.persona {
+  min-width: 0;
+}
+.topbar h1:focus {
+  outline: none;
+}
+.azBar button[aria-pressed="true"] {
+  background: #315ecb;
+}
+.tabs button,
+.pwaTabs button {
+  min-height: 44px;
+}
+.personChoices label:has(:focus-visible) {
+  outline: 2px solid #4054aa;
+  outline-offset: 2px;
+}
+.permissionHead select,
+.previewWho select {
+  min-width: 0;
+}
+.azBar button:disabled {
+  color: #626b78;
+  opacity: 1;
+}
+.azBar button:enabled {
+  font-weight: 700;
+  text-decoration: underline;
+}
+.demoContext .textBtn {
+  text-align: start;
+}
+@media (max-width: 990px) {
+  .sidebar {
+    visibility: hidden;
+  }
+  .sidebar.open {
+    visibility: visible;
+  }
+  .mobileClose {
+    display: inline-grid;
+    position: absolute;
+    right: 8px;
+    top: 14px;
+    color: white;
+    background: #303850;
+    z-index: 1;
+  }
+  .brand img {
+    max-width: 67%;
+  }
+  .topbar .mobileMenu {
+    display: inline-grid;
+  }
+  .sidebar .iconBtn:hover {
+    color: #202838;
+  }
+}
+@media (max-width: 680px) {
+  .topbar {
+    flex-wrap: wrap;
+  }
+  .topbar .row {
+    flex: 1;
+  }
+  .persona {
+    max-width: min(47%, 190px);
+  }
+  .persona select {
+    width: 100%;
+  }
+  .demoContext {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  .persona select,
+  .joinCard input,
+  input[type="url"],
+  .formRow input,
+  .peopleTools input,
+  .permissionHead select,
+  select {
+    font-size: 1rem;
+  }
+  .checkInPanel select {
+    max-width: 100%;
+  }
+  .formRow {
+    flex-wrap: wrap;
+  }
+  .iconBtn,
+  .outlined,
+  .primary,
+  .textBtn,
+  .contacts button,
+  .pwaTabs button,
+  .alphaPeople button,
+  .personChoices label,
+  .check,
+  .mobileMenu {
+    min-height: 44px;
+  }
+  .iconBtn,
+  .mobileMenu {
+    min-width: 44px;
+  }
+  .permissionHead select,
+  .joinCard input,
+  .checkInPanel select {
+    min-height: 44px;
+  }
+  .alphaPeople button {
+    padding: 8px 0;
+  }
+  .topbar .row > div {
+    min-width: 0;
+  }
+  .azBar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(34px, 1fr));
+    gap: 1px;
+  }
+  .azBar button {
+    width: 100%;
+    height: 36px;
+    font-size: 0.875rem;
+    border-radius: 5px;
+  }
+  .peopleTools .search {
+    height: 44px;
+  }
+  .joinCard .formRow {
+    align-items: stretch;
+  }
+  .joinCard .formRow input {
+    max-width: 100%;
+  }
+  .permissionHead {
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .sessionControls .permissionRow {
+    flex-basis: 100%;
+  }
+  .previewWho {
+    flex-wrap: wrap;
+  }
+  .api pre {
+    max-width: 100%;
+  }
+  .topbar .topSmall {
+    font-size: 0.75rem;
+  }
+  .demoContext .textBtn {
+    min-height: 36px;
+  }
+  .formRow select {
+    min-width: 0;
+  }
+}
+@media (max-width: 380px) {
+  .topbar .row {
+    flex-basis: 100%;
+  }
+  .persona {
+    max-width: 100%;
+    width: 100%;
+    margin-left: 0;
+  }
+  .persona span {
+    display: block;
+  }
+  .persona select {
+    width: auto;
+    flex: 1;
+  }
+  .chat .formRow input {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  .pwaTabs button {
+    padding-inline: 7px;
+  }
+}
+
+.persona > svg,
+.phoneSearchBtn {
+  display: none;
+}
+.sidebar {
+  width: 275px;
+}
+main {
+  margin-left: 275px;
+}
+.peopleBody {
+  min-height: 180px;
+}
+.pwaTabs button {
+  font-weight: 500;
+}
+.azBar button:enabled {
+  font-weight: 550;
+  text-decoration: none;
+}
+.azBar button[aria-pressed="true"] {
+  font-weight: 650;
+}
+.alphaPeople button {
+  font-size: 0.875rem;
+}
+.brand img {
+  height: 44px;
+  width: 184px;
+}
+@media (max-width: 990px) {
+  main {
+    margin-left: 0;
+  }
+  .sidebar {
+    width: min(275px, 88vw);
+  }
+  .topbar {
+    height: auto;
+    min-height: 60px;
+    background: #282a3d;
+    color: white;
+    padding: 7px 10px;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 4px;
+  }
+  .topbar .row {
+    flex: 1;
+    min-width: 0;
+    gap: 5px;
+  }
+  .topbar .confMark,
+  .topbar .topSmall {
+    display: none;
+  }
+  .topbar h1 {
+    font-size: 1rem;
+    font-weight: 680;
+    letter-spacing: 0;
+    line-height: 1.2;
+    margin: 0;
+  }
+  .topbar .iconBtn {
+    color: white;
+    width: 44px;
+    height: 44px;
+  }
+  .topbar .iconBtn:hover {
+    background: #3c415a;
+  }
+  .topbar .persona {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 55px;
+    min-height: 44px;
+    max-width: none;
+    width: auto;
+    gap: 3px;
+    margin: 0;
+    padding: 0 4px;
+    color: white;
+  }
+  .persona > svg,
+  .persona span,
+  .phoneSearchBtn {
+    display: inline-flex;
+  }
+  .topbar .persona span {
+    font-size: 0.75rem;
+  }
+  .topbar .persona select {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+  .topbar .persona:focus-within {
+    outline: 3px solid white;
+    outline-offset: -2px;
+  }
+  .topbar .mobileMenu svg {
+    width: 26px;
+    height: 26px;
+  }
+  .topbar .phoneSearchBtn svg {
+    width: 22px;
+  }
+  .topbar :focus-visible,
+  .sidebar :focus-visible {
+    outline-color: #ffdb78;
+  }
+  .peopleTools {
+    display: none;
+  }
+  .peopleTools.phoneVisible {
+    display: flex;
+    padding: 10px 12px;
+  }
+  .canvas {
+    display: flex;
+    flex-direction: column;
+  }
+  .canvas > .demoContext {
+    order: 2;
+    background: transparent;
+    padding: 14px 14px 20px;
+    margin-top: 7px;
+    border-top: 1px solid var(--line);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .canvas > .demoContext button {
+    font-size: 0.8rem;
+  }
+  .pwaTabs {
+    padding: 0 10px;
+    flex-wrap: wrap;
+  }
+  .pwaTabs button {
+    padding: 13px 12px 11px;
+    min-height: 48px;
+    font-size: 0.9375rem;
+  }
+  .azBar {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    max-width: 100%;
+    padding: 6px 10px;
+    gap: 3px;
+  }
+  .azBar button {
+    flex: 0 0 29px;
+    width: 29px;
+    height: 32px;
+    min-width: 29px;
+    border-radius: 8px;
+  }
+  .alphaGroup,
+  .alphaGroup.initialGroup {
+    display: block;
+    margin: 0 0 18px;
+  }
+  .alphaGroup h3 {
+    margin-bottom: 5px;
+  }
+  .alphaPeople {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .peopleBody {
+    padding: 15px 13px;
+  }
+  .alphaPeople button {
+    min-height: 44px;
+    padding: 9px 0;
+    font-size: 0.9rem;
+  }
+  .canvas > .reading,
+  .canvas > .chatLayout,
+  .canvas > .api {
+    min-width: 0;
+  }
+  .peoplePwa,
+  .canvas > *,
+  .topbar > * {
+    min-width: 0;
+  }
+  .joinWrap {
+    padding: 18px 14px;
+  }
+  .mobileClose {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+@media (min-width: 991px) {
+  .phoneSearchBtn {
+    display: none !important;
+  }
+  .topbar .persona > svg {
+    display: none;
+  }
+}
+@media (max-width: 380px) {
+  .pwaTabs button {
+    font-size: 0.875rem;
+    padding-inline: 9px;
+  }
+}
+
+.research h4 {
+  margin: 17px 0 4px;
+  font-size: 0.95rem;
+}
+.research ul {
+  padding: 0;
+  margin: 5px 0 10px;
+  list-style: none;
+}
+.research li {
+  margin: 8px 0;
+}
+.research li small {
+  display: block;
+  font-weight: 600;
+}
+.research a,
+.paperInfo a,
+.lines strong a {
+  color: #224ca7;
+  text-underline-offset: 0.14em;
+}
+.sourceLinks {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+  font-size: 0.875rem;
+}
+.research p {
+  margin: 6px 0 8px;
+}
+.paperInfo summary {
+  cursor: pointer;
+  color: #3c5073;
+  font-size: 0.875rem;
+  padding-block: 6px;
+}
+.paperInfo p {
+  font-size: 0.875rem;
+}
+.research a,
+.lines a,
+.record h2,
+.alphaGroup h3 {
+  overflow-wrap: anywhere;
+}
+.paperInfo {
+  margin: 4px 0;
+}
+.paperInfo a {
+  display: inline-block;
+}
+.reading{grid-template-columns:minmax(0,1fr)}.reading>.record{min-width:0}.recordHead{flex-wrap:wrap}.recordHead>.row{min-width:0;flex-wrap:wrap}.recordHead .row>div{min-width:0;overflow-wrap:anywhere}.recordHead>.outlined{max-width:100%;white-space:normal}.recordHead .row h3{overflow-wrap:anywhere}

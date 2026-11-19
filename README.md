@@ -1,28 +1,25 @@
-# SIGCHI conference networking demo
+# CHI ’26 conference networking demo
 
-[Open the interactive demo](https://anranxu.github.io/sigchi-networking-demo/)
+[Open the demo](https://anranxu.github.io/sigchi-networking-demo/)
 
-A hackathon prototype exploring how attendee-controlled sharing could fit into the SIGCHI Programs PWA. The interface uses UIST ’25 as a conference setting. All nine people, eight papers, four sessions, plans, and author identifiers in the fixtures are fictional. This is an independent prototype.
+A SIGCHI hackathon prototype for sharing a profile, finding people through papers, and choosing who can see session plans or a temporary room check-in. The interface follows the [SIGCHI Programs People page](https://programs.sigchi.org/chi/2026/people/list) on desktop and mobile. The conference was held in Barcelona, April 13–17, 2026.
 
-## A two-minute walkthrough
+## Try the sharing controls
 
-1. Start as **Mira Patel**. Open **Program** and choose **Who is interested?** under *Tactile Paths for Shared Diagrams*. Only attendees who shared a list containing the paper appear.
-2. In **My profile**, make Mira visible. In **My lists**, share *Access & collaboration*. In **Program**, enable **Share my plan** for *Designing for access*.
-3. Switch to **Leo Kim** in the header. Open Mira’s profile to see her selected list, session and research links. Download the profile as JSON. In **My matches**, open a profile to inspect the shared topics, papers and sessions.
-4. Send Mira a demo message and switch back to read it. Switch to **Unregistered guest** to see what happens to directory access.
-5. Open **API examples** and run a request. Turning Mira’s profile private removes her from the directory and makes a direct lookup by Leo return 404.
+1. Enter a name. A new profile starts private, with empty reading lists and no location.
+2. Open **My profile**. Set *Conference profile* to *Conference attendees*. Set *Current room* to *Selected people*, select Carla Griggio, and save the audience. Choose a room and check in.
+3. Under **View as**, select Carla. In **People → Here now**, your name appears in that room. Switch to Yun Huang and it disappears. Leaving the room or waiting an hour ends the check-in. A planned session never creates a room check-in.
+4. Open a researcher’s profile to see public research, verified CHI contributions and suggested reading. In **Program**, save a real paper to your own reading list or add a session to your plan. Lists and plans have independent audiences.
+5. Open **API examples** to inspect or download a viewer-specific response. The source fixture and worked examples are linked there.
 
-## Data and API proposal
+## Conference data and people
 
-- [Full synthetic dataset](docs/examples/synthetic-data.json)
-- [Worked requests and responses](docs/examples/requests-and-responses.json)
-- [Proposed endpoints and sharing rules](docs/examples/proposed-api.md)
-- [Existing SIGCHI Cloud API reference](https://services.sigchi.org/assets/pdf/cloud-api.pdf?version=4.9.24)
+The demo uses 14 real conference items and their 17 scheduled sessions from [the CHI 2026 program snapshot](https://files.sigchi.org/conference/cache/10142/86/program). Paper links open official program entries with publication DOIs. Author matches use the program’s person IDs and verified affiliations. Suggested reading is an editorial match to public research interests. It does not assert authorship or personal preference.
 
-GitHub Pages runs the proposed API in the browser. Demo changes persist in local storage and other visitors have independent copies. Anyone can inspect the fictional seed. The persona selector simulates conference registration. Chat, plan sharing and profile downloads use no SIGCHI account or credentials. A deployable service for real people would need server-enforced conference registration and authorization. Author matching uses illustrative identifiers and Google Scholar links lead to topic searches.
+The six example profiles use public sources for [Anran Xu](https://anranxu.com/), [Carla Griggio](https://carlagriggio.com/), [Gonzalo Gabriel Méndez](https://hasp-lab.github.io/members/), [Nathalie Bressa](https://www.bressa.de/), [Vincent Cavez](https://www.vincentcavez.com/), and [Yun Huang](https://ischool.illinois.edu/people/yun-huang). Their reading lists, attendance plans, privacy choices and messages are illustrative. No actual locations are collected. The public prototype stores changes in this browser. The viewer selector lets you compare perspectives within that copy.
 
-## Run and rebuild
+[Data fixture](docs/examples/synthetic-data.json) · [Worked API requests and responses](docs/examples/requests-and-responses.json) · [API proposal](docs/examples/proposed-api.md)
 
-Use Node.js 22 or newer. Run `npm ci`, `npm test`, and `npm run build`. To preview, run `python -m http.server 8000 --directory docs` and open the localhost URL. GitHub Pages publishes the committed `docs/` directory from `main`. Rebuild and commit this directory when changing the UI or fixture.
+## Build
 
-The conference thumbnail comes from the [SIGCHI conference asset service](https://files.sigchi.org/conference/logo/10138/c510d353-fe16-b4f5-9c3f-d7329bf0680c.png). The navigation and program context draw on [SIGCHI Programs](https://programs.sigchi.org/).
+With Node.js 22 or newer, run `npm ci`, `npm test`, and `npm run build`. Preview with `python -m http.server 8000 --directory docs`. GitHub Pages serves the committed `docs/` on `main`. Conference artwork and the SIGCHI mark come from the [official program](https://programs.sigchi.org/chi/2026). The included Montserrat font carries the SIL Open Font License.
