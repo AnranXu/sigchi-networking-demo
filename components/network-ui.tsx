@@ -25,6 +25,7 @@ import {
   Send,
   Orbit,
   FlaskConical,
+  Presentation,
 } from "lucide-react";
 import {
   personas as seedViewers,
@@ -48,6 +49,7 @@ import {
   type DemoConference,
 } from "../lib/conferences";
 import { roomFromHash } from "../lib/room-identification";
+import { ConferenceDirectory, ConferencePortals } from "./conference-directory";
 import { RoomBadge, RoomStatusPage } from "./room-status";
 import { SessionReminders } from "./session-reminders";
 import { Research } from "./research";
@@ -65,6 +67,7 @@ type Page =
   | "My lists"
   | "My profile"
   | "Messages"
+  | "All Conferences"
   | "API examples";
 const navigation: [Page, typeof Users][] = [
   ["Program", CalendarDays],
@@ -73,6 +76,7 @@ const navigation: [Page, typeof Users][] = [
   ["My lists", Bookmark],
   ["My profile", UserRound],
   ["Messages", MessagesSquare],
+  ["All Conferences", Presentation],
   ["API examples", Code2],
 ];
 const initials = (n: string) =>
@@ -146,34 +150,41 @@ function Dialog({
     </dialog>
   );
 }
+function programFromHash(hash: string) {
+  return conferences.find(c => hash === "#program/" + c.id);
+}
+function pageFromHistory(): Page | undefined {
+  return navigation.find(([name]) => name === history.state?.pickerPage)?.[0];
+}
 type Trace = { method: string; path: string; status: number; data: any };
 export default function NetworkUI() {
   const [event, setEvent] = useState<DemoConference | null>(null);
   const [name, setName] = useState("");
-  const [openingSettings, setOpeningSettings] = useState(false);
+  const [initialPage, setInitialPage] = useState<Page>("People");
   useEffect(() => {
     const fromLink = () => {
-      if (!roomFromHash(window.location.hash)) return false;
-      setEvent(defaultConference);
-      localStorage.setItem("sigchi.conference", defaultConference.id);
-      return true;
+      const hash = window.location.hash;
+      const program = programFromHash(hash);
+      const next = program || (roomFromHash(hash) && defaultConference)
+        || conferences.find(c => c.id === history.state?.pickerEventId)
+        || conferences.find(c => c.id === localStorage.getItem("sigchi.conference")) || defaultConference;
+      setInitialPage(program ? "Program" : hash === "#conferences" ? "All Conferences" : pageFromHistory() || "People");
+      setEvent(next);
+      localStorage.setItem("sigchi.conference", next.id);
     };
-    if (!fromLink())
-      setEvent(
-        conferences.find(
-          (c) => c.id === localStorage.getItem("sigchi.conference"),
-        ) || defaultConference,
-      );
+    fromLink();
     window.addEventListener("hashchange", fromLink);
-    return () => window.removeEventListener("hashchange", fromLink);
+    window.addEventListener("popstate", fromLink);
+    return () => { window.removeEventListener("hashchange", fromLink); window.removeEventListener("popstate", fromLink); };
   }, []);
-  function selectEvent(id: string) {
+  function selectEvent(id: string, destination: Page = "My profile") {
     const next = conferences.find((c) => c.id === id);
     if (!next) return;
     if (!next.roomReaders && roomFromHash(window.location.hash)) {
       history.replaceState(history.state, "", window.location.pathname + window.location.search);
     }
-    setOpeningSettings(true);
+    if (destination === "My profile") history.replaceState({ ...history.state, pickerEventId: id, pickerPage: destination }, "");
+    setInitialPage(destination);
     localStorage.setItem("sigchi.conference", id);
     setEvent(next);
   }
@@ -182,7 +193,7 @@ export default function NetworkUI() {
       key={event.id}
       event={event}
       selectEvent={selectEvent}
-      openingSettings={openingSettings}
+      initialPage={initialPage}
       signupName={name}
       setSignupName={setName}
     />
@@ -192,19 +203,19 @@ export default function NetworkUI() {
 function ConferenceUI({
   event,
   selectEvent,
-  openingSettings,
+  initialPage,
   signupName,
   setSignupName,
 }: {
   event: DemoConference;
-  selectEvent: (id: string) => void;
-  openingSettings: boolean;
+  selectEvent: (id: string, destination?: Page) => void;
+  initialPage: Page;
   signupName: string;
   setSignupName: (name: string) => void;
 }) {
   const { papers, sessions, rooms } = event;
   const prefix = conferencePrefix(event.id);
-  const focusConference = useRef(openingSettings);
+  const focusConference = useRef(initialPage === "My profile");
   const paperName = (id: string) =>
     papers.find((p) => p.id === id)?.title || id;
   const sessionName = (id: string) =>
@@ -214,7 +225,7 @@ function ConferenceUI({
   }, [event]);
   const [viewer, setViewer] = useState("guest"),
     [view, setView] = useState<View | null>(null),
-    [page, setPage] = useState<Page>(openingSettings ? "My profile" : "People");
+    [page, setPage] = useState<Page>(initialPage);
   const [tab, setTab] = useState("all"),
     [q, setQ] = useState(""),
     [filter, setFilter] = useState("");
@@ -239,6 +250,9 @@ function ConferenceUI({
     [prefilledRoom, setPrefilledRoom] = useState<string | null>(null);
   useEffect(() => {
     function readLink() {
+      const hash = window.location.hash;
+      const target = hash === "#conferences" ? "All Conferences" : programFromHash(hash) ? "Program" : !hash ? pageFromHistory() : undefined;
+      if (target) { setPage(target); setNavOpen(false); setProfile(null); setPreviewing(false); }
       if (window.location.hash === "#reminders") setPage("My lists");
       if (window.location.hash === "#rooms") setPage("Rooms");
       const name = roomFromHash(window.location.hash);
@@ -246,7 +260,8 @@ function ConferenceUI({
     }
     readLink();
     window.addEventListener("hashchange", readLink);
-    return () => window.removeEventListener("hashchange", readLink);
+    window.addEventListener("popstate", readLink);
+    return () => { window.removeEventListener("hashchange", readLink); window.removeEventListener("popstate", readLink); };
   }, []);
   useEffect(() => {
     if (!incomingRoom || view?.own?.id !== viewer) return;
@@ -423,9 +438,26 @@ function ConferenceUI({
       setBusy(false);
     }
   }
+  function openDirectory() {
+    if (busy) return;
+    if (window.location.hash !== "#conferences") {
+      history.replaceState({ ...history.state, pickerEventId: event.id, pickerPage: page }, "");
+      history.pushState({ pickerEventId: event.id, pickerPage: "All Conferences" }, "", "#conferences");
+    }
+    navigate("All Conferences");
+  }
+  function openProgram(id: string) {
+    if (busy) return;
+    history.pushState({ pickerEventId: id, pickerPage: "Program" }, "", "#program/" + id);
+    selectEvent(id, "Program");
+    navigate("Program");
+  }
   function navigate(p: Page) {
-    if ((p !== "My lists" && window.location.hash === "#reminders") || (p !== "Rooms" && window.location.hash === "#rooms")) {
-      history.replaceState(history.state, "", window.location.pathname + window.location.search);
+    const hash = window.location.hash;
+    if ((p !== "My lists" && hash === "#reminders") || (p !== "Rooms" && hash === "#rooms") || (p !== "All Conferences" && hash === "#conferences") || (p !== "Program" && programFromHash(hash))) {
+      history.replaceState({ ...history.state, pickerEventId: event.id, pickerPage: p }, "", window.location.pathname + window.location.search);
+    } else if (history.state?.pickerPage && !hash) {
+      history.replaceState({ ...history.state, pickerEventId: event.id, pickerPage: p }, "");
     }
     setPrefilledRoom(null);
     setRoomOpen(false);
@@ -642,10 +674,7 @@ function ConferenceUI({
         >
           <X />
         </button>
-        <div className="brand">
-          <span aria-hidden="true">⠿</span>
-          <img alt="SIGCHI" src={isStatic() ? "./sigchi.svg" : "/sigchi.svg"} />
-        </div>
+        <ConferencePortals key={navOpen ? "mobile-open" : "nav"} openDirectory={openDirectory} disabled={busy} />
         <button className="sideUser" onClick={() => navigate("My profile")}>
           <UserRound size={19} />
           {me?.name || "Create profile"}
@@ -662,10 +691,10 @@ function ConferenceUI({
         <nav aria-label="Conference navigation">
           {navigation.map(([n, I]) => (
             <React.Fragment key={n}>
-              {(n === "My lists" || n === "API examples") && <hr />}
+              {(n === "My lists" || n === "All Conferences") && <hr />}
               <button
                 aria-current={page === n ? "page" : undefined}
-                onClick={() => navigate(n)}
+                onClick={() => n === "All Conferences" ? openDirectory() : navigate(n)}
               >
                 <I size={19} />
                 {n}
@@ -678,7 +707,7 @@ function ConferenceUI({
         </div>
       </aside>
       <main id="main-content" tabIndex={-1} inert={navOpen || undefined}>
-        <header className="topbar">
+        <header className={"topbar" + (page === "All Conferences" ? " catalogHeader" : "")}>
           <div className="row">
             <button
               className="iconBtn mobileMenu"
@@ -699,7 +728,7 @@ function ConferenceUI({
                 {event.location} · {event.dates} · {event.zone}
               </div>
               <h1 ref={pageTitle} tabIndex={-1}>
-                {event.name} {page}
+                {page === "All Conferences" ? page : event.name + " " + page}
               </h1>
             </div>
           </div>
@@ -737,7 +766,7 @@ function ConferenceUI({
           )}
         </header>
         <div className="canvas">
-          <div className="demoContext">
+          {page !== "All Conferences" && <div className="demoContext">
             <span>
               Hackathon demo · Public research profiles · Simulated plans and
               room check-ins.
@@ -750,7 +779,7 @@ function ConferenceUI({
                 My sharing settings
               </button>
             )}
-          </div>
+          </div>}
           {error && (
             <div role="alert" className="alert">
               {error}{" "}
@@ -770,7 +799,7 @@ function ConferenceUI({
               setMinutes={minutesBefore => savePreference("me/reminders", { minutesBefore })}
             />
           )}
-          {!view ? (
+          {page === "All Conferences" ? <ConferenceDirectory active={event} select={openProgram} /> : !view ? (
             <div role="status" className="panel record">
               Loading the demo…
             </div>

@@ -2477,3 +2477,45 @@ main {
   .roomIntro { margin-bottom: .65rem; }
   .roomVolunteers .textBtn { margin-left: 0; }
 }
+
+.portalBrand { position: relative; z-index: 2; }
+.portalBrand .brand { gap: 5px; padding-left: 11px; }
+.portalTrigger { flex: 0 0 44px; height: 44px; display: grid; place-items: center; padding: 0; background: transparent; color: #a5b4ca; border: 0; border-radius: .4rem; cursor: pointer; }
+.portalTrigger:is(:hover,[aria-expanded=true]) { color: white; background: #354158; }
+.portalDots { display: grid; grid-template-columns: repeat(3,4px); gap: 3px; }
+.portalDots i { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+.portalLogo { display: flex; align-items: center; min-height: 44px; min-width: 0; }
+.portalLogo img { display: block; width: 184px; max-width: 100%; height: 44px; object-fit: contain; object-position: left center; }
+.portalsOpen,.portalLinks { background: #232730; }
+.portalLinks { position: absolute; top: 100%; left: 0; width: 100%; padding: 0 0 .45rem; color: #eef1f7; border-radius: 0 0 5px 5px; box-shadow: 0 5px 12px #0004; }
+.portalLinks[hidden] { display: none; }
+.portalLinks h2 { font-size: 1.05rem; margin: 0; padding: .5rem 1rem 1rem; }
+.portalLinks a { display: flex; gap: .9rem; align-items: center; min-height: 54px; padding: .55rem 1rem; color: inherit; font-weight: 600; font-size: .9rem; text-decoration: none; }
+.portalLinks a:hover, .portalLinks a:focus-visible { background: #354158; }
+.portalLinks a > span { flex: 0 0 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; color: #dce7fa; background: #37404f; }
+.sidebar .mobileClose { z-index: 4; }
+.catalogHeader .confMark,.catalogHeader .topSmall,.catalogHeader .persona { display: none; }
+.conferenceDirectory { max-width: 1150px; margin: 1rem clamp(14px,3vw,30px); min-width: 0; }
+.catalogFilters { display: grid; grid-template-columns: minmax(0,1.7fr) minmax(0,1fr); gap: 1rem; margin-bottom: 1.3rem; }
+.catalogFilters select,.catalogSearch { min-width: 0; min-height: 44px; width: 100%; display: flex; align-items: center; gap: .5rem; padding: .4rem .8rem; color: var(--text); background: white; border: 1px solid #79869c; border-radius: .5rem; font: inherit; }
+.catalogSearch svg { flex: none; color: var(--muted); }
+.catalogSearch input { width: 100%; min-width: 0; color: var(--text); background: white; border: 0; font: inherit; }
+.conferenceDirectory h2 { font-size: 1.12rem; margin: 1.25rem 0 .65rem; }
+.conferenceDirectory h3 { font-size: 1rem; margin: 1rem 0 .55rem; }
+.conferenceDirectory ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.conferenceCard { display: grid; grid-template-columns: 68px minmax(0,1fr) auto; align-items: center; gap: 1.05rem; padding: .95rem 1.1rem; background: white; color: var(--text); text-decoration: none; border: 1px solid var(--line); border-radius: .55rem; box-shadow: 0 2px 5px #222a4210; }
+.conferenceCard[aria-current=true] { background: #e6ebfb; border-color: #bdc8e3; }
+.conferenceCard:hover { border-color: #6374ac; }
+.directoryLogo { background: white; width: 68px; height: 68px; display: grid; place-items: center; border-radius: .4rem; }
+.directoryLogo img { width: 60px; height: 60px; object-fit: contain; }
+.directoryMeta { display: grid; gap: .35rem; overflow-wrap: anywhere; }
+.directoryMeta > span { display: flex; gap: .4rem; align-items: center; font-size: .88rem; }
+.directoryMeta svg,.conferenceCard > svg { flex: none; color: var(--blue); }
+.conferenceCard small { color: #374a83; }
+@media (max-width: 990px) { .portalBrand .brand { padding-right: 48px; } }
+@media (max-width: 700px) {
+  .catalogFilters { grid-template-columns: minmax(0,1fr); gap: .55rem; }
+  .conferenceCard { grid-template-columns: 42px minmax(0,1fr); padding: .8rem; column-gap: .65rem; row-gap: .3rem; }
+  .directoryLogo,.directoryLogo img { width: 42px; height: 42px; }
+  .conferenceCard > small,.conferenceCard > svg { grid-column: 2; }
+}

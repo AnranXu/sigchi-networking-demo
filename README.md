@@ -4,6 +4,10 @@
 
 A SIGCHI hackathon prototype for sharing a profile, finding people through papers, and choosing who can see session plans or a temporary room check-in. The interface follows the [SIGCHI Programs People page](https://programs.sigchi.org/chi/2026/people/list) on desktop and mobile. The conference was held in Barcelona, April 13–17, 2026.
 
+## Choose a conference
+
+Open the dots beside the SIGCHI logo and select **Conference Programs**, or use **All Conferences** in the sidebar. CHI 2026 and CHI 2025 open in the demo. Search by name or filter by short name to find other published programs on SIGCHI. The two demo conferences are always available in the picker.
+
 ## Try the sharing controls
 
 1. Choose a conference and enter a name, choose **Only me**, **Selected people**, or **All attendees**, and select **Create profile**. The default is **Only me**.
