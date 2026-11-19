@@ -101,7 +101,8 @@
     {
       "id": "gonzalo",
       "name": "Gonzalo Gabriel Méndez",
-      "affiliation": "HASP Lab · València",
+      "affiliation": "HASP Lab",
+      "city": "València",
       "bio": "Gonzalo develops tools for authoring visualizations and studies how visual interfaces can give people more control over privacy in AI systems.",
       "topics": [
         "Visualization",
@@ -145,7 +146,8 @@
     {
       "id": "vincent",
       "name": "Vincent Cavez",
-      "affiliation": "Postdoctoral scholar, Stanford University",
+      "affiliation": "Stanford University",
+      "role": "Postdoctoral scholar",
       "bio": "Vincent studies pen-based interaction and creative tools, including how musicians annotate scores and how people learn with AI and sketching interfaces.",
       "topics": [
         "Pen-based interaction",
@@ -929,7 +931,8 @@
     {
       "id": "gonzalo",
       "name": "Gonzalo Gabriel Méndez",
-      "affiliation": "HASP Lab · València",
+      "affiliation": "HASP Lab",
+      "city": "València",
       "bio": "Gonzalo develops tools for authoring visualizations and studies how visual interfaces can give people more control over privacy in AI systems.",
       "topics": [
         "Visualization",
@@ -1205,7 +1208,8 @@
     {
       "id": "vincent",
       "name": "Vincent Cavez",
-      "affiliation": "Postdoctoral scholar, Stanford University",
+      "affiliation": "Stanford University",
+      "role": "Postdoctoral scholar",
       "bio": "Vincent studies pen-based interaction and creative tools, including how musicians annotate scores and how people learn with AI and sketching interfaces.",
       "topics": [
         "Pen-based interaction",

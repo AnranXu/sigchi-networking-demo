@@ -11,10 +11,18 @@ export const conference = {
 export const { papers, sessions } = program;
 export const rooms = [...new Set(sessions.map((s) => s.room))].sort();
 export type Links = { website: string; scholar: string };
-export type Person = {
+type Affiliation = {
+  affiliation: string;
+  role?: string;
+  city?: string;
+};
+export function profileAffiliation({ affiliation, role, city }: Affiliation) {
+  const position = [role, affiliation].filter(Boolean).join(", ");
+  return [position, city].filter(Boolean).join(" · ");
+}
+export type Person = Affiliation & {
   id: string;
   name: string;
-  affiliation: string;
   bio: string;
   topics: string[];
   color: string;
@@ -27,10 +35,9 @@ export type Person = {
   going: string[];
   shared: string[];
 };
-type Background = {
+type Background = Affiliation & {
   id: string;
   name: string;
-  affiliation: string;
   bio: string;
   topics: string[];
   color: string;
@@ -90,7 +97,8 @@ export const backgrounds: Background[] = [
   {
     id: "gonzalo",
     name: "Gonzalo Gabriel Méndez",
-    affiliation: "HASP Lab · València",
+    affiliation: "HASP Lab",
+    city: "València",
     bio: "Gonzalo develops tools for authoring visualizations and studies how visual interfaces can give people more control over privacy in AI systems.",
     topics: ["Visualization", "Privacy", "Human–AI interaction"],
     color: "rose",
@@ -121,7 +129,8 @@ export const backgrounds: Background[] = [
   {
     id: "vincent",
     name: "Vincent Cavez",
-    affiliation: "Postdoctoral scholar, Stanford University",
+    affiliation: "Stanford University",
+    role: "Postdoctoral scholar",
     bio: "Vincent studies pen-based interaction and creative tools, including how musicians annotate scores and how people learn with AI and sketching interfaces.",
     topics: [
       "Pen-based interaction",
@@ -167,6 +176,8 @@ export const people: Person[] = backgrounds.map((b, i) => {
     id: b.id,
     name: b.name,
     affiliation: b.affiliation,
+    role: b.role,
+    city: b.city,
     bio: b.bio,
     topics: b.topics,
     color: b.color,

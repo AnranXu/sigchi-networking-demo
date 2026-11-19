@@ -32,6 +32,7 @@ import {
   personas as seedViewers,
   rooms,
   fixtureNote,
+  profileAffiliation,
 } from "@/lib/demo-fixtures";
 import {
   overlap,
@@ -801,7 +802,7 @@ export default function NetworkUI() {
                       <Avatar name={me.name} color={me.color} large />
                       <div>
                         <h2>{me.name}</h2>
-                        {me.affiliation && <p>{me.affiliation}</p>}
+                        {me.affiliation && <p>{profileAffiliation(me)}</p>}
                       </div>
                     </div>
                     <AudienceControl
@@ -1164,7 +1165,7 @@ export default function NetworkUI() {
             <div className="details">
               <Avatar name={selected.name} color={selected.color} large />
               <h2>{selected.name}</h2>
-              <p>{selected.affiliation}</p>
+              <p>{profileAffiliation(selected)}</p>
               {selected.checkIn && (
                 <div className="checkStatus">
                   <b>Current room</b> · {selected.checkIn.room} · until{" "}

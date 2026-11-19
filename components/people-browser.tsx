@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { MapPin, SlidersHorizontal, Search } from "lucide-react";
-import { papers, sessions, rooms } from "../lib/demo-fixtures";
+import { papers, sessions, rooms, profileAffiliation } from "../lib/demo-fixtures";
 import { overlap, type DemoPerson, type Profile } from "../lib/network-model";
 const tabs = [
   ["all", "People"],
@@ -68,7 +68,7 @@ export default function PeopleBrowser({
       ]);
       return [
         p.name,
-        p.affiliation,
+        profileAffiliation(p),
         ...p.topics,
         p.checkIn?.room || "",
         ...papers.filter((a) => sharedPapers.has(a.id)).map((a) => a.title),

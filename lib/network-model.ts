@@ -29,6 +29,8 @@ export type Profile = Pick<
   | "id"
   | "name"
   | "affiliation"
+  | "role"
+  | "city"
   | "bio"
   | "topics"
   | "color"
@@ -176,6 +178,8 @@ export function publicProfile(p: DemoPerson, viewer: string): Profile {
     id: p.id,
     name: p.name,
     affiliation: p.affiliation,
+    role: p.role,
+    city: p.city,
     bio: p.bio,
     topics: p.topics,
     color: p.color,
